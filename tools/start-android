@@ -1,5 +1,6 @@
 #!/bin/bash
 
-emulator -avd Nexus_5X_API_23 &
+`type -P emulator` -avd Nexus_5X_API_23 &
+sleep 2
 react-native run-android &
 
