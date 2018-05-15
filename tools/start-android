@@ -1,5 +1,5 @@
-#!/bin/sh
+#!/bin/bash
 
-emulator -avd Nexus_5X_API_23_-_Marshmallow &
+emulator -avd Nexus_5X_API_23 &
 react-native run-android &
 
