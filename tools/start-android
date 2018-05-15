@@ -1,0 +1,5 @@
+#!/bin/sh
+
+emulator -avd Nexus_5X_API_23_-_Marshmallow &
+react-native run-android &
+
