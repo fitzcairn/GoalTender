@@ -1,6 +1,9 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
+ * GoalTender
+ * A simple react native application to take this framework for a spin.
+ * Steve Martin
+ * steve@stevezero.com
+ *
  * @flow
  */
 
@@ -9,7 +12,8 @@ import {
   Platform,
   StyleSheet,
   Text,
-  View
+  View,
+  Image
 } from 'react-native';
 
 const instructions = Platform.select({
@@ -20,7 +24,7 @@ const instructions = Platform.select({
 });
 
 type Props = {};
-export default class App extends Component<Props> {
+export class App extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
@@ -33,6 +37,37 @@ export default class App extends Component<Props> {
         <Text style={styles.instructions}>
           {instructions}
         </Text>
+      </View>
+    );
+  }
+}
+
+export class Bananas extends Component {
+  render() {
+    let pic = {
+      uri: 'https://upload.wikimedia.org/wikipedia/commons/d/de/Bananavarieties.jpg'
+    };
+    return (
+      <Image source={pic} style={{width: 193, height: 110}}/>
+    );
+  }
+}
+
+class Greeting extends Component {
+  render() {
+    return (
+      <Text>Hello {this.props.name}!</Text>
+    );
+  }
+}
+
+export default class LotsOfGreetings extends Component {
+  render() {
+    return (
+      <View style={{alignItems: 'center'}}>
+        <Greeting name='Luke' />
+        <Greeting name='Leia' />
+        <Greeting name='Vader' />
       </View>
     );
   }
