@@ -25,104 +25,12 @@ import {
   NavigationState,
 } from 'react-navigation';
 
+import HomeScreen from './app/screens/HomeScreen.js';
+import SettingsScreen from './app/screens/SettingsScreen.js';
+import DailyScreen from './app/screens/DailyScreen.js';
+import StatsScreen from './app/screens/StatsScreen.js';
 
-// TODO: understand "type Props"??
-type Props = {
-  navigation: NavigationScreenProp<NavigationState>,
-};
-
-// Opening Screen
-export class HomeScreen extends Component<Props> {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to GoalTender!
-        </Text>
-        <Text style={styles.instructions}>
-          This is a tiny app to help you track simple daily goals.
-        </Text>
-        <Button
-          title="Get Started!"
-          onPress={() => this.props.navigation.navigate('Settings')}
-        />
-      </View>
-    );
-  }
-}
-
-// App Settings
-export class SettingsScreen extends Component<Props> {
-  render() {
-    let pic = {
-      uri: 'https://upload.wikimedia.org/wikipedia/commons/d/de/Bananavarieties.jpg'
-    };
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Image source={pic} style={{width: 193, height: 110}}/>
-        <Text>Details Screen</Text>
-        <Button
-          title="Go to Settings... again"
-          onPress={() => this.props.navigation.push('Settings')}
-        />
-        <Button
-          title="Go to Home"
-          onPress={() => this.props.navigation.navigate('Home')}
-        />
-        <Button
-          title="Goals"
-          onPress={() => this.props.navigation.navigate('Daily')}
-        />
-        <Button
-          title="Go back"
-          onPress={() => this.props.navigation.goBack()}
-        />
-      </View>
-    );
-  }
-}
-
-
-// Daily Goals Screen
-export class DailyScreen extends Component<Props> {
-  render() {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Daily Goals Screen</Text>
-        <Button
-          title="Go to Home"
-          onPress={() => this.props.navigation.navigate('Home')}
-        />
-      </View>
-    );
-  }
-}
-
-// Stats Screen
-export class StatsScreen extends Component<Props> {
-  constructor(props: Object) {
-    super(props);
-    this.state = { text: ''};
-  }
-
-  render() {
-    return (
-      <View style={{padding: 10}}>
-        <TextInput
-          style={{height: 40}}
-          placeholder="Type here to translate!"
-          onChangeText={(text) => this.setState({text})}
-        />
-        <Text style={{padding: 10, fontSize: 42}}>
-          {this.state.text.split(' ').map((word) => word && '🍕').join(' ')}
-        </Text>
-      </View>
-    );
-  }
-}
-
-// Define my screens.
-// TODO: Design the app :)
+// Set up Goaltender's screens.
 const GoalTender = createStackNavigator({
   Home: {
     screen: HomeScreen,
@@ -171,22 +79,3 @@ export default class App extends Component<Props> {
     return <GoalTender />;
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
