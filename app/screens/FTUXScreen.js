@@ -23,15 +23,48 @@ import {
 } from 'react-navigation';
 
 import styles from '../Styles.js';
+import FTUXService from '../services/FTUXService.js';
 
 
-// TODO: understand "type Props"??
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
 };
 
+type State = {
+   showFTUX: string,
+ };
+
 // Opening Screen
-export default class HomeScreen extends Component<Props> {
+export default class FTUXScreen extends Component<Props, State> {
+  state: {
+     showFTUX: string,
+   }
+
+  // Hide the top navigation tab.
+  static navigationOptions = { header: null };
+
+  constructor(props: Object) {
+    super(props);
+    this.state = {
+      showFTUX: 'true'
+    };
+  }
+
+  componentDidMount() {
+    FTUXService.hasFTUX(
+      function(value: string) {
+        console.log(value);
+        this.state.showFTUX = value;
+      }
+    );
+  }
+
+  // Helper function to write FTUX state and then navigate.
+  saveAndNavigate() {
+    FTUXService.setFTUX();
+    this.props.navigation.navigate('Settings');
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -43,7 +76,7 @@ export default class HomeScreen extends Component<Props> {
         </Text>
         <Button
           title="Get Started!"
-          onPress={() => this.props.navigation.navigate('Settings')}
+          onPress={() => this.saveAndNavigate()}
         />
       </View>
     );

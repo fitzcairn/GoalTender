@@ -25,17 +25,17 @@ import {
   NavigationState,
 } from 'react-navigation';
 
-import HomeScreen from './app/screens/HomeScreen.js';
+import FTUXScreen from './app/screens/FTUXScreen.js';
 import SettingsScreen from './app/screens/SettingsScreen.js';
 import DailyScreen from './app/screens/DailyScreen.js';
 import StatsScreen from './app/screens/StatsScreen.js';
 
 // Set up Goaltender's screens.
 const GoalTender = createStackNavigator({
-  Home: {
-    screen: HomeScreen,
+  FTUX: {
+    screen: FTUXScreen,
     // Optional: When deep linking or using react-navigation in a web app, this path is used:
-    path: 'home',
+    path: 'ftux',
     // Optional: Override the `navigationOptions` for the screen
     //navigationOptions: ({ navigation }) => ({
     //  title: `${navigation.state.params.name}'s Profile'`,
@@ -70,11 +70,11 @@ const GoalTender = createStackNavigator({
   }
 },
 {
-  initialRouteName: 'Home',
+  initialRouteName: 'FTUX',
 });
 
 // The main app class.
-export default class App extends Component<Props> {
+export default class App extends Component {
   render() {
     return <GoalTender />;
   }
