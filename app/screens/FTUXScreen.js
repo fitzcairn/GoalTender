@@ -30,14 +30,8 @@ type Props = {
   navigation: NavigationScreenProp<NavigationState>,
 };
 
-type State = {
-   showFTUX: string,
- };
-
 // Opening Screen
-export default class FTUXScreen extends Component<Props, State> {
-  // Hide the top navigation tab.
-  static navigationOptions = { header: null };
+export default class FTUXScreen extends Component<Props> {
 
   // Helper function to write FTUX state and then navigate.
   saveAndNavigate() {

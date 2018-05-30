@@ -14,7 +14,9 @@ export default class FTUXService {
   static async hasFTUX(callback: (boolean) => void) {
     try {
       return AsyncStorage.getItem(key)
-        .then(val => callback(val));
+        // TODO: Currently hardcoded to always show FTUX; remove.
+        //.then(val => callback(val == "true"));
+        .then(val => callback(false));
     } catch (error) {
       throw error;
     }
@@ -22,7 +24,7 @@ export default class FTUXService {
 
   static async setFTUX() {
     try {
-      AsyncStorage.setItem(key, true);
+      AsyncStorage.setItem(key, "true");
     } catch (error) {
       // Ah well, user will see FTUX next time too.
       throw error;

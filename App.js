@@ -41,10 +41,9 @@ const GoalTenderStack = {
     screen: FTUXScreen,
     // Optional: When deep linking or using react-navigation in a web app, this path is used:
     path: 'ftux',
-    // Optional: Override the `navigationOptions` for the screen
-    //navigationOptions: ({ navigation }) => ({
-    //  title: `${navigation.state.params.name}'s Profile'`,
-    //}),
+    navigationOptions: ({ navigation }) => ({
+      header: null,
+    }),
   },
   Settings: {
     screen: SettingsScreen,
