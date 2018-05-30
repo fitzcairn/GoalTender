@@ -30,8 +30,13 @@ import SettingsScreen from './app/screens/SettingsScreen.js';
 import DailyScreen from './app/screens/DailyScreen.js';
 import StatsScreen from './app/screens/StatsScreen.js';
 
+import FTUXService from './app/services/FTUXService.js';
+
+import styles from './app/Styles.js';
+
+
 // Set up Goaltender's screens.
-const GoalTender = createStackNavigator({
+const GoalTenderStack = {
   FTUX: {
     screen: FTUXScreen,
     // Optional: When deep linking or using react-navigation in a web app, this path is used:
@@ -68,14 +73,57 @@ const GoalTender = createStackNavigator({
     //  title: `${navigation.state.params.name}'s Profile'`,
     //}),
   }
-},
+};
+
+// Two versions of the app navigation: with and without FTUX.
+// Messy, but the best way I found to get this to work.
+const GoalTender = createStackNavigator(GoalTenderStack,
 {
   initialRouteName: 'FTUX',
 });
+const GoalTenderNoFTUX = createStackNavigator(GoalTenderStack,
+{
+  initialRouteName: 'Daily',
+});
+
+
+type Props = {
+  navigation: NavigationScreenProp<NavigationState>,
+};
+
+type State = {
+  dataLoaded: boolean,
+  showFTUX: boolean,
+};
 
 // The main app class.
-export default class App extends Component {
+export default class App extends Component<Props, State> {
+  constructor(props: Object) {
+    super(props);
+    this.state = {
+      dataLoaded: false,
+      showFTUX: false
+    };
+  }
+
+  componentDidMount() {
+    FTUXService.hasFTUX((value: boolean) => {
+        this.setState({ dataLoaded: true, showFTUX: value});
+      }
+    );
+  }
+
   render() {
+    if (!this.state.dataLoaded)
+      return (
+        <View style={styles.container}>
+          <Text style={styles.welcome}>
+            Loading...
+          </Text>
+        </View>
+        );
+    if (this.state.showFTUX)
+      return <GoalTenderNoFTUX />;
     return <GoalTender />;
   }
 }

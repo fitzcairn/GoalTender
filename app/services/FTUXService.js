@@ -11,19 +11,18 @@
 const key = 'FTUX';
 
 export default class FTUXService {
-  static async hasFTUX(callback: (string) => void) {
+  static async hasFTUX(callback: (boolean) => void) {
     try {
       return AsyncStorage.getItem(key)
         .then(val => callback(val));
     } catch (error) {
-      callback("false");
       throw error;
     }
   }
 
   static async setFTUX() {
     try {
-      AsyncStorage.setItem(key, "penis");
+      AsyncStorage.setItem(key, true);
     } catch (error) {
       // Ah well, user will see FTUX next time too.
       throw error;

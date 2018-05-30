@@ -36,28 +36,8 @@ type State = {
 
 // Opening Screen
 export default class FTUXScreen extends Component<Props, State> {
-  state: {
-     showFTUX: string,
-   }
-
   // Hide the top navigation tab.
   static navigationOptions = { header: null };
-
-  constructor(props: Object) {
-    super(props);
-    this.state = {
-      showFTUX: 'true'
-    };
-  }
-
-  componentDidMount() {
-    FTUXService.hasFTUX(
-      function(value: string) {
-        console.log(value);
-        this.state.showFTUX = value;
-      }
-    );
-  }
 
   // Helper function to write FTUX state and then navigate.
   saveAndNavigate() {
