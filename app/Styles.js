@@ -34,6 +34,14 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
+  iconButton: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 12,
+  },
 });
 
 export default styles;

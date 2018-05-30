@@ -25,13 +25,19 @@ import {
   NavigationState,
 } from 'react-navigation';
 
+// Screens
 import FTUXScreen from './app/screens/FTUXScreen.js';
 import SettingsScreen from './app/screens/SettingsScreen.js';
 import DailyScreen from './app/screens/DailyScreen.js';
 import StatsScreen from './app/screens/StatsScreen.js';
 
+// Components
+import IconButton from './app/components/IconButton.js';
+
+// Services
 import FTUXService from './app/services/FTUXService.js';
 
+// Styles
 import styles from './app/Styles.js';
 
 
@@ -39,7 +45,6 @@ import styles from './app/Styles.js';
 const GoalTenderStack = {
   FTUX: {
     screen: FTUXScreen,
-    // Optional: When deep linking or using react-navigation in a web app, this path is used:
     path: 'ftux',
     navigationOptions: ({ navigation }) => ({
       header: null,
@@ -47,30 +52,31 @@ const GoalTenderStack = {
   },
   Settings: {
     screen: SettingsScreen,
-    // Optional: When deep linking or using react-navigation in a web app, this path is used:
     path: 'settings',
-    // Optional: Override the `navigationOptions` for the screen
-    //navigationOptions: ({ navigation }) => ({
-    //  title: `${navigation.state.params.name}'s Profile'`,
-    //}),
   },
   Daily: {
     screen: DailyScreen,
-    // Optional: When deep linking or using react-navigation in a web app, this path is used:
     path: 'daily',
-    // Optional: Override the `navigationOptions` for the screen
-    //navigationOptions: ({ navigation }) => ({
-    //  title: `${navigation.state.params.name}'s Profile'`,
-    //}),
+    navigationOptions: ({ navigation }) => ({
+      headerLeft: (
+        <IconButton
+          align='left'
+          icon='settings'
+          onPress={() => navigation.navigate('Settings')}
+        />
+      ),
+      headerRight: (
+        <IconButton
+          align='right'
+          icon='assessment'
+          onPress={() => navigation.navigate('Stats')}
+        />
+      )
+    }),
   },
   Stats: {
     screen: StatsScreen,
-    // Optional: When deep linking or using react-navigation in a web app, this path is used:
     path: 'stats',
-    // Optional: Override the `navigationOptions` for the screen
-    //navigationOptions: ({ navigation }) => ({
-    //  title: `${navigation.state.params.name}'s Profile'`,
-    //}),
   }
 };
 
@@ -84,7 +90,6 @@ const GoalTenderNoFTUX = createStackNavigator(GoalTenderStack,
 {
   initialRouteName: 'Daily',
 });
-
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,

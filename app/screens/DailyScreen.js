@@ -10,17 +10,12 @@
 import React, { Component } from 'react';
 
 import {
-  Platform,
-  StyleSheet,
   Text,
-  TextInput,
   View,
   Button,
-  Image
 } from 'react-native';
 
 import {
-  createStackNavigator,
   NavigationScreenProp,
   NavigationState,
 } from 'react-navigation';
@@ -38,10 +33,6 @@ export default class DailyScreen extends Component<Props> {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Daily Goals Screen</Text>
-        <Button
-          title="Go to Home"
-          onPress={() => this.props.navigation.navigate('Home')}
-        />
       </View>
     );
   }

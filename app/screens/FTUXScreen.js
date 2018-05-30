@@ -1,5 +1,5 @@
 /**
- * Home screen for GoalTender
+ * FTUX screen for GoalTender
  *
  * @author Steve Martin
  *
@@ -8,16 +8,11 @@
 
 import React, { Component } from 'react';
 import {
-  Platform,
-  StyleSheet,
   Text,
-  TextInput,
   View,
   Button,
-  Image
 } from 'react-native';
 import {
-  createStackNavigator,
   NavigationScreenProp,
   NavigationState,
 } from 'react-navigation';
@@ -36,7 +31,7 @@ export default class FTUXScreen extends Component<Props> {
   // Helper function to write FTUX state and then navigate.
   saveAndNavigate() {
     FTUXService.setFTUX();
-    this.props.navigation.navigate('Settings');
+    this.props.navigation.navigate('Daily');
   }
 
   render() {
