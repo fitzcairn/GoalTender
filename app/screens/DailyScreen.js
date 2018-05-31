@@ -60,6 +60,9 @@ type State = {
 
 // Daily Goals Screen
 export default class DailyScreen extends Component<Props, State> {
+  swipeable = null;
+  deleteOpen = false;
+
   static navigationOptions = {
     title: 'Goal Status',
     headerTitleStyle: {
@@ -71,8 +74,8 @@ export default class DailyScreen extends Component<Props, State> {
   constructor(props: Object) {
     super(props);
     this.state = {
-      isSwiping: false,
       dataLoaded: false,
+      isSwiping: false,
       user: null,
       goals: null,
     };
@@ -105,23 +108,35 @@ export default class DailyScreen extends Component<Props, State> {
         <LoadingSpinner modal={false} />
       );
     return (
-      <ScrollView scrollEnabled={!this.state.isSwiping}>
-      {this.state.goals.getGoals().map((g: Goal, index: number) => {
-        console.log("goal id: " + g.getId() + " goal text: " + g.getText());
-        return (
-          <Swipeable
-            key={index}
-            leftButtons={[<DeleteButton />]}
-            onSwipeStart={() => {
-              this.setState({isSwiping: true});
-            }}
-            onSwipeRelease={() => {
-              this.setState({isSwiping: false});
-            }}>
-            <GoalRow label={g.getText()} id={g.getId()} />
-          </Swipeable>
-        )
-      })}
+      <ScrollView
+        scrollEnabled={!this.state.isSwiping}>
+        {this.state.goals.getGoals().map((g: Goal, index: number) => {
+          return (
+            <Swipeable
+              onRef={ref => this.swipeable = ref}
+              key={index}
+              leftButtons={[<DeleteButton />]}
+              onSwipeStart={() => {
+                if (this.deleteOpen && this.swipeable) {
+                  this.swipeable.recenter();
+                }
+                this.setState({isSwiping: true});
+              }}
+              onSwipeRelease={() => {
+                this.setState({isSwiping: false});
+              }}
+              onLeftButtonsOpenComplete={(event, gestureState, ref) => {
+                this.deleteOpen = true;
+                this.swipeable = ref;
+              }}
+              onLeftButtonsCloseComplete={() => {
+                this.deleteOpen = false;
+              }}
+              >
+              <GoalRow label={g.getText()} id={g.getId()} />
+            </Swipeable>
+          )
+        })}
       </ScrollView>
     );
   }
