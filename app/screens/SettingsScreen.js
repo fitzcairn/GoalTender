@@ -14,7 +14,10 @@ import {
   TextInput,
   View,
   Button,
-  Image
+  Image,
+  SectionList,
+  ScrollView,
+  Switch,
 } from 'react-native';
 
 import {
@@ -23,7 +26,13 @@ import {
   NavigationState,
 } from 'react-navigation';
 
+// TODO: Add DateTimePicker once I tackle local notifications.
+// https://github.com/mmazzarolo/react-native-modal-datetime-picker
+//import DateTimePicker from 'react-native-modal-datetime-picker';
+
 import styles from '../Styles.js';
+
+import SettingsButton from '../components/SettingsButton.js';
 
 
 // TODO: understand "type Props"??
@@ -33,31 +42,27 @@ type Props = {
 
 // App Settings
 export default class SettingsScreen extends Component<Props> {
+  static navigationOptions = {
+    title: 'Settings',
+  };
+
   render() {
-    let pic = {
-      uri: 'https://upload.wikimedia.org/wikipedia/commons/d/de/Bananavarieties.jpg'
-    };
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Image source={pic} style={{width: 193, height: 110}}/>
-        <Text>Details Screen</Text>
-        <Button
-          title="Go to Settings... again"
-          onPress={() => this.props.navigation.push('Settings')}
-        />
-        <Button
-          title="Go to Home"
-          onPress={() => this.props.navigation.navigate('Home')}
-        />
-        <Button
-          title="Goals"
-          onPress={() => this.props.navigation.navigate('Daily')}
-        />
-        <Button
-          title="Go back"
-          onPress={() => this.props.navigation.goBack()}
-        />
-      </View>
+      <ScrollView>
+        <View style={styles.settingsGroup}>
+          <SettingsButton label='Manage Identity' onPress={() => this.props.navigation.navigate('Stats')} />
+          <SettingsButton label='Another Setting' onPress={() => this.props.navigation.navigate('Stats')} />
+          <SettingsButton label='Oh Snap!' onPress={() => this.props.navigation.navigate('Stats')} />
+        </View>
+        <View style={styles.settingsGroup}>
+          <View style={styles.settingsRow}>
+            <Text style={styles.settingsText}>Enable Reminders</Text>
+            <Switch />
+          </View>
+          <View style={styles.settingsRow}>
+          </View>
+        </View>
+      </ScrollView>
     );
   }
 }

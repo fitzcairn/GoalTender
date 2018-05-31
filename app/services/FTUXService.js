@@ -14,9 +14,8 @@ export default class FTUXService {
   static async hasFTUX(callback: (boolean) => void) {
     try {
       return AsyncStorage.getItem(key)
-        // TODO: Currently hardcoded to always show FTUX; remove.
-        //.then(val => callback(val == "true"));
-        .then(val => callback(false));
+        .then(val => callback(val == "true"));
+        //.then(val => callback(false));
     } catch (error) {
       // Go ahead and show FTUX.
       callback(false);

@@ -13,8 +13,6 @@ import {
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import styles from '../Styles.js';
-
 
 export default function IconButton(
   {
@@ -37,3 +35,13 @@ export default function IconButton(
     </TouchableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  iconButton: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
