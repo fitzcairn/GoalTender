@@ -33,6 +33,7 @@ import StatsScreen from './app/screens/StatsScreen.js';
 
 // Components
 import IconButton from './app/components/IconButton.js';
+import LoadingSpinner from './app/components/LoadingSpinner.js';
 
 // Services
 import FTUXService from './app/services/FTUXService.js';
@@ -120,12 +121,8 @@ export default class App extends Component<Props, State> {
   render() {
     if (!this.state.dataLoaded)
       return (
-        <View style={styles.container}>
-          <Text style={styles.welcome}>
-            Loading...
-          </Text>
-        </View>
-        );
+        <LoadingSpinner modal={true} />
+      );
     if (this.state.showFTUX)
       return <GoalTenderNoFTUX />;
     return <GoalTender />;

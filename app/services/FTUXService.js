@@ -5,9 +5,9 @@
  * @flow
  */
 
- import React, { Component } from 'react';
- import { AsyncStorage } from 'react-native';
+import { AsyncStorage } from 'react-native';
 
+// TODO: Change this.
 const key = 'FTUX';
 
 export default class FTUXService {

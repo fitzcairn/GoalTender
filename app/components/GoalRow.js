@@ -5,7 +5,7 @@
  *
  * @flow
  */
-import React from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -17,37 +17,47 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 // Buttons for Yes and No
 function IconButton(
   {
-    type
+    type,
+    state
   }: {
     type: string,
+    state: string,
   }) {
   return (
     <TouchableOpacity
       style={styles.goalIcon}>
         <Icon
-          name={'computer'}
+          name={(type == 'yes' ? 'check-circle' : 'do-not-disturb')}
           size={30}
-          style={() => {type == 'yes' ? styles.goalYesIconOff : styles.goalNoIconOff}}
+          style={(type == 'yes' ?
+            (state == 'on' ? styles.goalYesIconOn : styles.goalYesIconOff) :
+            (state == 'on' ? styles.goalNoIconOn : styles.goalNoIconOff))}
         />
     </TouchableOpacity>
   );
 }
 
+type Props = {
+  label: string,
+  id: string
+};
+
+type State = {
+  goalState: string
+};
+
 // Exported Goal component.
-export default function Goal(
-  {
-    label,
-  }: {
-    label: string,
-  }) {
-  return (
-    <TouchableOpacity style={styles.goalRow}>
-      <Text style={styles.goalText}>{label}</Text>
-      <IconButton type="yes"/>
-      <IconButton type="no"/>
-    </TouchableOpacity>
-  );
-}
+export default class GoalRow extends Component<Props, State> {
+  render() {
+    return (
+      <TouchableOpacity style={styles.goalRow}>
+        <Text style={styles.goalText}>{this.props.label}</Text>
+        <IconButton type="yes" state="on"/>
+        <IconButton type="no" state="on"/>
+      </TouchableOpacity>
+    );
+  }
+};
 
 const styles = StyleSheet.create({
   goalRow: {
