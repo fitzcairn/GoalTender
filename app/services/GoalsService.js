@@ -114,12 +114,52 @@ const goals = {
   userId: "SomeIDString", // Flattened from a user object elsewhere.
   goalList: [
     {
-      goalId: "12345",
+      goalId: "12",
       goalText: "It’s the ship that made the Kessel run in less than twelve parsecs. I’ve outrun Imperial starships. Not the local bulk cruisers, mind you. I’m talking about the big Corellian ships, now. She’s fast enough for you, old man",
     },
     {
-      goalId: "67890",
+      goalId: "34",
       goalText: "Traveling through hyperspace aint like dusting crops, farm boy.",
+    },
+    {
+      goalId: "56",
+      goalText: "Get in there you big furry oaf, I don’t care what you smell!"
+    },
+    {
+      goalId: "78",
+      goalText: "Luke, at that speed do you think you’ll be able to pull out in time?"
+    },
+    {
+      goalId: "90",
+      goalText: "Put that thing away before you get us all killed."
+    },
+    {
+      goalId: "09",
+      goalText: "You’ve got something jammed in here real good."
+    },
+    {
+      goalId: "87",
+      goalText: "Aren’t you a little short for a stormtrooper?"
+    },
+    {
+      goalId: "65",
+      goalText: "You came in that thing? You’re braver than I thought."
+    },
+    {
+      goalId: "43",
+      goalText: "Sorry about the mess…"
+    },
+    {
+      goalId: "21",
+      goalText: "Look at the size of that thing!"
+    },
+    {
+      goalId: "6969",
+      goalText: "Curse my metal body, I wasn’t fast enough!"
+    },
+    {
+      goalId: "420",
+      goalText: "She may not look like much, but she’s got it where it counts, kid."
     },
   ],
 }

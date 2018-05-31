@@ -10,6 +10,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
+  View,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -43,18 +44,18 @@ type Props = {
 };
 
 type State = {
-  goalState: string
+  goalState: string,
 };
 
 // Exported Goal component.
 export default class GoalRow extends Component<Props, State> {
   render() {
     return (
-      <TouchableOpacity style={styles.goalRow}>
+      <View style={styles.goalRow}>
         <Text style={styles.goalText}>{this.props.label}</Text>
         <IconButton type="yes" state="on"/>
         <IconButton type="no" state="on"/>
-      </TouchableOpacity>
+      </View>
     );
   }
 };

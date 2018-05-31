@@ -64,6 +64,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     color: 'gray',
   },
+  deleteButton: {
+    flex: 1,
+    backgroundColor: 'red',
+  },
+  deleteIcon: {
+    color: 'black',
+  },
 });
 
 export default styles;
