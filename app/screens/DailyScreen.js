@@ -15,6 +15,7 @@ import {
   ScrollView,
   TouchableHighlight,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 
 import {
@@ -127,6 +128,13 @@ export default class DailyScreen extends Component<Props, State> {
     return true;
   }
 
+  _closeDrawer() {
+    if (this.deleteOpen && this.swipeable) {
+      this.swipeable.recenter();
+      this.deleteOpen = false;
+    }
+  }
+
   render() {
     if (!this.state.dataLoaded)
       return (
@@ -140,19 +148,25 @@ export default class DailyScreen extends Component<Props, State> {
             <Swipeable
               leftButtons={[
                 <DeleteButton onPress={() => {
-                  if (this.deleteOpen && this.swipeable) {
-                    this.swipeable.recenter();
-                    this.deleteOpen = false;
-                  }
-                  this._handleDelete(g.getId())
+                  Alert.alert(
+                    'Are you sure?',
+                    'This will remove all saved progress for your goal.',
+                    [
+                      {text: 'Cancel', style: 'cancel', onPress: () => {
+                        this._closeDrawer();
+                      }},
+                      {text: 'Delete', onPress: () => {
+                        this._closeDrawer();
+                        this._handleDelete(g.getId())
+                      }},
+                    ],
+                    { cancelable: false }
+                  )
                 }} />
               ]}
               key={index}
               onSwipeStart={() => {
-                if (this.deleteOpen && this.swipeable) {
-                  this.swipeable.recenter();
-                  this.deleteOpen = false;
-                }
+                this._closeDrawer();
                 this.setState({isSwiping: true});
               }}
               onSwipeRelease={() => {
