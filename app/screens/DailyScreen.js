@@ -139,7 +139,13 @@ export default class DailyScreen extends Component<Props, State> {
           return (
             <Swipeable
               leftButtons={[
-                <DeleteButton onPress={() => this._handleDelete(g.getId())} />
+                <DeleteButton onPress={() => {
+                  if (this.deleteOpen && this.swipeable) {
+                    this.swipeable.recenter();
+                    this.deleteOpen = false;
+                  }
+                  this._handleDelete(g.getId())
+                }} />
               ]}
               key={index}
               onSwipeStart={() => {
