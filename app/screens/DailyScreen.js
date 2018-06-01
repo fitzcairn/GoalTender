@@ -13,6 +13,7 @@ import {
   ScrollView,
   TouchableHighlight,
   Alert,
+  StyleSheet,
 } from 'react-native';
 
 import {
@@ -23,13 +24,47 @@ import {
 import Swipeable from 'react-native-swipeable';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import styles from '../Styles.js';
+import GlobalStyles from '../Styles.js';
 
 import GoalRow from '../components/GoalRow.js';
 import LoadingSpinner from '../components/LoadingSpinner.js';
 
 import {GoalsService, Goal, GoalList, GoalStateValues} from '../services/GoalsService.js';
 import {UserService, User} from '../services/UserService.js';
+
+
+// Add goal button
+function AddButton(
+  {
+    onPress,
+  }: {
+    onPress: () => void,
+  }) {
+  return (
+    <TouchableHighlight
+      underlayColor={'transparent'}
+      style={styles.addButtonFloat}
+      onPress={() => {onPress()}}>
+      <View style={styles.addView}>
+        <Icon
+          name={'fiber-manual-record'}
+          size={70}
+          style={styles.addIconBg}
+        />
+        <Icon
+          name={'add-circle'}
+          size={70}
+          style={styles.addIconShadow}
+        />
+        <Icon
+          name={'add-circle'}
+          size={70}
+          style={styles.addIcon}
+        />
+      </View>
+    </TouchableHighlight>
+  );
+}
 
 
 // Button for delete on swipe.
@@ -73,9 +108,9 @@ export default class DailyScreen extends Component<Props, State> {
   static navigationOptions = {
     title: 'Goal Status',
     headerTitleStyle: {
-      flex: 1,
-      textAlign: 'center',
-    },
+        flex: 1,
+        textAlign: 'center',
+      },
   };
 
   constructor(props: Object) {
@@ -145,56 +180,107 @@ export default class DailyScreen extends Component<Props, State> {
         <LoadingSpinner modal={false} />
       );
     return (
-      <ScrollView
-        scrollEnabled={!this.state.isSwiping}>
-        {this.state.goals.getGoals().map((g: Goal, index: number) => {
-          return (
-            <Swipeable
-              key={index}
-              leftButtons={[
-                <DeleteButton onPress={() => {
-                  Alert.alert(
-                    'Are you sure?',
-                    'This will remove all saved progress for your goal.',
-                    [
-                      {text: 'Cancel', style: 'cancel', onPress: () => {
-                        this._closeDrawer();
-                      }},
-                      {text: 'Delete', onPress: () => {
-                        this._closeDrawer();
-                        this._handleDelete(g.getId(), index)
-                      }},
-                    ],
-                    { cancelable: false }
-                  )
-                }} />
-              ]}
-              onSwipeStart={() => {
-                this._closeDrawer();
-                this.setState({isSwiping: true});
-              }}
-              onSwipeRelease={() => {
-                this.setState({isSwiping: false});
-              }}
-              onLeftButtonsOpenComplete={(event, gestureState, ref) => {
-                this.deleteOpen = true;
-                this.deleteOpenIndex = index;
-                this.swipeable = ref;
-              }}
-              onLeftButtonsCloseComplete={() => {
-                this.deleteOpen = false;
-              }}
-              >
-              {/* TODO: Set disabled correctly when this goalrow is open for deletion.*/}
-              <GoalRow
-                disabled={((this.deleteOpen && (this.deleteOpenIndex == index)) ? true : false)}
-                label={g.getText()}
-                id={g.getId()}
-                state={GoalStateValues.NONE} />
-            </Swipeable>
-          )
-        })}
-      </ScrollView>
+      <View style={styles.goalsView}>
+        <ScrollView
+          scrollEnabled={!this.state.isSwiping}>
+          {this.state.goals.getGoals().map((g: Goal, index: number) => {
+            return (
+              <Swipeable
+                key={index}
+                leftButtons={[
+                  <DeleteButton onPress={() => {
+                    Alert.alert(
+                      'Are you sure?',
+                      'This will remove all saved progress for your goal.',
+                      [
+                        {text: 'Cancel', style: 'cancel', onPress: () => {
+                          this._closeDrawer();
+                        }},
+                        {text: 'Delete', onPress: () => {
+                          this._closeDrawer();
+                          this._handleDelete(g.getId(), index)
+                        }},
+                      ],
+                      { cancelable: false }
+                    )
+                  }} />
+                ]}
+                onSwipeStart={() => {
+                  this._closeDrawer();
+                  this.setState({isSwiping: true});
+                }}
+                onSwipeRelease={() => {
+                  this.setState({isSwiping: false});
+                }}
+                onLeftButtonsOpenComplete={(event, gestureState, ref) => {
+                  this.deleteOpen = true;
+                  this.deleteOpenIndex = index;
+                  this.swipeable = ref;
+                }}
+                onLeftButtonsCloseComplete={() => {
+                  this.deleteOpen = false;
+                }}
+                >
+                {/* TODO: Set disabled correctly when this goalrow is open for deletion.*/}
+                <GoalRow
+                  disabled={((this.deleteOpen && (this.deleteOpenIndex == index)) ? true : false)}
+                  label={g.getText()}
+                  id={g.getId()}
+                  state={GoalStateValues.NONE} />
+              </Swipeable>
+            )
+          })}
+        </ScrollView>
+        <AddButton onPress={() => {}} />
+      </View>
     );
   }
 }
+
+// Styles only used on this screen.
+const styles = StyleSheet.create({
+  goalsView: {
+    backgroundColor: 'white',
+    justifyContent: 'flex-end'
+  },
+  deleteButton: {
+    backgroundColor: 'white',
+    flex: 1,
+    alignItems: 'stretch',
+    justifyContent: 'center',
+  },
+  deleteIcon: {
+    color: '#cc0000',
+    alignSelf: 'flex-end',
+    marginRight: 12,
+  },
+  addButtonFloat: {
+    position: 'absolute',
+    zIndex: 100,
+    alignSelf: 'flex-end',
+    backgroundColor: 'transparent',
+  },
+  addView: {
+    marginRight: 8,
+    marginBottom: 8,
+  },
+  addIcon: {
+    flex: 1,
+    color: '#cc0000',
+    backgroundColor: 'transparent',
+  },
+  addIconShadow: {
+    position: 'absolute',
+    flex: 1,
+    left: 1,
+    top: 1,
+    color: '#666666',
+    backgroundColor: 'transparent',
+  },
+  addIconBg: {
+    position: 'absolute',
+    flex: 1,
+    color: 'white',
+    backgroundColor: 'transparent',
+  },
+});

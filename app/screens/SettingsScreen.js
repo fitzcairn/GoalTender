@@ -30,7 +30,7 @@ import {
 // https://github.com/mmazzarolo/react-native-modal-datetime-picker
 //import DateTimePicker from 'react-native-modal-datetime-picker';
 
-import styles from '../Styles.js';
+import GlobalStyles from '../Styles.js';
 
 import SettingsButton from '../components/SettingsButton.js';
 
@@ -49,17 +49,17 @@ export default class SettingsScreen extends Component<Props> {
   render() {
     return (
       <ScrollView>
-        <View style={styles.settingsGroup}>
+        <View style={GlobalStyles.settingsGroup}>
           <SettingsButton label='Manage Identity' onPress={() => this.props.navigation.navigate('Stats')} />
           <SettingsButton label='Another Setting' onPress={() => this.props.navigation.navigate('Stats')} />
           <SettingsButton label='Oh Snap!' onPress={() => this.props.navigation.navigate('Stats')} />
         </View>
-        <View style={styles.settingsGroup}>
-          <View style={styles.settingsRow}>
-            <Text style={styles.settingsText}>Enable Reminders</Text>
+        <View style={GlobalStyles.settingsGroup}>
+          <View style={GlobalStyles.settingsRow}>
+            <Text style={GlobalStyles.settingsText}>Enable Reminders</Text>
             <Switch />
           </View>
-          <View style={styles.settingsRow}>
+          <View style={GlobalStyles.settingsRow}>
           </View>
         </View>
       </ScrollView>

@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import styles from '../Styles.js';
+import GlobalStyles from '../Styles.js';
 
 
 export default function SettingsButton(
@@ -25,9 +25,9 @@ export default function SettingsButton(
     label: string,
   }) {
   return (
-    <TouchableOpacity style={styles.settingsRow} onPress={onPress}>
-      <Text style={styles.settingsText}>{label}</Text>
-      <Icon name='chevron-right' style={styles.settingsIcon} size={30}/>
+    <TouchableOpacity style={GlobalStyles.settingsRow} onPress={onPress}>
+      <Text style={GlobalStyles.settingsText}>{label}</Text>
+      <Icon name='chevron-right' style={GlobalStyles.settingsIcon} size={30}/>
     </TouchableOpacity>
   );
 }

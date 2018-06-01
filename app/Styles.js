@@ -17,7 +17,7 @@ export const assets = {
   // TODO: add as needed.
 };
 
-const styles = StyleSheet.create({
+const GlobalStyles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -33,6 +33,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
+  },
+  headerTitle: {
+    flex: 1,
+    textAlign: 'center',
   },
   settingsGroup: {
     flex: 1,
@@ -64,17 +68,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     color: 'gray',
   },
-  deleteButton: {
-    backgroundColor: 'white',
-    flex: 1,
-    alignItems: 'stretch',
-    justifyContent: 'center',
-  },
-  deleteIcon: {
-    color: 'red',
-    alignSelf: 'flex-end',
-    marginRight: 12,
-  },
 });
 
-export default styles;
+export default GlobalStyles;

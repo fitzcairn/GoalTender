@@ -17,7 +17,7 @@ import {
   NavigationState,
 } from 'react-navigation';
 
-import styles from '../Styles.js';
+import GlobalStyles from '../Styles.js';
 import FTUXService from '../services/FTUXService.js';
 
 
@@ -36,11 +36,11 @@ export default class FTUXScreen extends Component<Props> {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
+      <View style={GlobalStyles.container}>
+        <Text style={GlobalStyles.welcome}>
           Welcome to GoalTender!
         </Text>
-        <Text style={styles.instructions}>
+        <Text style={GlobalStyles.instructions}>
           This is a tiny app to help you track simple daily goals.
         </Text>
         <Button

@@ -119,6 +119,7 @@ export default class GoalRow extends Component<Props, State> {
   }
 };
 
+// Local styles.
 const styles = StyleSheet.create({
   goalRow: {
     flex: 1,
@@ -145,14 +146,14 @@ const styles = StyleSheet.create({
   },
   goalIconOff: {
     backgroundColor: 'transparent',
-    color: 'gray',
+    color: '#cccccc',
   },
   goalYesIconOn: {
     backgroundColor: 'transparent',
-    color: 'green',
+    color: '#006600',
   },
   goalNoIconOn: {
     backgroundColor: 'transparent',
-    color: 'red',
+    color: '#cc0000',
   },
 });

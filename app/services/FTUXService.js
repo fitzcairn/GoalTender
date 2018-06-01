@@ -17,6 +17,7 @@ export default class FTUXService {
         .then(val => callback(val == "true"));
         //.then(val => callback(false));
     } catch (error) {
+      console.log(error);
       // Go ahead and show FTUX.
       callback(false);
     }
@@ -27,6 +28,7 @@ export default class FTUXService {
       AsyncStorage.setItem(key, "true");
     } catch (error) {
       // Ah well, user will see FTUX next time too.
+      console.log(error);
     }
   }
 }
