@@ -19,13 +19,16 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 function IconButton(
   {
     type,
+    disabled,
     state
   }: {
     type: string,
+    disabled: boolean,
     state: string,
   }) {
   return (
     <TouchableOpacity
+      disabled={disabled}
       style={styles.goalIcon}>
         <Icon
           name={(type == 'yes' ? 'check-circle' : 'do-not-disturb')}
@@ -40,7 +43,8 @@ function IconButton(
 
 type Props = {
   label: string,
-  id: string
+  id: string,
+  disabled: boolean
 };
 
 type State = {
@@ -53,8 +57,8 @@ export default class GoalRow extends Component<Props, State> {
     return (
       <View style={styles.goalRow}>
         <Text style={styles.goalText}>{this.props.label}</Text>
-        <IconButton type="yes" state="on"/>
-        <IconButton type="no" state="on"/>
+        <IconButton disabled={this.props.disabled} type="yes" state="on"/>
+        <IconButton disabled={this.props.disabled} type="no" state="on"/>
       </View>
     );
   }

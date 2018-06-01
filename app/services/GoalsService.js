@@ -7,10 +7,11 @@
 
  import { AsyncStorage } from 'react-native';
 
- const keyPrefix = 'goalList:';
-
 // TODO: Add off-device persistence via API.
  export class GoalsService {
+   static _makeKey(userId: string) {
+      return 'goalList:' + userId;
+   }
 
    static _makeEmptyGoalList(userId: string) {
      return new GoalList(userId);
@@ -30,14 +31,41 @@
      userId: string,
      callback: (GoalList) => void) {
      try {
-       const key = keyPrefix + userId;
-       return AsyncStorage.getItem(key)
+       return AsyncStorage.getItem(this._makeKey(userId))
          // For now, just return the fake data below.
          .then(val => callback(this._makeGoalTestList()));
          //.then(val => callback(val));
      } catch (error) {
        // Return an empty goal list.
        callback(this._makeEmptyGoalList(userId));
+     }
+   }
+
+   // Simple remove goal.
+   // Returns the updated list.
+   static async removeFromList(
+     goalId: string,
+     goals: GoalList,
+     callback: (GoalList) => void) {
+     try {
+       // Rmove the goal from the in-memory list.
+       const goalList = goals.getGoals();
+       for (let i = 0; i < goalList.length; i++) {
+          if (goalList[i].getId() == goalId) {
+            console.log("deleting goal " + goalId + " from index " + i);
+            goalList.splice(i, 1);
+          }
+       }
+
+       // Write the new list back to AsyncStorage.
+       return AsyncStorage.setItem(this._makeKey(userId), goals)
+         // For now, just return the fake data below.
+         .then(() => callback(goals));
+         //.then(val => callback(val));
+     } catch (error) {
+       // TODO: Let's handle this better.
+       // Return the edited list.
+       callback(goals);
      }
    }
  }

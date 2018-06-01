@@ -14,6 +14,7 @@ import {
   Button,
   ScrollView,
   TouchableHighlight,
+  TouchableOpacity,
 } from 'react-native';
 
 import {
@@ -34,15 +35,22 @@ import {UserService, User} from '../services/UserService.js';
 
 
 // Button for delete on swipe.
-function DeleteButton() {
+function DeleteButton(
+  {
+    onPress,
+  }: {
+    onPress: () => void,
+  }) {
   return (
     <TouchableHighlight
-      style={styles.deleteButton}>
-        <Icon
-          name={'delete'}
-          size={30}
-          style={styles.deleteIcon}
-        />
+      underlayColor={'white'}
+      style={styles.deleteButton}
+      onPress={() => {onPress()}}>
+      <Icon
+        name={'delete-forever'}
+        size={50}
+        style={styles.deleteIcon}
+      />
     </TouchableHighlight>
   );
 }
@@ -102,6 +110,23 @@ export default class DailyScreen extends Component<Props, State> {
     );
   }
 
+  _handleDelete(goalId: string) {
+    // Could this be called before we have data?
+    if (this.state.dataLoaded) {
+      GoalsService.removeFromList(
+        goalId,
+        this.state.goals,
+        (goals: GoalList) => {
+          // Success!  Set state and trigger refresh.
+          this.setState({
+            goals: goals,
+          });
+        }
+      );
+    }
+    return true;
+  }
+
   render() {
     if (!this.state.dataLoaded)
       return (
@@ -113,12 +138,14 @@ export default class DailyScreen extends Component<Props, State> {
         {this.state.goals.getGoals().map((g: Goal, index: number) => {
           return (
             <Swipeable
-              onRef={ref => this.swipeable = ref}
+              leftButtons={[
+                <DeleteButton onPress={() => this._handleDelete(g.getId())} />
+              ]}
               key={index}
-              leftButtons={[<DeleteButton />]}
               onSwipeStart={() => {
                 if (this.deleteOpen && this.swipeable) {
                   this.swipeable.recenter();
+                  this.deleteOpen = false;
                 }
                 this.setState({isSwiping: true});
               }}
@@ -133,7 +160,8 @@ export default class DailyScreen extends Component<Props, State> {
                 this.deleteOpen = false;
               }}
               >
-              <GoalRow label={g.getText()} id={g.getId()} />
+              {/* TODO: Set disabled correctly when this goalrow is open for deletion.*/}
+              <GoalRow disabled={false} label={g.getText()} id={g.getId()} />
             </Swipeable>
           )
         })}
