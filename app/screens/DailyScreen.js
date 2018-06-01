@@ -9,12 +9,9 @@
 import React, { Component } from 'react';
 
 import {
-  Text,
   View,
-  Button,
   ScrollView,
   TouchableHighlight,
-  TouchableOpacity,
   Alert,
 } from 'react-native';
 
@@ -31,7 +28,7 @@ import styles from '../Styles.js';
 import GoalRow from '../components/GoalRow.js';
 import LoadingSpinner from '../components/LoadingSpinner.js';
 
-import {GoalsService, Goal, GoalList} from '../services/GoalsService.js';
+import {GoalsService, Goal, GoalList, GoalStateValues} from '../services/GoalsService.js';
 import {UserService, User} from '../services/UserService.js';
 
 
@@ -71,6 +68,7 @@ type State = {
 export default class DailyScreen extends Component<Props, State> {
   swipeable = null;
   deleteOpen = false;
+  deleteOpenIndex = -1;
 
   static navigationOptions = {
     title: 'Goal Status',
@@ -111,19 +109,25 @@ export default class DailyScreen extends Component<Props, State> {
     );
   }
 
-  _handleDelete(goalId: string) {
+  _handleDelete(goalId: string, index: number) {
     // Could this be called before we have data?
     if (this.state.dataLoaded) {
+      console.log("about to delete goal: " + goalId + " at index: " + index);
       GoalsService.removeFromList(
         goalId,
         this.state.goals,
         (goals: GoalList) => {
           // Success!  Set state and trigger refresh.
+          console.log("goal deleted!");
+
           this.setState({
             goals: goals,
           });
-        }
-      );
+        },
+        index
+      ).catch((error) => {
+        console.log(error);
+      });
     }
     return true;
   }
@@ -146,6 +150,7 @@ export default class DailyScreen extends Component<Props, State> {
         {this.state.goals.getGoals().map((g: Goal, index: number) => {
           return (
             <Swipeable
+              key={index}
               leftButtons={[
                 <DeleteButton onPress={() => {
                   Alert.alert(
@@ -157,14 +162,13 @@ export default class DailyScreen extends Component<Props, State> {
                       }},
                       {text: 'Delete', onPress: () => {
                         this._closeDrawer();
-                        this._handleDelete(g.getId())
+                        this._handleDelete(g.getId(), index)
                       }},
                     ],
                     { cancelable: false }
                   )
                 }} />
               ]}
-              key={index}
               onSwipeStart={() => {
                 this._closeDrawer();
                 this.setState({isSwiping: true});
@@ -174,6 +178,7 @@ export default class DailyScreen extends Component<Props, State> {
               }}
               onLeftButtonsOpenComplete={(event, gestureState, ref) => {
                 this.deleteOpen = true;
+                this.deleteOpenIndex = index;
                 this.swipeable = ref;
               }}
               onLeftButtonsCloseComplete={() => {
@@ -181,7 +186,11 @@ export default class DailyScreen extends Component<Props, State> {
               }}
               >
               {/* TODO: Set disabled correctly when this goalrow is open for deletion.*/}
-              <GoalRow disabled={false} label={g.getText()} id={g.getId()} />
+              <GoalRow
+                disabled={((this.deleteOpen && (this.deleteOpenIndex == index)) ? true : false)}
+                label={g.getText()}
+                id={g.getId()}
+                state={GoalStateValues.NONE} />
             </Swipeable>
           )
         })}

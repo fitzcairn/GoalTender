@@ -14,28 +14,45 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {GoalStateValues} from '../services/GoalsService.js';
+
 
 // Buttons for Yes and No
 function IconButton(
   {
-    type,
     disabled,
-    state
+    type,
+    state,
+    onPress,
   }: {
-    type: string,
     disabled: boolean,
-    state: string,
+    type: number,
+    state: number,
+    onPress: () => void,
   }) {
+
+  let style = styles.goalIconOff;
+  switch(state) {
+    case GoalStateValues.YES:
+      if (type == GoalRow.ButtonType.YES) style = styles.goalYesIconOn;
+      break;
+    case GoalStateValues.NO:
+      if (type == GoalRow.ButtonType.NO) style = styles.goalNoIconOn;
+      break;
+    case GoalStateValues.NONE:
+    default:
+      break;
+  }
+
   return (
     <TouchableOpacity
       disabled={disabled}
-      style={styles.goalIcon}>
+      style={styles.goalIcon}
+      onPress={onPress}>
         <Icon
-          name={(type == 'yes' ? 'check-circle' : 'do-not-disturb')}
+          name={(type == GoalRow.ButtonType.YES ? 'check-circle' : 'do-not-disturb')}
           size={30}
-          style={(type == 'yes' ?
-            (state == 'on' ? styles.goalYesIconOn : styles.goalYesIconOff) :
-            (state == 'on' ? styles.goalNoIconOn : styles.goalNoIconOff))}
+          style={style}
         />
     </TouchableOpacity>
   );
@@ -44,21 +61,59 @@ function IconButton(
 type Props = {
   label: string,
   id: string,
-  disabled: boolean
+  disabled: boolean,
+  state: number,
 };
 
 type State = {
-  goalState: string,
+  goalState: number,
 };
 
 // Exported Goal component.
 export default class GoalRow extends Component<Props, State> {
+  static ButtonType = Object.freeze({
+    NO: 0,
+    YES: 1
+  })
+
+  constructor(props: Object) {
+    super(props);
+    this.state = {
+      goalState: props.state,
+    };
+  }
+
+  _saveGoalState(state: number) {
+    console.log("Goal id: " + this.props.id +
+      " transitioning from " + this.state.goalState +
+      " to: " + state);
+    this.setState({
+      goalState: state,
+    })
+  }
+
   render() {
     return (
       <View style={styles.goalRow}>
         <Text style={styles.goalText}>{this.props.label}</Text>
-        <IconButton disabled={this.props.disabled} type="yes" state="on"/>
-        <IconButton disabled={this.props.disabled} type="no" state="on"/>
+        <IconButton
+          type={GoalRow.ButtonType.YES}
+          disabled={this.props.disabled}
+          state={this.state.goalState}
+          onPress={() => {
+            this._saveGoalState(
+                GoalStateValues.YES
+              );
+          }} />
+        <IconButton
+          type={GoalRow.ButtonType.NO}
+          disabled={this.props.disabled}
+          state={this.state.goalState}
+          onPress={() => {
+            this._saveGoalState(
+                GoalStateValues.NO
+              );
+          }} />
       </View>
     );
   }
@@ -88,17 +143,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  goalYesIconOff: {
+  goalIconOff: {
     backgroundColor: 'transparent',
     color: 'gray',
   },
   goalYesIconOn: {
     backgroundColor: 'transparent',
     color: 'green',
-  },
-  goalNoIconOff: {
-    backgroundColor: 'transparent',
-    color: 'gray',
   },
   goalNoIconOn: {
     backgroundColor: 'transparent',

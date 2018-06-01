@@ -33,9 +33,12 @@
      try {
        return AsyncStorage.getItem(this._makeKey(userId))
          // For now, just return the fake data below.
-         .then(val => callback(this._makeGoalTestList()));
+         .then((val) => {
+           callback(this._makeGoalTestList());
+         });
          //.then(val => callback(val));
      } catch (error) {
+       console.log(error);
        // Return an empty goal list.
        callback(this._makeEmptyGoalList(userId));
      }
@@ -46,24 +49,31 @@
    static async removeFromList(
      goalId: string,
      goals: GoalList,
-     callback: (GoalList) => void) {
+     callback: (GoalList) => void,
+     index?: number) {
      try {
-       // Rmove the goal from the in-memory list.
+       // Remove the goal from the in-memory list.
        const goalList = goals.getGoals();
-       for (let i = 0; i < goalList.length; i++) {
-          if (goalList[i].getId() == goalId) {
-            console.log("deleting goal " + goalId + " from index " + i);
-            goalList.splice(i, 1);
-          }
+       if( typeof index !== 'undefined' ) {
+         goalList.splice(index, 1);
+       }
+       else {
+         for (let i = 0; i < goalList.length; i++) {
+           if (goalList[i].getId() == goalId) {
+             goalList.splice(i, 1);
+           }
+         }
        }
 
-       // Write the new list back to AsyncStorage.
-       return AsyncStorage.setItem(this._makeKey(userId), goals)
+       return AsyncStorage.setItem(
+         this._makeKey(goals.getUserId()), goals.toJSONString())
          // For now, just return the fake data below.
          .then(() => callback(goals));
          //.then(val => callback(val));
      } catch (error) {
        // TODO: Let's handle this better.
+       console.log("Error saving goals!");
+       console.log(error);
        // Return the edited list.
        callback(goals);
      }
@@ -73,7 +83,8 @@
 // POJsO for a list of Goals.
 export class GoalList {
   getUserId: () => string;
-  addGoal: (Goal) => Array<Goal>;
+  addGoal: (Goal) => GoalList;
+  addGoals: (Array<Goal>) => GoalList;
   getGoals: () => Array<Goal>;
   toJSON: () => Object;
 
@@ -87,19 +98,35 @@ export class GoalList {
 
     this.addGoal = function(goal: Goal) {
       _goals.push(goal);
-      return _goals;
+      return this;
+    }
+
+    this.addGoals = function(goals: Array<Goal>) {
+      // Warnging! Use this with care.
+      console.log(goals);
+      _goals = goals;
+      return this;
     }
 
     this.getGoals = function() {
       return _goals;
     }
 
-    this.toJSON = function() {
-      return {
+    this.toJSONString = function() {
+      return JSON.stringify({
         userId: _userId,
-        goalList: _goals.map(goal => { return goal.toJSON(); })
-      };
+        goalList: _goals.map(goal => { return goal.toJSONString(); })
+      });
     }
+  }
+
+  static fromJSONString(json: string) {
+    let jsonObj = JSON.parse(json);
+    let goalListObj = new GoalList(jsonObj.userId);
+    jsonObj.goalList.forEach((goalJson: string, i: number) => {
+      jsonObj.goalList[i] = Goal.fromJSONString(goalJson);
+    });
+    return goalListObj.addGoals(jsonObj.goalList);
   }
 }
 
@@ -121,15 +148,26 @@ export class Goal {
      return _text;
    }
 
-   this.toJSON = function() {
-     return {
+   this.toJSONString = function() {
+     return JSON.stringify({
        goalId: _id,
        goalText: _text,
-     };
+     });
    }
+ }
+
+ static fromJSONString(json: string) {
+   let jsonObj = JSON.parse(json);
+   return new Goal(jsonObj.goalId, jsonObj.goalText);
  }
 }
 
+// States for a Goal
+export const GoalStateValues = Object.freeze({
+  NONE: 0,
+  NO:   1,
+  YES:  2,
+});
 
 
 //
@@ -149,7 +187,7 @@ const goals = {
       goalId: "34",
       goalText: "Traveling through hyperspace aint like dusting crops, farm boy.",
     },
-    {
+    /*{
       goalId: "56",
       goalText: "Get in there you big furry oaf, I don’t care what you smell!"
     },
@@ -188,7 +226,7 @@ const goals = {
     {
       goalId: "420",
       goalText: "She may not look like much, but she’s got it where it counts, kid."
-    },
+    },*/
   ],
 }
 
