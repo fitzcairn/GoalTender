@@ -29,7 +29,8 @@ import GlobalStyles from '../Styles.js';
 import GoalRow from '../components/GoalRow.js';
 import LoadingSpinner from '../components/LoadingSpinner.js';
 
-import {GoalsService, Goal, GoalList, GoalStateValues} from '../services/GoalsService.js';
+import {GoalsService, Goal, GoalList} from '../services/GoalsService.js';
+import {GoalsStatesService, GoalStateValues} from '../services/StatesService.js';
 import {UserService, User} from '../services/UserService.js';
 
 
@@ -135,7 +136,7 @@ export default class DailyScreen extends Component<Props, State> {
       (user: User) => {
         // Great, we have a user, now kick off the goals fetch.
         // We don't set state first because there is nothing to redraw yet.
-        GoalsService.getGoalList(
+        GoalsService.getGoals(
           user.getId(),
           (goals: GoalList) => {
             // Success!  Set state and trigger refresh.
@@ -144,16 +145,25 @@ export default class DailyScreen extends Component<Props, State> {
               user: user,
               goals: goals,
             });
+
+            // TODO: Remove
+            console.log(user.toJSONString());
+            console.log(goals.toJSONString());
+
           }
-        );
+        ).catch((error) => {
+          console.log("DailyScreen -> _refreshData -> getGoals: " + error);
+        });
       }
-    );
+    ).catch((error) => {
+      console.log("DailyScreen -> _refreshData -> getUser: " + error);
+    });
   }
 
   _handleDelete(goalId: string, index: number) {
     // Could this be called before we have data?
     if (this.state.dataLoaded) {
-      GoalsService.removeFromList(
+      GoalsService.deleteGoal(
         goalId,
         this.state.goals,
         (goals: GoalList) => {

@@ -27,7 +27,7 @@ import GlobalStyles from '../Styles.js';
 
 import LoadingSpinner from '../components/LoadingSpinner.js';
 
-import {GoalsService} from '../services/GoalsService.js';
+import {GoalsService, GoalList} from '../services/GoalsService.js';
 import {UserService, User} from '../services/UserService.js';
 
 type Props = {
@@ -40,7 +40,7 @@ type State = {
   saving: boolean,
 }
 
-export default class GoalScreen extends Component<Props> {
+export default class GoalScreen extends Component<Props, State> {
 
   constructor(props: Object) {
     super(props);
@@ -60,7 +60,7 @@ export default class GoalScreen extends Component<Props> {
     UserService.getUser(
       (user: User) => {
         // Great, we have a user, now kick off the goal write.
-        GoalsService.addToList(
+        GoalsService.addGoal(
           user.getId(),
           this.state.text,
           (goals: GoalList) => {

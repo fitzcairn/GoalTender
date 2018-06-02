@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {GoalStateValues} from '../services/GoalsService.js';
+import { GoalStateValues } from '../services/StatesService.js';
 
 
 // Buttons for Yes and No

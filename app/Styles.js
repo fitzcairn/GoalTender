@@ -13,10 +13,6 @@ import {
 } from 'react-native';
 
 
-export const assets = {
-  // TODO: add as needed.
-};
-
 const GlobalStyles = StyleSheet.create({
   container: {
     flex: 1,
