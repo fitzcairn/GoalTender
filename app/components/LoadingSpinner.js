@@ -10,15 +10,19 @@ import {
   StyleSheet,
   View,
   Modal,
+  Text,
   ActivityIndicator
 } from 'react-native';
 
+import GlobalStyles from '../Styles.js';
 
 export default function LoadingSpinner (
   {
-    modal
+    modal,
+    text
   }: {
-    modal: boolean
+    modal: boolean,
+    text?: string
   }) {
 
   if (modal)
@@ -30,16 +34,16 @@ export default function LoadingSpinner (
         onRequestClose={() => {console.log('close modal')}}>
         <View style={styles.modalBackground}>
           <View style={styles.activityIndicatorWrapper}>
-            <ActivityIndicator
-              animating={true} />
+            <ActivityIndicator animating={true} />
+            <Text style={GlobalStyles.info}>{text}</Text>
           </View>
         </View>
       </Modal>
     );
   return (
-      <View style={styles.activityIndicator}>
-        <ActivityIndicator
-          animating={true} />
+    <View style={styles.activityIndicator}>
+      <ActivityIndicator animating={true} />
+      <Text style={GlobalStyles.info}>{text}</Text>
     </View>
   );
 }

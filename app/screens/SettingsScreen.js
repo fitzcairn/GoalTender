@@ -42,10 +42,6 @@ type Props = {
 
 // App Settings
 export default class SettingsScreen extends Component<Props> {
-  static navigationOptions = {
-    title: 'Settings',
-  };
-
   render() {
     return (
       <ScrollView>

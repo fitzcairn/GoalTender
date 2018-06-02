@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import {
   Text,
   View,
-  Button,
+  TouchableOpacity,
 } from 'react-native';
 import {
   NavigationScreenProp,
@@ -43,10 +43,11 @@ export default class FTUXScreen extends Component<Props> {
         <Text style={GlobalStyles.instructions}>
           This is a tiny app to help you track simple daily goals.
         </Text>
-        <Button
-          title="Get Started!"
-          onPress={() => this.saveAndNavigate()}
-        />
+        <TouchableOpacity
+          style={GlobalStyles.button}
+          onPress={() => this.saveAndNavigate()}>
+          <Text style={GlobalStyles.buttonText}>Get Started!</Text>
+        </TouchableOpacity>
       </View>
     );
   }

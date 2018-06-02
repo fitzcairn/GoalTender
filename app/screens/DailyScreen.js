@@ -95,6 +95,7 @@ type Props = {
 type State = {
   isSwiping: boolean,
   dataLoaded: boolean,
+  forceRefresh: boolean,
   user: User | null,
   goals: GoalList | null,
 };
@@ -105,18 +106,11 @@ export default class DailyScreen extends Component<Props, State> {
   deleteOpen = false;
   deleteOpenIndex = -1;
 
-  static navigationOptions = {
-    title: 'Goal Status',
-    headerTitleStyle: {
-        flex: 1,
-        textAlign: 'center',
-      },
-  };
-
   constructor(props: Object) {
     super(props);
     this.state = {
       dataLoaded: false,
+      forceRefresh: false,
       isSwiping: false,
       user: null,
       goals: null,
@@ -124,6 +118,18 @@ export default class DailyScreen extends Component<Props, State> {
   }
 
   componentDidMount() {
+    this._refreshData();
+  }
+
+  componentDidUpdate() {
+    // Did another screen send us here after changing the underlying data?
+    if (this.props.navigation.getParam('refresh', false)) {
+      this.props.navigation.state.params.refresh = false;
+      this._refreshData();
+    }
+  }
+
+  _refreshData() {
     // First get the user data, then the goals.
     UserService.getUser(
       (user: User) => {
@@ -147,14 +153,10 @@ export default class DailyScreen extends Component<Props, State> {
   _handleDelete(goalId: string, index: number) {
     // Could this be called before we have data?
     if (this.state.dataLoaded) {
-      console.log("about to delete goal: " + goalId + " at index: " + index);
       GoalsService.removeFromList(
         goalId,
         this.state.goals,
         (goals: GoalList) => {
-          // Success!  Set state and trigger refresh.
-          console.log("goal deleted!");
-
           this.setState({
             goals: goals,
           });
@@ -231,16 +233,18 @@ export default class DailyScreen extends Component<Props, State> {
             )
           })}
         </ScrollView>
-        <AddButton onPress={() => {}} />
+        <AddButton onPress={() => {
+          this.props.navigation.navigate('Goal');
+        }} />
       </View>
     );
   }
 }
 
-// Styles only used on this screen.
 const styles = StyleSheet.create({
   goalsView: {
-    backgroundColor: 'white',
+    flex: 1,
+    backgroundColor: 'transparent',
     justifyContent: 'flex-end'
   },
   deleteButton: {

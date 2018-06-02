@@ -30,6 +30,7 @@ import FTUXScreen from './app/screens/FTUXScreen.js';
 import SettingsScreen from './app/screens/SettingsScreen.js';
 import DailyScreen from './app/screens/DailyScreen.js';
 import StatsScreen from './app/screens/StatsScreen.js';
+import GoalScreen from './app/screens/GoalScreen.js';
 
 // Components
 import IconButton from './app/components/IconButton.js';
@@ -54,11 +55,26 @@ const GoalTenderStack = {
   Settings: {
     screen: SettingsScreen,
     path: 'settings',
+    navigationOptions: ({ navigation }) => ({
+      title: 'Settings',
+    }),
+  },
+  Goal: {
+    screen: GoalScreen,
+    path: 'goal',
+    navigationOptions: ({ navigation }) => ({
+      title: 'Create New Goal',
+    }),
   },
   Daily: {
     screen: DailyScreen,
     path: 'daily',
     navigationOptions: ({ navigation }) => ({
+      title: 'Goal Status',
+      headerTitleStyle: {
+          flex: 1,
+          textAlign: 'center',
+      },
       headerLeft: (
         <IconButton
           align='left'

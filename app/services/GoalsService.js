@@ -5,53 +5,99 @@
  * @flow
  */
 
- import { AsyncStorage } from 'react-native';
+import { AsyncStorage } from 'react-native';
+
 
 // TODO: Add off-device persistence via API.
- export class GoalsService {
-   static _makeKey(userId: string) {
-      return 'goalList:' + userId;
-   }
+export class GoalsService {
+  static _date = new Date();
 
-   static _makeEmptyGoalList(userId: string) {
-     return new GoalList(userId);
-   }
+  static _makeKey(userId: string) {
+    return 'goalList:' + userId;
+  }
 
-   // TODO: Remove.
-   static _makeGoalTestList() {
-     let goalList = new GoalList(goals.userId);
-     goals.goalList.forEach((g: Object) => {
-       goalList.addGoal(new Goal(g.goalId, g.goalText));
-     });
-     return goalList;
-   }
+  static _makeEmptyGoalList(userId: string) {
+    return new GoalList(userId);
+  }
 
-   // Get the list of goals for this user.
-   static async getGoalList(
-     userId: string,
-     callback: (GoalList) => void) {
-     try {
-       return AsyncStorage.getItem(this._makeKey(userId))
-         // For now, just return the fake data below.
-         .then((val) => {
-           callback(this._makeGoalTestList());
-         });
-         //.then(val => callback(val));
-     } catch (error) {
-       console.log(error);
-       // Return an empty goal list.
-       callback(this._makeEmptyGoalList(userId));
-     }
-   }
+  // TODO: Remove.
+  static _makeGoalTestList() {
+    let goalList = new GoalList(goals.userId);
+    goals.goalList.forEach((g: Object) => {
+     goalList.addGoal(new Goal(g.goalId, g.goalText));
+    });
+    return goalList;
+  }
 
-   // Simple remove goal.
-   // Returns the updated list.
-   static async removeFromList(
-     goalId: string,
-     goals: GoalList,
-     callback: (GoalList) => void,
-     index?: number) {
-     try {
+  // From https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+  // Should have good enough entropy for this little app.
+  static generateId() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
+  // Get the list of goals for this user.
+  static async getGoalList(
+    userId: string,
+    callback: (GoalList) => void) {
+      try {
+      return AsyncStorage.getItem(this._makeKey(userId))
+       // For now, just return the fake data below.
+        .then((goalString) => {
+          //callback(this._makeGoalTestList());
+          callback(GoalList.fromJSONString(goalString));
+        });
+       //.then(val => callback(val));
+      } catch (error) {
+        console.log(error);
+        // Return an empty goal list.
+        callback(this._makeEmptyGoalList(userId));
+      }
+  }
+
+  // Simple add goal, callback executed with the new Goal.
+  static addToList(
+    userId: string,
+    goalText: string,
+    callback: (Goal) => void) {
+      let goal = new Goal(userId, goalText, this._date.toISOString());
+
+      try {
+        // TODO: this is pretty gnarly, this whole service probably needs rewriting.
+        this.getGoalList(
+          userId,
+          (goals: GoalList) => {
+            // Have a list, now add and save back.
+            goals.addGoal(goal);
+            AsyncStorage.setItem(
+              this._makeKey(userId), goals.toJSONString())
+              // For now, just return the fake data below.
+              .then(() => callback(goal))
+              .catch((error) => {
+                console.log(error);
+              });
+              //.then(val => callback(val));
+          }
+        );
+      } catch (error) {
+        // TODO: Let's handle this better.
+        console.log("Error saving new goal!");
+        console.log(error);
+        // Hand back the new goal.
+        callback(goal);
+      }
+  }
+
+  // Simple remove goal.
+  // Callback executed with the updated GoalList.
+  static async removeFromList(
+    goalId: string,
+    goals: GoalList,
+    callback: (GoalList) => void,
+    index?: number) {
+      try {
        // Remove the goal from the in-memory list.
        const goalList = goals.getGoals();
        if( typeof index !== 'undefined' ) {
@@ -70,15 +116,15 @@
          // For now, just return the fake data below.
          .then(() => callback(goals));
          //.then(val => callback(val));
-     } catch (error) {
-       // TODO: Let's handle this better.
-       console.log("Error saving goals!");
-       console.log(error);
-       // Return the edited list.
-       callback(goals);
-     }
-   }
- }
+      } catch (error) {
+        // TODO: Let's handle this better.
+        console.log("Error saving goals!");
+        console.log(error);
+        // Return the edited list.
+        callback(goals);
+      }
+  }
+}
 
 // POJsO for a list of Goals.
 export class GoalList {
@@ -103,7 +149,6 @@ export class GoalList {
 
     this.addGoals = function(goals: Array<Goal>) {
       // Warnging! Use this with care.
-      console.log(goals);
       _goals = goals;
       return this;
     }
@@ -189,7 +234,7 @@ const goals = {
       goalId: "12",
       goalText: "It’s the ship that made the Kessel run in less than twelve parsecs. I’ve outrun Imperial starships. Not the local bulk cruisers, mind you. I’m talking about the big Corellian ships, now. She’s fast enough for you, old man",
       goalCreateDate: "2018-05-31T11:45:12,780210000-00:00", // ISO 8601, UTC
-    },
+    },/*
     {
       goalId: "34",
       goalText: "Traveling through hyperspace aint like dusting crops, farm boy.",
@@ -244,7 +289,7 @@ const goals = {
       goalId: "420",
       goalText: "She may not look like much, but she’s got it where it counts, kid.",
       goalCreateDate: "2018-05-31T11:45:12,780210000-00:00", // ISO 8601, UTC
-    },
+    },*/
   ],
 }
 

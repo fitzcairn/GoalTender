@@ -34,9 +34,41 @@ const GlobalStyles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
-  headerTitle: {
-    flex: 1,
+  info: {
+    fontSize: 16,
     textAlign: 'center',
+    color: '#333333',
+    margin: 10,
+  },
+  error: {
+    textAlign: 'center',
+    color: '#ff8000',
+    marginBottom: 5,
+  },
+  button: {
+    marginTop: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor:'#68a0cf',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff'
+  },
+  buttonDisabled: {
+    marginTop: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor:'#99ccff',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#99ccff'
+  },
+  buttonText: {
+    fontSize: 20,
+    color:'#fff',
+    textAlign:'center',
+    marginLeft: 30,
+    marginRight: 30,
   },
   settingsGroup: {
     flex: 1,
