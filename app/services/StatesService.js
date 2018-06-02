@@ -36,7 +36,8 @@ export class GoalStatesService {
     return stateList;
   }
 
-  // Get the state for a given goal day.
+  // Get the per-day states for a given goal.
+  // GET goals/{id}/states/
   static async getStatesFor(
     userId: string,
     goalId: string,
@@ -55,7 +56,36 @@ export class GoalStatesService {
       }
   }
 
-  // Updated
+  // GET goals/{id}/states/{today}
+  static async getStateForToday(
+    userId: string,
+    goalId: string,
+    callback: (GoalState) => void) {
+      try {
+        this.getStatesFor(
+          userId,
+          goalId,
+          (states: GoalStateList) => {
+
+          }
+        )
+        return AsyncStorage.getItem(this._makeKey(userId, goalId))
+          .then((stateString) => {
+            if (stateString == null)
+              callback(this._makeEmptyStateListFor(userId, goalId));
+            else
+              callback(GoalStateList.fromJSONString(stateString));
+          });
+      } catch (error) {
+        console.log(error);
+        callback(this._makeEmptyStateListFor(userId, goalId));
+      }
+  }
+
+  // Write an updated state.
+  // Note that because the majority use case is interacting with the daily
+  // screen, we write this twice: once into the
+  // PUT goals/{id}/states/{today}
   static addState(
     userId: string,
     goalId: string,
@@ -63,7 +93,6 @@ export class GoalStatesService {
       // TODO: This data schema won't work -- the majority use case is
       // viewing all the goals with today's state.  Re-do.
     }
-
 }
 
 // POJsO for a Goal state list.

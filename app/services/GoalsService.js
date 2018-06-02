@@ -261,7 +261,9 @@ export class GoalStateList {
 // API Examples.
 //
 
-// Represents the list of user goals.
+// GET goals/
+// Represents the list of user goals.  The lastState is included to make
+// rendering the Daily Goals screen efficient.
 const goals = {
   version: 1,
   userId: "SomeIDString", // Flattened from a user object elsewhere.
@@ -270,11 +272,19 @@ const goals = {
       goalId: "12",
       goalText: "It’s the ship that made the Kessel run in less than twelve parsecs. I’ve outrun Imperial starships. Not the local bulk cruisers, mind you. I’m talking about the big Corellian ships, now. She’s fast enough for you, old man",
       goalCreateDate: "2018-05-31", // ISO 8601, UTC, but day only.
+      lastState: {
+        date: "2018-06-02", // ISO 8601, UTC, but day only.
+        state: "NO",
+      },
     },
     {
       goalId: "34",
       goalText: "Traveling through hyperspace aint like dusting crops, farm boy.",
       goalCreateDate: "2018-05-31", // ISO 8601, UTC, but day only.
+      lastState: {
+        date: "2018-06-01", // ISO 8601, UTC, but day only.
+        state: "YES",
+      },
     },
   ],
 };
