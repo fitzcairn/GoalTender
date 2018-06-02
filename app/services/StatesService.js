@@ -27,11 +27,16 @@ export class GoalStatesService {
     return new GoalStateList(userId, goalId);
   }
 
+  static _makeEmptyState() {
+    return new GoalState(GoalStateValues.YES, nowDate());
+  }
+
   // TODO: Remove.
   static _makeStateTestList() {
-    let stateList = new GoalList(goalStateForId.userId);
+    let stateList = new GoalStateList(
+      goalStateForId.userId, goalStateForId.goalId);
     goalStateForId.stateList.forEach((g: Object) => {
-     stateList.addState(new State(g.date, g.state));
+      stateList.addState(new GoalState(g.date, g.state));
     });
     return stateList;
   }
@@ -72,13 +77,13 @@ export class GoalStatesService {
         return AsyncStorage.getItem(this._makeKey(userId, goalId))
           .then((stateString) => {
             if (stateString == null)
-              callback(this._makeEmptyStateListFor(userId, goalId));
+              callback(this._makeEmptyState());
             else
-              callback(GoalStateList.fromJSONString(stateString));
+              callback(GoalState.fromJSONString(stateString));
           });
       } catch (error) {
         console.log(error);
-        callback(this._makeEmptyStateListFor(userId, goalId));
+        callback(this._makeEmptyState());
       }
   }
 
@@ -98,10 +103,10 @@ export class GoalStatesService {
 // POJsO for a Goal state list.
 export class GoalStateList {
   getUserId: () => string;
-  getUserId: () => string;
+  getGoalId: () => string;
   addState: (GoalState) => GoalStateList;
-  addStates: (Array<GoalState>) => GoalStateList;
   getStates: () => Array<GoalState>;
+  addStates: (Array<GoalState>) => GoalStateList;
   toJSONString: () => string;
 
   constructor(userId: string, goalId: string) {
@@ -143,10 +148,10 @@ export class GoalStateList {
   static fromJSONString(json: string) {
     let jsonObj = JSON.parse(json);
     let stateListObj = new GoalStateList(jsonObj.userId, jsonObj.goalId);
-    jsonObj.goalList.forEach((goalJson: string, i: number) => {
-      jsonObj.goalList[i] = Goal.fromJSONString(goalJson);
+    jsonObj.stateList.forEach((goalJson: string, i: number) => {
+      jsonObj.stateList[i] = GoalState.fromJSONString(goalJson);
     });
-    return goalListObj.addGoals(jsonObj.goalList);
+    return stateListObj.addStates(jsonObj.goalList);
   }
 }
 
@@ -160,8 +165,8 @@ export class GoalState {
     let _state = state;
     let _date = date;
 
-    this.getId = function() {
-      return _id;
+    this.getState = function() {
+      return _state;
     };
 
     this.getDate = function() {
@@ -178,7 +183,7 @@ export class GoalState {
 
   static fromJSONString(json: string) {
     let jsonObj = JSON.parse(json);
-    return new Goal(GoalStateValues[jsonObj.state], jsonObj.date);
+    return new GoalState(GoalStateValues[jsonObj.state], jsonObj.date);
   }
 }
 
