@@ -32,12 +32,13 @@ import DailyScreen from './app/screens/DailyScreen.js';
 import StatsScreen from './app/screens/StatsScreen.js';
 import GoalScreen from './app/screens/GoalScreen.js';
 
+// Services
+import UserService from './app/services/UserService.js';
+import { User } from './app/storage/data/User.js';
+
 // Components
 import IconButton from './app/components/IconButton.js';
 import LoadingSpinner from './app/components/LoadingSpinner.js';
-
-// Services
-import FTUXService from './app/services/FTUXService.js';
 
 // Styles
 import styles from './app/Styles.js';
@@ -101,7 +102,8 @@ const GoalTenderStack = {
 // Messy, but the best way I found to get this to work.
 const GoalTender = createStackNavigator(GoalTenderStack,
 {
-  initialRouteName: 'FTUX',
+  //initialRouteName: 'FTUX',
+  initialRouteName: 'Daily',
 });
 const GoalTenderNoFTUX = createStackNavigator(GoalTenderStack,
 {
@@ -128,10 +130,15 @@ export default class App extends Component<Props, State> {
   }
 
   componentDidMount() {
-    FTUXService.hasFTUX((value: boolean) => {
-        this.setState({ dataLoaded: true, showFTUX: value});
+    UserService.getUser(
+      null, // TODO: Split out a function for local storage until user signin.
+      (user: User) => {
+        this.setState({
+          dataLoaded: true,
+          showFTUX: user.getHasSeenFTUX(),
+        });
       }
-    );
+    )
   }
 
   render() {

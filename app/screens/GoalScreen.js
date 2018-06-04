@@ -25,10 +25,17 @@ import {
 
 import GlobalStyles from '../Styles.js';
 
+// Components
 import LoadingSpinner from '../components/LoadingSpinner.js';
 
-import {GoalsService, GoalList} from '../services/GoalsService.js';
-import {UserService, User} from '../services/UserService.js';
+// Services
+import GoalService from '../services/GoalService.js';
+import UserService from '../services/UserService.js';
+
+// Data
+import { User } from '../storage/data/User.js';
+import { Goal } from '../storage/data/Goal.js';
+
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
@@ -58,12 +65,13 @@ export default class GoalScreen extends Component<Props, State> {
 
     // First get the user data, then the goals.
     UserService.getUser(
+      null, // No user ID yet, just use local.
       (user: User) => {
         // Great, we have a user, now kick off the goal write.
-        GoalsService.addGoal(
+        GoalService.addGoal(
           user.getId(),
           this.state.text,
-          (goals: GoalList) => {
+          (goal: Goal) => {
             // Success!  Navigate back to goals.
             this.props.navigation.navigate('Daily', { refresh: true });
           }

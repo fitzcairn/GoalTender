@@ -18,7 +18,9 @@ import {
 } from 'react-navigation';
 
 import GlobalStyles from '../Styles.js';
-import FTUXService from '../services/FTUXService.js';
+
+// Services
+import UserService from '../services/UserService.js';
 
 
 type Props = {
@@ -28,10 +30,12 @@ type Props = {
 // Opening Screen
 export default class FTUXScreen extends Component<Props> {
 
-  // Helper function to write FTUX state and then navigate.
-  saveAndNavigate() {
-    FTUXService.setFTUX();
-    this.props.navigation.navigate('Daily');
+  _registerUser() {
+    // TODO: Call this from a login integration.  For now, no user id.
+    UserService.updateUserFTUX(
+      null, // No user id; just use the default local one.
+      true, // User has seen FTUX.
+      () => this.props.navigation.navigate('Daily'))
   }
 
   render() {
@@ -45,7 +49,7 @@ export default class FTUXScreen extends Component<Props> {
         </Text>
         <TouchableOpacity
           style={GlobalStyles.button}
-          onPress={() => this.saveAndNavigate()}>
+          onPress={() => this._registerUser()}>
           <Text style={GlobalStyles.buttonText}>Get Started!</Text>
         </TouchableOpacity>
       </View>

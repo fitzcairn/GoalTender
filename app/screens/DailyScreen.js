@@ -1,7 +1,8 @@
 /**
- * Daily Goals screen.  This is where the majority of app interaction will take place.
- * Steve Martin
- * steve@stevezero.com
+ * Daily Goals screen.  This is where the majority of app interaction will
+ * take place.
+ *
+ * @author Steve Martin
  *
  * @flow
  */
@@ -29,9 +30,12 @@ import GlobalStyles from '../Styles.js';
 import GoalRow from '../components/GoalRow.js';
 import LoadingSpinner from '../components/LoadingSpinner.js';
 
-import {GoalsService, Goal, GoalList} from '../services/GoalsService.js';
-import {GoalsStatesService, GoalStateValues} from '../services/StatesService.js';
-import {UserService, User} from '../services/UserService.js';
+import GoalService from '../services/GoalService.js';
+import UserService from '../services/UserService.js';
+
+import { User } from '../storage/data/User.js'
+import { Goal, GoalList } from '../storage/data/Goal.js'
+import { StateValues } from '../storage/data/State.js'
 
 
 // Add goal button
@@ -133,10 +137,11 @@ export default class DailyScreen extends Component<Props, State> {
   _refreshData() {
     // First get the user data, then the goals.
     UserService.getUser(
+      null, // No userID until we integrate login.
       (user: User) => {
         // Great, we have a user, now kick off the goals fetch.
         // We don't set state first because there is nothing to redraw yet.
-        GoalsService.getGoals(
+        GoalService.getGoalsWithTodayStates(
           user.getId(),
           (goals: GoalList) => {
             // Success!  Set state and trigger refresh.
@@ -145,11 +150,6 @@ export default class DailyScreen extends Component<Props, State> {
               user: user,
               goals: goals,
             });
-
-            // TODO: Remove
-            console.log(user.toJSONString());
-            console.log(goals.toJSONString());
-
           }
         ).catch((error) => {
           console.log("DailyScreen -> _refreshData -> getGoals: " + error);
@@ -160,18 +160,17 @@ export default class DailyScreen extends Component<Props, State> {
     });
   }
 
-  _handleDelete(goalId: string, index: number) {
+  _handleDelete(goalId: string) {
     // Could this be called before we have data?
     if (this.state.dataLoaded) {
-      GoalsService.deleteGoal(
+      GoalService.deleteGoal(
         goalId,
         this.state.goals,
         (goals: GoalList) => {
           this.setState({
             goals: goals,
           });
-        },
-        index
+        }
       ).catch((error) => {
         console.log(error);
       });
@@ -210,7 +209,7 @@ export default class DailyScreen extends Component<Props, State> {
                         }},
                         {text: 'Delete', onPress: () => {
                           this._closeDrawer();
-                          this._handleDelete(g.getId(), index)
+                          this._handleDelete(g.getId());
                         }},
                       ],
                       { cancelable: false }
@@ -237,8 +236,9 @@ export default class DailyScreen extends Component<Props, State> {
                 <GoalRow
                   disabled={((this.deleteOpen && (this.deleteOpenIndex == index)) ? true : false)}
                   label={g.getText()}
-                  id={g.getId()}
-                  state={GoalStateValues.NONE} />
+                  goalId={g.getId()}
+                  userId={this.state.user.getId()}
+                  state={g.getStateValue()} />
               </Swipeable>
             )
           })}

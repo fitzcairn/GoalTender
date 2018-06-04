@@ -14,7 +14,10 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { GoalStateValues } from '../services/StatesService.js';
+
+import GoalService from '../services/GoalService.js';
+
+import { StateValues } from '../storage/data/State.js'
 
 
 // Buttons for Yes and No
@@ -33,13 +36,13 @@ function IconButton(
 
   let style = styles.goalIconOff;
   switch(state) {
-    case GoalStateValues.YES:
+    case StateValues.YES:
       if (type == GoalRow.ButtonType.YES) style = styles.goalYesIconOn;
       break;
-    case GoalStateValues.NO:
+    case StateValues.NO:
       if (type == GoalRow.ButtonType.NO) style = styles.goalNoIconOn;
       break;
-    case GoalStateValues.NONE:
+    case StateValues.NONE:
     default:
       break;
   }
@@ -60,7 +63,8 @@ function IconButton(
 
 type Props = {
   label: string,
-  id: string,
+  goalId: string,
+  userId: string,
   disabled: boolean,
   state: number,
 };
@@ -84,12 +88,15 @@ export default class GoalRow extends Component<Props, State> {
   }
 
   _saveGoalState(state: number) {
-    console.log("Goal id: " + this.props.id +
-      " transitioning from " + this.state.goalState +
-      " to: " + state);
-    this.setState({
-      goalState: state,
-    })
+    GoalService.setGoalState(
+      this.props.userId,
+      this.props.goalId,
+      state,
+      () => {
+        this.setState({
+          goalState: state,
+        });
+      });
   }
 
   render() {
@@ -102,7 +109,7 @@ export default class GoalRow extends Component<Props, State> {
           state={this.state.goalState}
           onPress={() => {
             this._saveGoalState(
-                GoalStateValues.YES
+                StateValues.YES
               );
           }} />
         <IconButton
@@ -111,7 +118,7 @@ export default class GoalRow extends Component<Props, State> {
           state={this.state.goalState}
           onPress={() => {
             this._saveGoalState(
-                GoalStateValues.NO
+                StateValues.NO
               );
           }} />
       </View>

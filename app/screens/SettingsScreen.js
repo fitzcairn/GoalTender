@@ -35,7 +35,6 @@ import GlobalStyles from '../Styles.js';
 import SettingsButton from '../components/SettingsButton.js';
 
 
-// TODO: understand "type Props"??
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
 };
@@ -46,9 +45,15 @@ export default class SettingsScreen extends Component<Props> {
     return (
       <ScrollView>
         <View style={GlobalStyles.settingsGroup}>
-          <SettingsButton label='Manage Identity' onPress={() => this.props.navigation.navigate('Stats')} />
-          <SettingsButton label='Another Setting' onPress={() => this.props.navigation.navigate('Stats')} />
-          <SettingsButton label='Oh Snap!' onPress={() => this.props.navigation.navigate('Stats')} />
+          <SettingsButton
+            label='Manage Identity'
+            onPress={() => this.props.navigation.navigate('Stats')} />
+          <SettingsButton
+            label='Another Setting'
+            onPress={() => this.props.navigation.navigate('Stats')} />
+          <SettingsButton
+            label='Oh Snap!'
+            onPress={() => this.props.navigation.navigate('Stats')} />
         </View>
         <View style={GlobalStyles.settingsGroup}>
           <View style={GlobalStyles.settingsRow}>
