@@ -25,8 +25,8 @@ export default class UserStorage {
     return 'user:' + this._getUserId(userId);
   }
 
-  static _makeUser(userId: string, hasSeenFTUX?: string) {
-    return new User(userId, nowDateTime(), hasSeenFTUX);
+  static _makeUser(userId: string) {
+    return new User(userId, nowDateTime(), false);
   }
 
   /* Get a user object.
@@ -73,7 +73,8 @@ export default class UserStorage {
     userId: string | null,
     callback: (User) => void,
     hasSeenFTUX?: boolean) {
-      const newUser = this._makeUser(this._getUserId(userId));
+      const newUser = this._makeUser(this._getUserId(userId))
+        .setHasSeenFTUX(hasSeenFTUX);
       try {
         if (userId == null) { // New user case.
           return AsyncStorage.setItem(

@@ -17,11 +17,10 @@ export class User {
   setHasSeenFTUX: (hasSeenFTUX?: boolean) => User;
   toJSONString: () => string;
 
-  constructor(id: string, lastUpdateDateTime: string, hasSeenFTUX?: string) {
+  constructor(id: string, lastUpdateDateTime: string, hasSeenFTUX: boolean) {
     let _id = id;
     let _lastUpdateDateTime = lastUpdateDateTime;
-    let _hasSeenFTUX = (
-      typeof hasSeenFTUX != 'undefined'? (hasSeenFTUX == 'true') : false);
+    let _hasSeenFTUX = hasSeenFTUX;
 
     Boolean(hasSeenFTUX).valueOf();
 

@@ -1,6 +1,7 @@
 /**
  * Screen for creating a new goal.
- * steve@stevezero.com
+ *
+ * @author Steve Martin
  *
  * @flow
  */
@@ -18,7 +19,6 @@ import {
 } from 'react-native';
 
 import {
-  createStackNavigator,
   NavigationScreenProp,
   NavigationState,
 } from 'react-navigation';

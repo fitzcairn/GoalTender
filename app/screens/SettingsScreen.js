@@ -21,7 +21,6 @@ import {
 } from 'react-native';
 
 import {
-  createStackNavigator,
   NavigationScreenProp,
   NavigationState,
 } from 'react-navigation';
