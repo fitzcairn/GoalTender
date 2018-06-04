@@ -53,14 +53,15 @@ export default class SettingsScreen extends Component<Props> {
             onPress={() => this.props.navigation.navigate('Stats')} />
           <SettingsButton
             label='Oh Snap!'
+            isLast={true}
             onPress={() => this.props.navigation.navigate('Stats')} />
         </View>
         <View style={GlobalStyles.settingsGroup}>
           <View style={GlobalStyles.settingsRow}>
-            <Text style={GlobalStyles.settingsText}>Enable Reminders</Text>
-            <Switch />
-          </View>
-          <View style={GlobalStyles.settingsRow}>
+            <View style={GlobalStyles.settingsRowViewLast}>
+              <Text style={GlobalStyles.settingsText}>Enable Reminders</Text>
+              <Switch />
+            </View>
           </View>
         </View>
       </ScrollView>
