@@ -8,6 +8,12 @@
 
 
 const _now = new Date();
+const _options = {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+};
 
 // From https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
 // Should have good enough entropy for this little app.
@@ -33,4 +39,9 @@ export function nowDateTime() {
 // Get a ISO 8601 datetime in UTC, but date only.
 export function nowDate() {
   return _now.toISOString().split('T')[0];
+}
+
+// Get a (TODO: localized) date string.
+export function nowDateDisplay() {
+  return _now.toLocaleDateString('en-US', _options);
 }
