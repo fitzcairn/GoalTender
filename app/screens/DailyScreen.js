@@ -167,9 +167,7 @@ export default class DailyScreen extends Component<Props, State> {
         goalId,
         this.state.goals,
         (goals: GoalList) => {
-          this.setState({
-            goals: goals,
-          });
+          this.setState({ goals: goals });
         }
       ).catch((error) => {
         console.log(error);

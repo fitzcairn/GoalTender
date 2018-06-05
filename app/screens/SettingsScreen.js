@@ -46,14 +46,14 @@ export default class SettingsScreen extends Component<Props> {
         <View style={GlobalStyles.settingsGroup}>
           <SettingsButton
             label='Manage Identity'
-            onPress={() => this.props.navigation.navigate('Stats')} />
+            onPress={() => alert("TBD")} />
           <SettingsButton
             label='Another Setting'
-            onPress={() => this.props.navigation.navigate('Stats')} />
+            onPress={() => alert("TBD")} />
           <SettingsButton
             label='Oh Snap!'
             isLast={true}
-            onPress={() => this.props.navigation.navigate('Stats')} />
+            onPress={() => alert("TBD")} />
         </View>
         <View style={GlobalStyles.settingsGroup}>
           <View style={GlobalStyles.settingsRow}>

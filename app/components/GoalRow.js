@@ -87,6 +87,14 @@ export default class GoalRow extends Component<Props, State> {
     };
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.state !== prevProps.state) {
+      this.setState({
+        goalState: this.props.state,
+      });
+    }
+  }
+
   _saveGoalState(state: number) {
     GoalService.setGoalState(
       this.props.userId,
@@ -135,15 +143,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'stretch',
     backgroundColor: 'white',
-    marginBottom: 1,
   },
   goalText: {
     flex: 1,
     color: 'black',
-    marginLeft: 14,
+    marginLeft: 15,
     marginRight: 8,
-    marginTop: 8,
-    marginBottom: 8,
+    marginTop: 15,
+    marginBottom: 15,
   },
   goalIcon: {
     backgroundColor: 'transparent',
