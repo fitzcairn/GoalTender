@@ -7,6 +7,13 @@
  * @flow
  */
 
+
+
+// TODO: remove from prod.
+import './ReactotronConfig.js';
+
+
+
 import React, { Component } from 'react';
 
 import {
@@ -31,6 +38,7 @@ import SettingsScreen from './app/screens/SettingsScreen.js';
 import DailyScreen from './app/screens/DailyScreen.js';
 import StatsScreen from './app/screens/StatsScreen.js';
 import GoalScreen from './app/screens/GoalScreen.js';
+import TestDataScreen from './app/screens/TestDataScreen.js';
 
 // Services
 import UserService from './app/services/UserService.js';
@@ -100,7 +108,10 @@ const GoalTenderStack = {
     navigationOptions: ({ navigation }) => ({
       title: 'Goal Progress',
     }),
-  }
+  },
+  Test: {
+    screen: TestDataScreen,
+  },
 };
 
 // Two versions of the app navigation: with and without FTUX.
@@ -111,8 +122,8 @@ const GoalTender = createStackNavigator(GoalTenderStack,
 });
 const GoalTenderNoFTUX = createStackNavigator(GoalTenderStack,
 {
-  //initialRouteName: 'Daily',
-  initialRouteName: 'Stats',
+  //initialRouteName: 'Test',
+  initialRouteName: 'Daily',
 });
 
 type Props = {

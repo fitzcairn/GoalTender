@@ -134,23 +134,3 @@ export class GoalList {
     return goalListObj.addGoals(jsonObj.goalList);
   }
 }
-
-//
-// Test Data
-//
-const _testGoals = {
-  version: 1,
-  userId: "SomeIDString", // Flattened from a user object elsewhere.
-  goalList: [
-    {
-      goalId: "12",
-      goalText: "It’s the ship that made the Kessel run in less than twelve parsecs. I’ve outrun Imperial starships. Not the local bulk cruisers, mind you. I’m talking about the big Corellian ships, now. She’s fast enough for you, old man",
-      goalCreateDate: "2018-05-31", // ISO 8601, UTC, but day only.
-    },
-    {
-      goalId: "34",
-      goalText: "Traveling through hyperspace aint like dusting crops, farm boy.",
-      goalCreateDate: "2018-05-31", // ISO 8601, UTC, but day only.
-    },
-  ],
-};

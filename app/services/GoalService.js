@@ -12,12 +12,13 @@ import GoalStorage from '../storage/GoalStorage.js';
 import StateStorage from '../storage/StateStorage.js';
 
 import { Goal, GoalList } from '../storage/data/Goal.js';
-import { State, StateList } from '../storage/data/State.js';
+import { State } from '../storage/data/State.js';
+
+import { nowDate } from '../Dates.js';
 
 
 // TODO: Add off-device persistence via API.
 export default class GoalService {
-
   // Get the list of goals for this user, along with today's states.
   static async getGoalsWithTodayStates(
     userId: string,
@@ -28,9 +29,10 @@ export default class GoalService {
         3. Combine and return.
       */
       return GoalStorage.getGoals(userId, (goalList: GoalList) => {
-        StateStorage.getStatesForToday(
+        StateStorage.getStates(
           userId,
           goalList.getGoals().map((goal: Goal) => goal.getId()),
+          nowDate(),
           (states: Array<State>) => callback(goalList.addStates(states))
         ).catch((error) => {
           console.log(error)
@@ -39,13 +41,14 @@ export default class GoalService {
       });
   }
 
-  // Save a new state for a goal.
+  // Save a new state for a goal for today
   static setGoalState(
     userId: string,
     goalId: string,
     goalState: number,
     callback: (?State) => void) {
-      return StateStorage.setState(userId, goalId, goalState, callback);
+      return StateStorage.setState(
+        userId, goalId, goalState, nowDate(), callback);
   }
 
   // Simple add goal, callback executed with the new Goal.

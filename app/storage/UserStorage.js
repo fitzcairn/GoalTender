@@ -8,7 +8,7 @@
 
 import { AsyncStorage } from 'react-native';
 
-import { nowDateTime } from '../Util.js';
+import { nowDateTime } from '../Dates.js';
 import { User } from './data/User.js';
 
 

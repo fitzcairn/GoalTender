@@ -6,7 +6,7 @@
  * @flow
  */
 
-import { nowDateTime } from '../../Util.js';
+import { nowDateTime } from '../../Dates.js';
 
 // POJsO for a user.
 export class User {

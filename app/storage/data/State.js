@@ -52,19 +52,21 @@
    }
  }
 
-// POJsO for a Goal state list.
-export class StateList {
+// POJsO for a list of dates we have state for a goal.
+export class StateDatesList {
   getUserId: () => string;
   getGoalId: () => string;
-  addState: (State) => StateList;
-  addStates: (Array<State>) => StateList;
-  getStates: () => Array<State>;
+  addDate: (string) => StateDatesList;
+  getDates: () => Array<string>;
   toJSONString: () => string;
 
-  constructor(userId: string, goalId: string) {
+  constructor(userId: string, goalId: string, dates?: Array<string>) {
     let _userId = userId;
     let _goalId = goalId;
-    let _states = [];
+    const _dateMap:Map<string, boolean> = new Map();
+    if (typeof dates != 'undefined') dates.forEach((date: string) => {
+      _dateMap.set(date, true);
+    });
 
     this.getUserId = function() {
       return _userId;
@@ -74,36 +76,27 @@ export class StateList {
       return _goalId;
     };
 
-    this.addState = function(state: State) {
-      _states.push(state);
+    this.addDate = function(date: string) {
+      _dateMap.set(date, true);
       return this;
     }
 
-    this.addStates = function(states: Array<Object>) {
-      this._states = states;
-      return this;
-    }
-
-    this.getStates = function() {
-      return _states;
+    this.getDates = function() {
+      return Array.from(_dateMap.keys());
     }
 
     this.toJSONString = function() {
       return JSON.stringify({
         userId: _userId,
         goalId: _goalId,
-        stateList: _states.map(state => { return state.toJSONString(); })
+        dateList: this.getDates(),
       });
     }
   }
 
   static fromJSONString(json: string) {
     let jsonObj = JSON.parse(json);
-    let stateListObj = new StateList(jsonObj.userId, jsonObj.goalId);
-    jsonObj.stateList.forEach((stateJson: string, i: number) => {
-      jsonObj.stateList[i] = State.fromJSONString(stateJson);
-    });
-    return stateListObj.addStates(jsonObj.goalList);
+    return new StateDatesList(jsonObj.userId, jsonObj.goalId, jsonObj.dateList);
   }
 }
 
