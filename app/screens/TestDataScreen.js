@@ -108,7 +108,6 @@ export default class TestDataScreen extends Component<Props> {
   }
 
   render() {
-    console.log(_goalMap);
     return (
       <View>
         <Button title='Clear Data' onPress={() => this._clear()}/>

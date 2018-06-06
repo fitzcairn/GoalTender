@@ -58,29 +58,7 @@ export default class StatsScreen extends Component<Props> {
   }
 
   _refreshData() {
-    // First get the user data, then the goals.
-    UserService.getUser(
-      null, // No userID until we integrate login.
-      (user: User) => {
-        // Great, we have a user, now kick off the goals fetch.
-        // We don't set state first because there is nothing to redraw yet.
-        GoalService.getGoalsWithTodayStates(
-          user.getId(),
-          (goals: GoalList) => {
-            // Success!  Set state and trigger refresh.
-            this.setState({
-              dataLoaded: true,
-              user: user,
-              goals: goals,
-            });
-          }
-        ).catch((error) => {
-          console.log("DailyScreen -> _refreshData -> getGoals: " + error);
-        });
-      }
-    ).catch((error) => {
-      console.log("DailyScreen -> _refreshData -> getUser: " + error);
-    });
+
   }
 
   _renderWeekDays(): Array<Object> {
