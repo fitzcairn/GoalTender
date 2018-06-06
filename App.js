@@ -7,13 +7,6 @@
  * @flow
  */
 
-
-
-// TODO: remove from prod.
-import './ReactotronConfig.js';
-
-
-
 import React, { Component } from 'react';
 
 import {
@@ -31,6 +24,8 @@ import {
   NavigationScreenProp,
   NavigationState,
 } from 'react-navigation';
+
+import './ReactotronConfig.js';
 
 // Screens
 import FTUXScreen from './app/screens/FTUXScreen.js';
@@ -109,7 +104,7 @@ const GoalTenderStack = {
       title: 'Goal Progress',
     }),
   },
-  Test: {
+  _Test: {
     screen: TestDataScreen,
   },
 };
@@ -122,7 +117,7 @@ const GoalTender = createStackNavigator(GoalTenderStack,
 });
 const GoalTenderNoFTUX = createStackNavigator(GoalTenderStack,
 {
-  //initialRouteName: 'Test',
+  //initialRouteName: '_Test',
   initialRouteName: 'Daily',
 });
 
