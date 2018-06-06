@@ -13,7 +13,7 @@
  export class Goal {
    getId: () => string;
    getText: () => string;
-   getState: () => number;
+   getStateValue: () => number;
    getCreateDate: () => string;
    setState: (State) => Goal;
    toJSONString: () => string;

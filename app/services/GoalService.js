@@ -8,8 +8,6 @@
 
 import { AsyncStorage } from 'react-native';
 
-import { generateId, parseISODateString, nowDate } from '../Util.js';
-
 import GoalStorage from '../storage/GoalStorage.js';
 import StateStorage from '../storage/StateStorage.js';
 

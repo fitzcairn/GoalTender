@@ -37,11 +37,11 @@ import UserService from './app/services/UserService.js';
 import { User } from './app/storage/data/User.js';
 
 // Components
+import CustomHeaderTitle from './app/components/CustomHeaderTitle.js';
 import IconButton from './app/components/IconButton.js';
 import LoadingSpinner from './app/components/LoadingSpinner.js';
 
-// Styles
-import styles from './app/Styles.js';
+import { nowDateDisplay } from './app/Dates.js';
 
 
 // Set up Goaltender's screens.
@@ -71,10 +71,12 @@ const GoalTenderStack = {
     screen: DailyScreen,
     path: 'daily',
     navigationOptions: ({ navigation }) => ({
-      title: 'Goal Status',
+      headerTitle: <CustomHeaderTitle
+                     title={"Today's Goals"}
+                     subtitle={nowDateDisplay()} />,
       headerTitleStyle: {
-          flex: 1,
-          textAlign: 'center',
+        flex: 1,
+        textAlign: 'center',
       },
       headerLeft: (
         <IconButton
@@ -95,6 +97,9 @@ const GoalTenderStack = {
   Stats: {
     screen: StatsScreen,
     path: 'stats',
+    navigationOptions: ({ navigation }) => ({
+      title: 'Goal Progress',
+    }),
   }
 };
 
@@ -102,12 +107,12 @@ const GoalTenderStack = {
 // Messy, but the best way I found to get this to work.
 const GoalTender = createStackNavigator(GoalTenderStack,
 {
-  //initialRouteName: 'FTUX',
-  initialRouteName: 'Daily',
+  initialRouteName: 'FTUX',
 });
 const GoalTenderNoFTUX = createStackNavigator(GoalTenderStack,
 {
-  initialRouteName: 'Daily',
+  //initialRouteName: 'Daily',
+  initialRouteName: 'Stats',
 });
 
 type Props = {

@@ -48,10 +48,7 @@ export default class SettingsScreen extends Component<Props> {
             label='Manage Identity'
             onPress={() => alert("TBD")} />
           <SettingsButton
-            label='Another Setting'
-            onPress={() => alert("TBD")} />
-          <SettingsButton
-            label='Oh Snap!'
+            label='Export Data'
             isLast={true}
             onPress={() => alert("TBD")} />
         </View>

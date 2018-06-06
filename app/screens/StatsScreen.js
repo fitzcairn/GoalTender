@@ -15,6 +15,7 @@ import {
   Text,
   View,
   ScrollView,
+  Button,
 } from 'react-native';
 
 import {
@@ -27,9 +28,11 @@ import LoadingSpinner from '../components/LoadingSpinner.js';
 import GoalService from '../services/GoalService.js';
 import UserService from '../services/UserService.js';
 
-import { User } from '../storage/data/User.js'
-import { Goal, GoalList } from '../storage/data/Goal.js'
-import { StateValues } from '../storage/data/State.js'
+import { User } from '../storage/data/User.js';
+import { Goal, GoalList } from '../storage/data/Goal.js';
+import { StateValues } from '../storage/data/State.js';
+
+import { nowDate, getWeekdays, getDaysBetween } from '../Dates.js';
 
 
 type Props = {
@@ -80,15 +83,62 @@ export default class StatsScreen extends Component<Props> {
     });
   }
 
+  _renderWeekDays(): Array<Object> {
+    const weekdays:Array<string> = getWeekdays();
+    const rendered:Array<Object> = weekdays.map((day: string) => {
+      return (
+          <Text key={day} style={styles.calendarWeekdaysText}>
+            {day.toUpperCase()}
+          </Text>
+      );
+    });
+    return rendered;
+  }
+
+  _renderDays(days: Array<string>): Array<Object> {
+    return days.map((day: string, index: number) => {
+      return (
+        <View key={index} style={styles.day}>
+          <Text style={styles.dayText}>{day}</Text>
+        </View>
+      );
+    });
+  }
+
+  _renderWeeks(): Array<Object> {
+    const days:Array<string> = getDaysBetween('2018-03-01', nowDate());
+    console.log(days);
+
+    // Create weeks.
+    const weeks:Array<Array<string>> = [];
+    for (let day = 0; day < days.length; day += 7)
+      weeks.push(days.slice(day, day + 7));
+
+    console.log(weeks);
+
+    return weeks.map((week: Array<string>, index: number) => {
+      return (
+          <View key={index} style={styles.week}>
+          { this._renderDays(weeks[index]) }
+          </View>
+      );
+    });
+  }
+
   render() {
     return (
       <View>
-        <View>
-          <Text style={styles.titleText}>Goal</Text>
-          <Text style={styles.subTitleText}>Date</Text>
+        <View style={styles.header}>
+          <View style={styles.headerItem}>
+              <Text style={styles.goalText}>Goal Name</Text>
+              <Text style={styles.dateText}>Goal Set X/Y/Z</Text>
+          </View>
+        </View>
+        <View style={styles.calendarWeekdays}>
+            { this._renderWeekDays() }
         </View>
         <ScrollView>
-          <Text>Whee</Text>
+          { this._renderWeeks() }
         </ScrollView>
       </View>
     );
@@ -97,54 +147,48 @@ export default class StatsScreen extends Component<Props> {
 
 // Local styles.
 const styles = StyleSheet.create({
-  titleView: {
+  week: {
+    flexDirection: 'row',
+  },
+  day: {
     flex: 1,
-    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+    paddingTop: 12,
+    paddingBottom: 12,
+    margin: 1
   },
-  titleText: {
-    fontSize: Platform.OS === 'ios' ? 17 : 20,
-    fontWeight: Platform.OS === 'ios' ? '700' : '500',
-    color: 'rgba(0, 0, 0, .9)',
-    textAlign: Platform.OS === 'ios' ? 'center' : 'left',
-    marginHorizontal: 16,
-  },
-  subTitleText: {
-    fontSize: Platform.OS === 'ios' ? 12 : 14,
-    color: 'grey'
-  },
-  goalRow: {
+  dayText: {
     flex: 1,
-    flexDirection: "row",
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'stretch',
-    backgroundColor: 'white',
-    marginBottom: 1,
+    textAlign: 'center',
+    color: '#A9A9A9',
+    fontSize: 12
+  },
+  calendarWeekdays: {
+    flexDirection: 'row',
+    backgroundColor: "red",
+  },
+  calendarWeekdaysText: {
+    flex: 1,
+    color: '#C0C0C0',
+    textAlign: 'center'
+  },
+  header: {
+    backgroundColor: '#329BCB',
+    flexDirection: 'row',
+    padding: 10
+  },
+  headerItem: {
+    flex: 1
   },
   goalText: {
-    flex: 1,
-    color: 'black',
-    marginLeft: 14,
-    marginRight: 8,
-    marginTop: 8,
-    marginBottom: 8,
+    textAlign: 'left',
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold'
   },
-  goalIcon: {
-    backgroundColor: 'transparent',
-    margin: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  goalIconOff: {
-    backgroundColor: 'transparent',
-    color: '#cccccc',
-  },
-  goalYesIconOn: {
-    backgroundColor: 'transparent',
-    color: '#006600',
-  },
-  goalNoIconOn: {
-    backgroundColor: 'transparent',
-    color: '#cc0000',
+  dateText: {
+    textAlign: 'left',
+    color: '#fff',
+    fontSize: 14,
   },
 });
