@@ -23,22 +23,43 @@ export default class GoalService {
   static async getGoalsWithTodayStates(
     userId: string,
     callback: (GoalList) => void) {
-      /*
-        1. Get the list of goals.
-        2. Get today's states for the goals.
-        3. Combine and return.
-      */
-      return GoalStorage.getGoals(userId, (goalList: GoalList) => {
-        StateStorage.getStates(
-          userId,
-          goalList.getGoals().map((goal: Goal) => goal.getId()),
-          nowDate(),
-          (states: Array<State>) => callback(goalList.addStates(states))
-        ).catch((error) => {
-          console.log(error)
-          callback(goalList);
+      // 1. Get the list of today's goals.
+      return GoalStorage.getGoals(
+        userId,
+        (goalList: GoalList) => {
+
+          // 2. Get today's states for all goals.
+          StateStorage.getStates(
+            userId,
+            goalList.getGoals().map((goal: Goal) => goal.getId()),
+            nowDate(),
+            (states: Array<State>) => {
+
+              // 3. Combine and return.
+              callback(goalList.addStates(states));
+            }
+          ).catch((error) => {
+            console.log("in getGoals Step 2: " + error);
+            callback(goalList);
         });
       });
+  }
+
+  // Get the list of goals for this user.
+  static async getGoals(
+    userId: string,
+    callback: (GoalList) => void) {
+      return GoalStorage.getGoals(
+        userId,
+        (goalList: GoalList) => callback(goalList));
+  }
+
+  // Get all historical state for a goal, in date:string -> state:State format.
+  static async getStatesFor(
+    userId: string,
+    goalId: string,
+    callback: (Map<string, State>) => void) {
+      return StateStorage.getAllStatesFor(userId, goalId, callback);
   }
 
   // Save a new state for a goal for today

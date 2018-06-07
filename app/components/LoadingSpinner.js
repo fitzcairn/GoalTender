@@ -25,6 +25,11 @@ export default function LoadingSpinner (
     text?: string
   }) {
 
+  const renderText = function() {
+    if (typeof text != 'undefined' && text.length > 0)
+      return (<Text style={GlobalStyles.info}>{text}</Text>);
+  }
+
   if (modal)
     return (
       <Modal
@@ -33,17 +38,17 @@ export default function LoadingSpinner (
         visible={true}
         onRequestClose={() => {console.log('close modal')}}>
         <View style={styles.modalBackground}>
-          <View style={styles.activityIndicatorWrapper}>
-            <ActivityIndicator animating={true} />
-            <Text style={GlobalStyles.info}>{text}</Text>
+          <View style={styles.activityIndicatorModal}>
+            <ActivityIndicator size={30} animating={true} />
+            { renderText() }
           </View>
         </View>
       </Modal>
     );
   return (
-    <View style={styles.activityIndicator}>
-      <ActivityIndicator animating={true} />
-      <Text style={GlobalStyles.info}>{text}</Text>
+    <View style={styles.activityIndicatorNonModal}>
+      <ActivityIndicator style={styles.activityIndicator} size={30} animating={true} />
+      { renderText() }
     </View>
   );
 }
@@ -56,18 +61,20 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     backgroundColor: '#00000040'
   },
-  activityIndicatorWrapper: {
+  activityIndicatorModal: {
     backgroundColor: '#FFFFFF',
-    height: 100,
-    width: 100,
     borderRadius: 10,
+    padding: 20,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-around'
   },
-  activityIndicator: {
+  activityIndicatorNonModal: {
     flex: 1,
-    alignItems: 'center',
+    flexDirection: 'column',
     justifyContent: 'center',
-  }
+    alignItems: 'center',
+  },
+  activityIndicator: {
+  },
 });

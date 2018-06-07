@@ -61,6 +61,11 @@ const GoalTenderStack = {
     path: 'settings',
     navigationOptions: ({ navigation }) => ({
       title: 'Settings',
+      headerTitleStyle: {
+        flex: 1,
+        textAlign: 'center',
+      },
+      headerRight: (<View></View>),
     }),
   },
   Goal: {
@@ -68,6 +73,11 @@ const GoalTenderStack = {
     path: 'goal',
     navigationOptions: ({ navigation }) => ({
       title: 'Create New Goal',
+      headerTitleStyle: {
+        flex: 1,
+        textAlign: 'center',
+      },
+      headerRight: (<View></View>),
     }),
   },
   Daily: {
@@ -102,6 +112,11 @@ const GoalTenderStack = {
     path: 'stats',
     navigationOptions: ({ navigation }) => ({
       title: 'Goal Progress',
+      headerTitleStyle: {
+        flex: 1,
+        textAlign: 'center',
+      },
+      headerRight: (<View></View>),
     }),
   },
   _Test: {

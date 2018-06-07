@@ -19,11 +19,11 @@ export default class StateStorage {
     return 'goalState:' + userId + ":" + goalId + ":" + day;
   }
 
-  /* Get the per-goal states for today.  Hands off a list of States to the
+  /* Get the per-goal states for a date.  Hands off a list of States to the
      callback.
 
      REST equivalent:
-       GET users/{id}/states/{today}
+       GET users/{id}/states/{date}
 
      Returns:
      {
@@ -82,9 +82,8 @@ export default class StateStorage {
   static async getAllStatesFor(
     userId: string,
     goalId: string,
-    callback: (Array<State>) => void) {
+    callback: (Map<string, State>) => void) {
       try {
-
         // 1. Fetch the dates this goal has state for.
         AsyncStorage.getItem(
           this._makeKey(userId, goalId, null))
@@ -96,23 +95,29 @@ export default class StateStorage {
               (date: string) => this._makeKey(userId, goalId, date));
             return AsyncStorage.multiGet(keys)
               .then((resultList) => {
-                if (resultList == null)
-                  callback([]);
-                else {
-                  callback(resultList.map(keyValList => {
-                    if (keyValList[1] != null)
-                      return State.fromJSONString(keyValList[1]);
-                  }));
+                const dateMap = new Map();
+                if (resultList != null) {
+                  resultList.forEach((keyValList) => {
+                    if (keyValList[1] != null) {
+                      const state:State = State.fromJSONString(keyValList[1]);
+                      dateMap.set(state.getDate(), state);
+                    }
+                  });
                 }
+                callback(dateMap);
               })
               .catch((error) => {
                 console.log("In getAllStatesFor step 2: " + error);
-                callback([]);
+                callback(new Map());
               });
+            })
+            .catch((error) => {
+              console.log("In getAllStatesFor step 1: " + error);
+              callback(new Map());
             });
       } catch (error) {
-        console.log("In getAllStatesFor step 1: " + error);
-        callback([]);
+        console.log("getAllStatesFor: " + error);
+        callback(new Map());
       }
   }
 

@@ -14,6 +14,12 @@ import {
 
 
 const GlobalStyles = StyleSheet.create({
+  noGoalsInstructions: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 300,
+    marginBottom: 40,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',

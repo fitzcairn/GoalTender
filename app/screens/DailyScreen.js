@@ -8,13 +8,15 @@
  */
 
 import React, { Component } from 'react';
+import type { Node } from 'react';
 
 import {
-  View,
-  ScrollView,
-  TouchableHighlight,
   Alert,
+  ScrollView,
   StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
 } from 'react-native';
 
 import {
@@ -183,63 +185,81 @@ export default class DailyScreen extends Component<Props, State> {
     }
   }
 
+  _renderGoalsView(goals: Array<Goal>): Node {
+    return goals.map((g: Goal, index: number) => {
+        return (
+          <Swipeable
+            key={index}
+            leftButtons={[
+              <DeleteButton onPress={() => {
+                Alert.alert(
+                  'Are you sure?',
+                  'This will remove all saved progress for your goal.',
+                  [
+                    {text: 'Cancel', style: 'cancel', onPress: () => {
+                      this._closeDrawer();
+                    }},
+                    {text: 'Delete', onPress: () => {
+                      this._closeDrawer();
+                      this._handleDelete(g.getId());
+                    }},
+                  ],
+                  { cancelable: false }
+                )
+              }} />
+            ]}
+            onSwipeStart={() => {
+              this._closeDrawer();
+              this.setState({isSwiping: true});
+            }}
+            onSwipeRelease={() => {
+              this.setState({isSwiping: false});
+            }}
+            onLeftButtonsOpenComplete={(event, gestureState, ref) => {
+              this.deleteOpen = true;
+              this.deleteOpenIndex = index;
+              this.swipeable = ref;
+            }}
+            onLeftButtonsCloseComplete={() => {
+              this.deleteOpen = false;
+            }}
+            >
+            {/* TODO: Set disabled correctly when this goalrow is open for deletion.*/}
+            <GoalRow
+              disabled={((this.deleteOpen && (this.deleteOpenIndex == index)) ? true : false)}
+              label={g.getText()}
+              goalId={g.getId()}
+              userId={this.state.user.getId()}
+              state={g.getStateValue()} />
+          </Swipeable>
+        );
+      });
+  }
+
+  _renderInstructions(goals: Array<Goal>) {
+    if (goals.length == 0) {
+      return (
+        <View style={GlobalStyles.noGoalsInstructions}>
+          <Text style={GlobalStyles.instructions}>
+            Click the red button below to start adding goals.
+          </Text>
+        </View>);
+    }
+  }
+
   render() {
     if (!this.state.dataLoaded)
       return (
         <LoadingSpinner modal={false} />
       );
+    const goals:Array<Goal> = this.state.goals.getGoals();
+
     return (
       <View style={styles.goalsView}>
+        { this._renderInstructions(goals) }
         <ScrollView
           scrollEnabled={!this.state.isSwiping}>
-          {this.state.goals.getGoals().map((g: Goal, index: number) => {
-            return (
-              <Swipeable
-                key={index}
-                leftButtons={[
-                  <DeleteButton onPress={() => {
-                    Alert.alert(
-                      'Are you sure?',
-                      'This will remove all saved progress for your goal.',
-                      [
-                        {text: 'Cancel', style: 'cancel', onPress: () => {
-                          this._closeDrawer();
-                        }},
-                        {text: 'Delete', onPress: () => {
-                          this._closeDrawer();
-                          this._handleDelete(g.getId());
-                        }},
-                      ],
-                      { cancelable: false }
-                    )
-                  }} />
-                ]}
-                onSwipeStart={() => {
-                  this._closeDrawer();
-                  this.setState({isSwiping: true});
-                }}
-                onSwipeRelease={() => {
-                  this.setState({isSwiping: false});
-                }}
-                onLeftButtonsOpenComplete={(event, gestureState, ref) => {
-                  this.deleteOpen = true;
-                  this.deleteOpenIndex = index;
-                  this.swipeable = ref;
-                }}
-                onLeftButtonsCloseComplete={() => {
-                  this.deleteOpen = false;
-                }}
-                >
-                {/* TODO: Set disabled correctly when this goalrow is open for deletion.*/}
-                <GoalRow
-                  disabled={((this.deleteOpen && (this.deleteOpenIndex == index)) ? true : false)}
-                  label={g.getText()}
-                  goalId={g.getId()}
-                  userId={this.state.user.getId()}
-                  state={g.getStateValue()} />
-              </Swipeable>
-            )
-          })}
+          { this._renderGoalsView(goals) }
         </ScrollView>
         <AddButton onPress={() => {
           this.props.navigation.navigate('Goal');

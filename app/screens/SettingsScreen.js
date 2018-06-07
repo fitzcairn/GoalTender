@@ -1,5 +1,6 @@
 /**
  * Settings screen for GoalTender.
+ *
  * @author Steve Martin
  *
  * @flow
@@ -49,6 +50,9 @@ export default class SettingsScreen extends Component<Props> {
             onPress={() => alert("TBD")} />
           <SettingsButton
             label='Export Data'
+            onPress={() => alert("TBD")} />
+          <SettingsButton
+            label='About'
             isLast={true}
             onPress={() => alert("TBD")} />
         </View>
