@@ -123,21 +123,31 @@ export default class GoalStorage {
       }
   */
   static async deleteGoal(
+    userId: string,
     goalId: string,
-    goals: GoalList,
     callback: (GoalList) => void) {
       try {
-       return AsyncStorage.setItem(
-         this._makeKey(goals.getUserId()),
-           goals.deleteGoal(goalId).toJSONString())
-         .then(() => callback(goals));
 
+        // Step 1: fetch the list of goals.
+        this.getGoals(
+          userId,
+          (goals: GoalList) => {
+
+            // Step 2: delete the goal.
+            goals.deleteGoal(goalId);
+
+            // Step 3: Save the goallist back.
+            AsyncStorage.setItem(this._makeKey(userId), goals.toJSONString())
+              .then(() => callback(goals))
+              .catch((error) => {
+                console.log("deleteGoal step 3: " + error);
+              });
+          }
+        );
       } catch (error) {
         console.log(error);
-        callback(goals);
       }
   }
-
 
   /* Mark a goal as completed.  Hands the updated goal to the
      callback.

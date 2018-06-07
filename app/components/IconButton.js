@@ -24,7 +24,7 @@ export default function IconButton(
     onPress: () => void,
     icon: string,
     align: string,
-    iconColor: ?string,
+    iconColor?: ?string,
   }) {
   return (
     <TouchableOpacity

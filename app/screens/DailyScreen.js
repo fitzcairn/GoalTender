@@ -159,14 +159,14 @@ export default class DailyScreen extends Component<Props, State> {
   }
 
   _refreshData() {
-    console.log("reloading data");
     // First get the user data, then the goals.
     UserService.getUser(
       null, // No userID until we integrate login.
       (user: User) => {
         // Great, we have a user, now kick off the goals fetch.
+        // We fetch only what we will display, which are incomplete goals.
         // We don't set state first because there is nothing to redraw yet.
-        GoalService.getGoalsWithTodayStates(
+        GoalService.getIncompleteGoalsWithTodayStates(
           user.getId(),
           (goals: GoalList) => {
             // Success!  Set state and trigger refresh.
@@ -189,8 +189,8 @@ export default class DailyScreen extends Component<Props, State> {
     // Could this be called before we have data?
     if (this.state.dataLoaded) {
       GoalService.deleteGoal(
+        this.state.user.getId(),
         goalId,
-        this.state.goals,
         (goals: GoalList) => {
           this._refreshData();
         }
@@ -208,7 +208,6 @@ export default class DailyScreen extends Component<Props, State> {
         this.state.user.getId(),
         goalId,
         (goals: GoalList) => {
-          console.log("Complete done");
           this._refreshData();
         }
       ).catch((error) => {
@@ -226,11 +225,7 @@ export default class DailyScreen extends Component<Props, State> {
   }
 
   _renderGoalsView(goals: Array<Goal>): Node {
-    console.log("re-rendering!");
-    console.log(goals.map((g: Goal) => g.getStateValue()));
-    return goals
-      .filter((g: Goal) => !g.getComplete())
-      .map((g: Goal, index: number) => {
+    return goals.map((g: Goal, index: number) => {
         return (
           <Swipeable
             leftButtonWidth={50}

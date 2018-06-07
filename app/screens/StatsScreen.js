@@ -72,7 +72,6 @@ export default class StatsScreen extends Component<Props, State> {
     // Tie the header button into
     this.props.navigation.setParams({ handleFilter: () => this._setShowComplete()} )
     this._refreshData();
-    console.log("did mount is done");
   }
 
   _setShowComplete() {
@@ -83,20 +82,33 @@ export default class StatsScreen extends Component<Props, State> {
     });
     this.setState({
       showCompleted: true,
+      dataLoaded: false,
     });
     this._refreshData();
   }
 
   _setShowAll() {
+    console.log("showing ALL data.");
     this.props.navigation.setParams({
       iconColor: '#000',
       handleFilter: () => this._setShowComplete()
     });
-    console.log(this.props.navigation);
-    console.log("showing ALL data.");
     this.setState({
       showCompleted: false,
+      dataLoaded: false,
     });
+    this._refreshData();
+  }
+
+  _refreshDataState(user: User, goals: GoalList) {
+    this.setState({
+      dataLoaded: true,
+      user: user,
+      goals: goals,
+    });
+
+    // Load state for first screen in swiper.
+    this._loadStatesFor(0);
   }
 
   _refreshData() {
@@ -105,26 +117,29 @@ export default class StatsScreen extends Component<Props, State> {
     UserService.getUser(
       null, // No userID until we integrate login.
       (user: User) => {
-        // Great, we have a user, now kick off the goals fetch.
+
         // We don't set state first because there is nothing to redraw yet.
-        GoalService.getGoals(
-          user.getId(),
-          (goals: GoalList) => {
-
-            // Success!  Set state and trigger refresh.
-            this.setState({
-              dataLoaded: true,
-              user: user,
-              goals: goals,
-            });
-
-            // Load state for first screen in swiper.
-            console.log("loading states for 0");
-            this._loadStatesFor(0);
-          }
-        ).catch((error) => {
-          console.log("StatsScreen -> _refreshData -> getGoals: " + error);
-        });
+        // If we're viewing completed goals, fetch those only.
+        if (this.state.showCompleted) {
+          GoalService.getCompletedGoals(
+            user.getId(),
+            (goals: GoalList) => {
+              this._refreshDataState(user, goals);
+            }
+          ).catch((error) => {
+            console.log("StatsScreen -> _refreshData -> getCompletedGoals: " + error);
+          });
+        // Otherwise, fetch the incomplete goals.
+        } else {
+          GoalService.getIncompleteGoals(
+            user.getId(),
+            (goals: GoalList) => {
+              this._refreshDataState(user, goals);
+            }
+          ).catch((error) => {
+            console.log("StatsScreen -> _refreshData -> getGoals: " + error);
+          });
+        }
       }
     ).catch((error) => {
       console.log("StatsScreen -> _refreshData -> getUser: " + error);
@@ -133,9 +148,7 @@ export default class StatsScreen extends Component<Props, State> {
 
   _loadStatesFor(index: number) {
     if (!this.state.dataLoaded || this.state.goals == null) return;
-    const goals:Array<Goal> = this.state.goals.getGoals()
-      .filter((g: Goal) =>
-        (this.state.showCompleted ? g.getComplete() : !g.getComplete()));
+    const goals:Array<Goal> = this.state.goals.getGoals();
 
     if (goals.length <= 0) return;
     const goal:Goal = goals[index];
@@ -148,10 +161,6 @@ export default class StatsScreen extends Component<Props, State> {
       userId,
       goal.getId(),
       (stateMap: Map<string, State>) => {
-
-        console.log("loaded statemap:");
-        console.log(Array.from(stateMap.values()));
-
         this.state.goalStates.set(goal.getId(), stateMap);
 
         // Success!  Set state and trigger refresh.
@@ -251,27 +260,18 @@ export default class StatsScreen extends Component<Props, State> {
 }
 
   _renderGoals(): Node {
-    const goals:Array<Goal> = this.state.goals.getGoals()
-      .filter((g: Goal) =>
-        (this.state.showCompleted ? g.getComplete() : !g.getComplete()));
+    const goals:Array<Goal> = this.state.goals.getGoals();
 
-    if (goals.length == 0 && !this.state.showCompleted) {
+    if (goals.length == 0)
       return (
         <View style={GlobalStyles.noGoalsInstructions}>
           <Text style={GlobalStyles.instructions}>
-            Create a daily goal to start tracking your progress!
+           { this.state.showCompleted ?
+             "You have no completed goals."
+             : "Create a daily goal to start tracking your progress!" }
           </Text>
-        </View>);
-    }
-
-    if (goals.length == 0 && this.state.showCompleted) {
-      return (
-        <View style={GlobalStyles.noGoalsInstructions}>
-          <Text style={GlobalStyles.instructions}>
-            You have no completed goals.
-          </Text>
-        </View>);
-    }
+        </View>
+      );
 
     return goals.map((goal: Goal, index: number) => {
       return (
@@ -291,6 +291,7 @@ export default class StatsScreen extends Component<Props, State> {
   }
 
   render() {
+    console.log("--> render");
     if (!this.state.dataLoaded)
       return (
         <LoadingSpinner modal={false} />

@@ -96,7 +96,6 @@ export class StateDatesList {
 
   static fromJSONString(json: string) {
     let jsonObj = JSON.parse(json);
-    console.log(jsonObj);
     return new StateDatesList(jsonObj.userId, jsonObj.goalId, jsonObj.dateList);
   }
 }
