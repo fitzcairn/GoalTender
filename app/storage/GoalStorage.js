@@ -41,6 +41,7 @@ export default class GoalStorage {
           {
             goalId: "12",
             goalText: "Text",
+            complete: false,
             goalCreateDate: "2018-05-31", // ISO 8601, UTC, but day only.
           },
         ],
@@ -72,6 +73,7 @@ export default class GoalStorage {
       {
         goalId: "12",
         goalText: "Text",
+        complete: false,
         goalCreateDate: "2018-05-31", // ISO 8601, UTC, but day only.
       }
   */
@@ -114,6 +116,7 @@ export default class GoalStorage {
           {
             goalId: "12",
             goalText: "Text",
+            complete: false,
             goalCreateDate: "2018-05-31", // ISO 8601, UTC, but day only.
           },
         ],
@@ -132,6 +135,50 @@ export default class GoalStorage {
       } catch (error) {
         console.log(error);
         callback(goals);
+      }
+  }
+
+
+  /* Mark a goal as completed.  Hands the updated goal to the
+     callback.
+
+    REST equivalent:
+      PUT users/{id}/goals/{id}/complete
+
+    Example return value:
+      {
+        goalId: "12",
+        complete: true,
+        goalText: "Text",
+        goalCreateDate: "2018-05-31", // ISO 8601, UTC, but day only.
+      }
+  */
+  static async completeGoal(
+    userId: string,
+    goalId: string,
+    callback: (GoalList) => void) {
+      try {
+
+        // Step 1: fetch the list of goals.
+        this.getGoals(
+          userId,
+          (goals: GoalList) => {
+            // Step 2: mark the goal as completed.
+            const goal:?Goal = goals.getGoal(goalId);
+            if (goal == null)
+              throw "Goal " + goalId + " not found in completeGoal step 2";
+            goal.setComplete(true);
+
+            // Step 3: Save the goallist back.
+            AsyncStorage.setItem(this._makeKey(userId), goals.toJSONString())
+              .then(() => callback(goals))
+              .catch((error) => {
+                console.log("completeGoal step 3: " + error);
+              });
+          }
+        );
+      } catch (error) {
+        console.log(error);
       }
   }
 }

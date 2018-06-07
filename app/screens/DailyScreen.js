@@ -88,12 +88,34 @@ function DeleteButton(
       onPress={() => {onPress()}}>
       <Icon
         name={'delete-forever'}
-        size={50}
+        size={40}
         style={styles.deleteIcon}
       />
     </TouchableHighlight>
   );
 }
+
+// Button for complete on swipe.
+function CompleteButton(
+  {
+    onPress,
+  }: {
+    onPress: () => void,
+  }) {
+  return (
+    <TouchableHighlight
+      underlayColor={'white'}
+      style={styles.completeButton}
+      onPress={() => {onPress()}}>
+      <Icon
+        name={'done-all'}
+        size={40}
+        style={styles.completeIcon}
+      />
+    </TouchableHighlight>
+  );
+}
+
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
@@ -110,8 +132,8 @@ type State = {
 // Daily Goals Screen
 export default class DailyScreen extends Component<Props, State> {
   swipeable = null;
-  deleteOpen = false;
-  deleteOpenIndex = -1;
+  drawerOpen = false;
+  drawerOpenIndex = -1;
 
   constructor(props: Object) {
     super(props);
@@ -137,6 +159,7 @@ export default class DailyScreen extends Component<Props, State> {
   }
 
   _refreshData() {
+    console.log("reloading data");
     // First get the user data, then the goals.
     UserService.getUser(
       null, // No userID until we integrate login.
@@ -169,7 +192,24 @@ export default class DailyScreen extends Component<Props, State> {
         goalId,
         this.state.goals,
         (goals: GoalList) => {
-          this.setState({ goals: goals });
+          this._refreshData();
+        }
+      ).catch((error) => {
+        console.log(error);
+      });
+    }
+    return true;
+  }
+
+  _handleComplete(goalId: string) {
+    // Could this be called before we have data?
+    if (this.state.dataLoaded) {
+      GoalService.completeGoal(
+        this.state.user.getId(),
+        goalId,
+        (goals: GoalList) => {
+          console.log("Complete done");
+          this._refreshData();
         }
       ).catch((error) => {
         console.log(error);
@@ -179,22 +219,27 @@ export default class DailyScreen extends Component<Props, State> {
   }
 
   _closeDrawer() {
-    if (this.deleteOpen && this.swipeable) {
+    if (this.drawerOpen && this.swipeable) {
       this.swipeable.recenter();
-      this.deleteOpen = false;
+      this.drawerOpen = false;
     }
   }
 
   _renderGoalsView(goals: Array<Goal>): Node {
-    return goals.map((g: Goal, index: number) => {
+    console.log("re-rendering!");
+    console.log(goals.map((g: Goal) => g.getStateValue()));
+    return goals
+      .filter((g: Goal) => !g.getComplete())
+      .map((g: Goal, index: number) => {
         return (
           <Swipeable
+            leftButtonWidth={50}
             key={index}
             leftButtons={[
               <DeleteButton onPress={() => {
                 Alert.alert(
-                  'Are you sure?',
-                  'This will remove all saved progress for your goal.',
+                  'Delete Goal?',
+                  'Deleting this goal will permanently remove both the goal and its history.',
                   [
                     {text: 'Cancel', style: 'cancel', onPress: () => {
                       this._closeDrawer();
@@ -206,7 +251,23 @@ export default class DailyScreen extends Component<Props, State> {
                   ],
                   { cancelable: false }
                 )
-              }} />
+              }} />,
+              <CompleteButton onPress={() => {
+                Alert.alert(
+                  'Complete Goal?',
+                  'Marking this goal as complete will permanently remove it from this list.\n\nYou\'ll still be able to view and export goal history.',
+                  [
+                    {text: 'Cancel', style: 'cancel', onPress: () => {
+                      this._closeDrawer();
+                    }},
+                    {text: 'Complete', onPress: () => {
+                      this._closeDrawer();
+                      this._handleComplete(g.getId());
+                    }},
+                  ],
+                  { cancelable: false }
+                )
+              }} />,
             ]}
             onSwipeStart={() => {
               this._closeDrawer();
@@ -216,17 +277,16 @@ export default class DailyScreen extends Component<Props, State> {
               this.setState({isSwiping: false});
             }}
             onLeftButtonsOpenComplete={(event, gestureState, ref) => {
-              this.deleteOpen = true;
-              this.deleteOpenIndex = index;
+              this.drawerOpen = true;
+              this.drawerOpenIndex = index;
               this.swipeable = ref;
             }}
             onLeftButtonsCloseComplete={() => {
-              this.deleteOpen = false;
+              this.drawerOpen = false;
             }}
             >
-            {/* TODO: Set disabled correctly when this goalrow is open for deletion.*/}
             <GoalRow
-              disabled={((this.deleteOpen && (this.deleteOpenIndex == index)) ? true : false)}
+              disabled={((this.drawerOpen && (this.drawerOpenIndex == index)) ? true : false)}
               label={g.getText()}
               goalId={g.getId()}
               userId={this.state.user.getId()}
@@ -237,18 +297,18 @@ export default class DailyScreen extends Component<Props, State> {
   }
 
   _renderInstructions(goals: Array<Goal>) {
-    if (goals.length == 0) {
+    if (goals.filter((g: Goal) => !g.getComplete()).length == 0) {
       return (
         <View style={GlobalStyles.noGoalsInstructions}>
           <Text style={GlobalStyles.instructions}>
-            Click the red button below to start adding goals.
+            Click the red button below create a new daily goal!
           </Text>
         </View>);
     }
   }
 
   render() {
-    if (!this.state.dataLoaded)
+    if (!this.state.dataLoaded || this.state.goals == null)
       return (
         <LoadingSpinner modal={false} />
       );
@@ -276,15 +336,24 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end'
   },
   deleteButton: {
-    backgroundColor: 'white',
+    backgroundColor: '#cc0000',
     flex: 1,
-    alignItems: 'stretch',
     justifyContent: 'center',
   },
   deleteIcon: {
-    color: '#cc0000',
+    color: 'white',
     alignSelf: 'flex-end',
-    marginRight: 12,
+    marginRight: 4,
+  },
+  completeButton: {
+    backgroundColor: '#006600',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  completeIcon: {
+    color: 'white',
+    alignSelf: 'flex-end',
+    marginRight: 5,
   },
   addButtonFloat: {
     position: 'absolute',

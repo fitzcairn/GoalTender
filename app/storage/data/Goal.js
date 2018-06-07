@@ -15,13 +15,18 @@
    getText: () => string;
    getStateValue: () => number;
    getCreateDate: () => string;
+   getComplete: () => boolean;
+   setComplete: (boolean) => Goal;
    setState: (State) => Goal;
    toJSONString: () => string;
 
-   constructor(id: string, text: string, date: string) {
+   constructor(
+     id: string, text: string, date: string, complete:boolean = false) {
+
      let _id = id;
      let _text = text;
      let _date = date;
+     let _complete = complete;
      let _state = null;
 
      this.getId = function() {
@@ -40,6 +45,10 @@
        return _text;
      }
 
+     this.getComplete = function() {
+       return _complete;
+     }
+
      this.getStateValue = function() {
        if (_state == null) return StateValues.NONE;
        return _state.getState();
@@ -50,19 +59,30 @@
        return this;
      }
 
+     this.setComplete = function(complete: boolean) {
+       _complete = complete;
+       return this;
+     }
+
      // Note that goal states aren't saved with goals.  The authority on
      // goal states is elsewhere/stored separately.
      this.toJSONString = function() {
        return JSON.stringify({
          goalId: _id,
          goalText: _text,
+         goalCreateDate: _date,
+         complete: _complete,
        });
      }
    }
 
    static fromJSONString(json: string) {
      let jsonObj = JSON.parse(json);
-     return new Goal(jsonObj.goalId, jsonObj.goalText, jsonObj.goalCreateDate);
+     return new Goal(
+       jsonObj.goalId,
+       jsonObj.goalText,
+       jsonObj.goalCreateDate,
+       jsonObj.complete);
    }
  }
 
@@ -73,6 +93,7 @@ export class GoalList {
   addGoals: (Array<Goal>) => GoalList;
   addStates: (Array<State>) => GoalList;
   deleteGoal: (string) => GoalList;
+  getGoal: (string) => ?Goal;
   getGoals: () => Array<Goal>;
   toJSONString: () => string;
 
@@ -109,6 +130,11 @@ export class GoalList {
     // Return a shallow copy of the goals.
     this.getGoals = function() {
       return Array.from(_goalMap.values());
+    }
+
+    // Return a reference to a given goal.
+    this.getGoal = function(goalId: string) {
+      return _goalMap.get(goalId);
     }
 
     // Return a shallow copy of the goals.

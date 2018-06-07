@@ -102,9 +102,12 @@ const GoalTenderStack = {
         <IconButton
           align='right'
           icon='assessment'
-          onPress={() => navigation.navigate('Stats')}
+          onPress={() => navigation.navigate('Stats', {
+            iconColor: '#000',
+            handleFilter: () => {}
+          })}
         />
-      )
+      ),
     }),
   },
   Stats: {
@@ -116,7 +119,14 @@ const GoalTenderStack = {
         flex: 1,
         textAlign: 'center',
       },
-      headerRight: (<View></View>),
+      headerRight: (
+        <IconButton
+          align='right'
+          icon='assignment-turned-in'
+          iconColor={navigation.state.params.iconColor}
+          onPress={() => navigation.state.params.handleFilter()}
+        />
+      ),
     }),
   },
   _Test: {

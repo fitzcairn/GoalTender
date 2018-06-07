@@ -70,7 +70,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around'
   },
   activityIndicatorNonModal: {
+    backgroundColor: 'transparent',
     flex: 1,
+    marginTop: 20,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',

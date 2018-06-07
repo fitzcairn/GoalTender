@@ -79,7 +79,7 @@ export default class StateStorage {
        ],
      }
   */
-  static async getAllStatesFor(
+  static async getStatesFor(
     userId: string,
     goalId: string,
     callback: (Map<string, State>) => void) {
@@ -88,35 +88,41 @@ export default class StateStorage {
         AsyncStorage.getItem(
           this._makeKey(userId, goalId, null))
           .then((dateListJSON: string) => {
-
-            // 2. Fetch all of the keys for those dates.
-            const dateList = StateDatesList.fromJSONString(dateListJSON);
-            const keys = dateList.getDates().map(
-              (date: string) => this._makeKey(userId, goalId, date));
-            return AsyncStorage.multiGet(keys)
-              .then((resultList) => {
-                const dateMap = new Map();
-                if (resultList != null) {
-                  resultList.forEach((keyValList) => {
-                    if (keyValList[1] != null) {
-                      const state:State = State.fromJSONString(keyValList[1]);
-                      dateMap.set(state.getDate(), state);
-                    }
-                  });
-                }
-                callback(dateMap);
-              })
-              .catch((error) => {
-                console.log("In getAllStatesFor step 2: " + error);
-                callback(new Map());
-              });
+            // If there are no dates, then no progress has been made on this
+            // goal.  This is a legit case.  Handle by invoking the callback
+            // with a new map.
+            if (dateListJSON == null)
+              callback(new Map());
+            else {
+              // 2. Fetch all of the keys for those dates.
+              const dateList = StateDatesList.fromJSONString(dateListJSON);
+              const keys = dateList.getDates().map(
+                (date: string) => this._makeKey(userId, goalId, date));
+              return AsyncStorage.multiGet(keys)
+                .then((resultList) => {
+                  const dateMap = new Map();
+                  if (resultList != null) {
+                    resultList.forEach((keyValList) => {
+                      if (keyValList[1] != null) {
+                        const state:State = State.fromJSONString(keyValList[1]);
+                        dateMap.set(state.getDate(), state);
+                      }
+                    });
+                  }
+                  callback(dateMap);
+                })
+                .catch((error) => {
+                  console.log("In getStatesFor step 2: " + error);
+                  callback(new Map());
+                });
+              }
             })
             .catch((error) => {
-              console.log("In getAllStatesFor step 1: " + error);
+              console.log("In getStatesFor step 1: " + error);
               callback(new Map());
             });
       } catch (error) {
-        console.log("getAllStatesFor: " + error);
+        console.log("getStatesFor: " + error);
         callback(new Map());
       }
   }

@@ -19,10 +19,12 @@ export default function IconButton(
     onPress,
     icon,
     align,
+    iconColor,
   }: {
     onPress: () => void,
     icon: string,
     align: string,
+    iconColor: ?string,
   }) {
   return (
     <TouchableOpacity
@@ -31,7 +33,10 @@ export default function IconButton(
         align == 'left' ? {marginLeft: 12} : {marginRight: 12}
       ]}
       onPress={onPress}>
-        <Icon name={icon} size={30} color="#000"/>
+        <Icon name={icon}
+          size={30}
+          color={(iconColor == null? "#000" : iconColor)}
+        />
     </TouchableOpacity>
   );
 }

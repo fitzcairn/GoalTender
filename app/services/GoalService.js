@@ -59,7 +59,7 @@ export default class GoalService {
     userId: string,
     goalId: string,
     callback: (Map<string, State>) => void) {
-      return StateStorage.getAllStatesFor(userId, goalId, callback);
+      return StateStorage.getStatesFor(userId, goalId, callback);
   }
 
   // Save a new state for a goal for today
@@ -70,6 +70,15 @@ export default class GoalService {
     callback: (?State) => void) {
       return StateStorage.setState(
         userId, goalId, goalState, nowDate(), callback);
+  }
+
+
+  // Mark a goal as completed.
+  static completeGoal(
+    userId: string,
+    goalId: string,
+    callback: (GoalList) => void) {
+      return GoalStorage.completeGoal(userId, goalId, callback);
   }
 
   // Simple add goal, callback executed with the new Goal.

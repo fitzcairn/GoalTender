@@ -25,6 +25,7 @@ import {
 
 import Swiper from 'react-native-swiper';
 
+import IconButton from '../components/IconButton.js';
 import LoadingSpinner from '../components/LoadingSpinner.js';
 
 import GoalService from '../services/GoalService.js';
@@ -45,6 +46,7 @@ type Props = {
 
 type State = {
   dataLoaded: boolean,
+  showCompleted: boolean,
   user: User | null,
   goalStates: Map<string, Map<string, State>>,
   goals: GoalList | null,
@@ -53,10 +55,12 @@ type State = {
 
 // Stats Screen
 export default class StatsScreen extends Component<Props, State> {
+
   constructor(props: Object) {
     super(props);
     this.state = {
       dataLoaded: false,
+      showCompleted: false,
       user: null,
       goals: null,
       goalStates: new Map(),
@@ -65,10 +69,38 @@ export default class StatsScreen extends Component<Props, State> {
   }
 
   componentDidMount() {
+    // Tie the header button into
+    this.props.navigation.setParams({ handleFilter: () => this._setShowComplete()} )
+    this._refreshData();
+    console.log("did mount is done");
+  }
+
+  _setShowComplete() {
+    console.log("showing completed data only.");
+    this.props.navigation.setParams({
+      iconColor: '#006600',
+      handleFilter: () => this._setShowAll()
+    });
+    this.setState({
+      showCompleted: true,
+    });
     this._refreshData();
   }
 
+  _setShowAll() {
+    this.props.navigation.setParams({
+      iconColor: '#000',
+      handleFilter: () => this._setShowComplete()
+    });
+    console.log(this.props.navigation);
+    console.log("showing ALL data.");
+    this.setState({
+      showCompleted: false,
+    });
+  }
+
   _refreshData() {
+    console.log("getting data");
     // First get the user data, then the goals.
     UserService.getUser(
       null, // No userID until we integrate login.
@@ -87,6 +119,7 @@ export default class StatsScreen extends Component<Props, State> {
             });
 
             // Load state for first screen in swiper.
+            console.log("loading states for 0");
             this._loadStatesFor(0);
           }
         ).catch((error) => {
@@ -99,16 +132,26 @@ export default class StatsScreen extends Component<Props, State> {
   }
 
   _loadStatesFor(index: number) {
-    if (!this.state.dataLoaded) return;
-    const goals:Array<Goal> = this.state.goals.getGoals();
+    if (!this.state.dataLoaded || this.state.goals == null) return;
+    const goals:Array<Goal> = this.state.goals.getGoals()
+      .filter((g: Goal) =>
+        (this.state.showCompleted ? g.getComplete() : !g.getComplete()));
+
     if (goals.length <= 0) return;
     const goal:Goal = goals[index];
 
+    if (this.state.user == null) return;
+    const userId:string = this.state.user.getId();
+
     // Load the state for the first goal.
     GoalService.getStatesFor(
-      this.state.user.getId(),
+      userId,
       goal.getId(),
       (stateMap: Map<string, State>) => {
+
+        console.log("loaded statemap:");
+        console.log(Array.from(stateMap.values()));
+
         this.state.goalStates.set(goal.getId(), stateMap);
 
         // Success!  Set state and trigger refresh.
@@ -135,7 +178,6 @@ export default class StatsScreen extends Component<Props, State> {
   }
 
   _renderDays(days: Array<string>, dateMap: Map<string, State>): Node {
-    console.log(dateMap);
     return days.map((day: string, index: number) => {
       return (
         <View key={index} style={
@@ -157,9 +199,7 @@ export default class StatsScreen extends Component<Props, State> {
   _renderWeeks(goal: Goal): Node {
     if (!this.state.goalStates.has(goal.getId()))
       return (
-        <View style={GlobalStyles.container}>
-          <LoadingSpinner modal={false} />
-        </View>
+        <LoadingSpinner modal={false} />
       );
 
     // Get days between the first and last date we have data.
@@ -183,28 +223,61 @@ export default class StatsScreen extends Component<Props, State> {
     });
   }
 
+  _renderGoalText(goal: Goal) {
+    if (goal.getComplete())
+      return (
+        <View style={styles.headerItem}>
+          <Text style={styles.goalCompleted}>
+            Completed!
+          </Text>
+          <Text style={styles.goalText}>
+            {goal.getText()}
+          </Text>
+          <Text style={styles.dateText}>
+            Created {dateDisplay(goal.getCreateDate())}
+          </Text>
+        </View>
+      );
+    return (
+      <View style={styles.headerItem}>
+        <Text style={styles.goalText}>
+          {goal.getText()}
+        </Text>
+        <Text style={styles.dateText}>
+          Created {dateDisplay(goal.getCreateDate())}
+        </Text>
+      </View>
+    );
+}
+
   _renderGoals(): Node {
-    const goals:Array<Goal> = this.state.goals.getGoals();
-    if (goals.length == 0) {
+    const goals:Array<Goal> = this.state.goals.getGoals()
+      .filter((g: Goal) =>
+        (this.state.showCompleted ? g.getComplete() : !g.getComplete()));
+
+    if (goals.length == 0 && !this.state.showCompleted) {
       return (
         <View style={GlobalStyles.noGoalsInstructions}>
           <Text style={GlobalStyles.instructions}>
-            Create goals to start tracking your progress here.
+            Create a daily goal to start tracking your progress!
           </Text>
         </View>);
     }
+
+    if (goals.length == 0 && this.state.showCompleted) {
+      return (
+        <View style={GlobalStyles.noGoalsInstructions}>
+          <Text style={GlobalStyles.instructions}>
+            You have no completed goals.
+          </Text>
+        </View>);
+    }
+
     return goals.map((goal: Goal, index: number) => {
       return (
         <View key={index}>
           <View style={styles.header}>
-            <View style={styles.headerItem}>
-              <Text style={styles.goalText}>
-                {goal.getText()}
-              </Text>
-              <Text style={styles.dateText}>
-                Created {dateDisplay(goal.getCreateDate())}
-              </Text>
-            </View>
+              { this._renderGoalText(goal) }
           </View>
           <View style={styles.calendarWeekdays}>
               { this._renderWeekDays() }
@@ -298,6 +371,11 @@ const styles = StyleSheet.create({
     fontSize: Platform.OS === 'ios' ? 16 : 18,
     color: 'rgba(0, 0, 0, .9)',
     marginHorizontal: 16,
+  },
+  goalCompleted: {
+    textAlign: 'center',
+    fontSize: Platform.OS === 'ios' ? 10 : 12,
+    color: '#006600'
   },
   dateText: {
     textAlign: 'center',
