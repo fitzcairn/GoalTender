@@ -46,21 +46,21 @@ export default class SettingsScreen extends Component<Props> {
       <ScrollView>
         <View style={GlobalStyles.settingsGroup}>
           <SettingsButton
-            label='Manage Identity'
-            onPress={() => alert("TBD")} />
-          <SettingsButton
             label='Export Data'
             onPress={() => alert("TBD")} />
           <SettingsButton
-            label='About'
+            label='Manage Identity (Coming Soon!)'
+            disabled={true}
             isLast={true}
             onPress={() => alert("TBD")} />
         </View>
         <View style={GlobalStyles.settingsGroup}>
           <View style={GlobalStyles.settingsRow}>
             <View style={GlobalStyles.settingsRowViewLast}>
-              <Text style={GlobalStyles.settingsText}>Enable Reminders</Text>
-              <Switch />
+              <Text style={GlobalStyles.settingsTextDisabled}>
+                Enable Reminders (Coming Soon!)
+              </Text>
+              <Switch disabled={true}/>
             </View>
           </View>
         </View>

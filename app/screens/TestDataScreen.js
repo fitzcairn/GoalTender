@@ -90,8 +90,8 @@ export default class TestDataScreen extends Component<Props> {
     // Month of alternating dates.
     const days = getDaysBetween('2018-05-01', '2018-05-31');
     const dates = days.map((day) => {
-      if (parseInt(day.split(' ', 2)[1]) % 3 > 0)
-        return '2018-05-' + day.split(' ', 2)[1];
+      if (parseInt(day[1].split(' ', 2)[1]) % 3 > 0)
+        return day[0];
     }).filter(date => typeof date != 'undefined');
 
     const states = dates.map((date, index) => {

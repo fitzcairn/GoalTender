@@ -22,16 +22,25 @@ export default function SettingsButton(
     onPress,
     isLast,
     label,
+    disabled,
   }: {
     onPress: () => void,
     isLast?: boolean,
     label: string,
+    disabled?: boolean,
   }) {
   const viewStyle = (isLast ? GlobalStyles.settingsRowViewLast : GlobalStyles.settingsRowView);
   return (
-    <TouchableOpacity style={GlobalStyles.settingsRow} onPress={onPress}>
+    <TouchableOpacity
+      disabled={disabled}
+      style={GlobalStyles.settingsRow}
+      onPress={ (disabled? () => {} : onPress) }>
       <View style={viewStyle}>
-        <Text style={GlobalStyles.settingsText}>{label}</Text>
+        <Text style={
+          (disabled ? GlobalStyles.settingsTextDisabled : GlobalStyles.settingsText)
+        }>
+          {label}
+        </Text>
         <Icon name='chevron-right' style={styles.settingsIcon} size={30}/>
       </View>
     </TouchableOpacity>

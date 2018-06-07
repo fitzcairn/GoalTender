@@ -114,6 +114,19 @@ const GlobalStyles = StyleSheet.create({
     flex: 1,
     color: 'black',
   },
+  settingsTextDisabled: {
+    marginTop: 10,
+    marginBottom: 10,
+    flex: 1,
+    color: 'gray',
+  },
+  settingsTextExplain: {
+    marginTop: 10,
+    marginBottom: 10,
+    flex: 1,
+    color: 'gray',
+    fontStyle: 'italic',
+  },
 });
 
 export default GlobalStyles;

@@ -7,11 +7,13 @@
  */
 
 import React, { Component } from 'react';
+
 import {
   Text,
   View,
   TouchableOpacity,
 } from 'react-native';
+
 import {
   NavigationScreenProp,
   NavigationState,
