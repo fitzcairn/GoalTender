@@ -39,7 +39,7 @@ export default function LoadingSpinner (
         onRequestClose={() => {console.log('close modal')}}>
         <View style={styles.modalBackground}>
           <View style={styles.activityIndicatorModal}>
-            <ActivityIndicator size={30} animating={true} />
+            <ActivityIndicator animating={true} />
             { renderText() }
           </View>
         </View>
@@ -47,7 +47,7 @@ export default function LoadingSpinner (
     );
   return (
     <View style={styles.activityIndicatorNonModal}>
-      <ActivityIndicator style={styles.activityIndicator} size={30} animating={true} />
+      <ActivityIndicator style={styles.activityIndicator} animating={true} />
       { renderText() }
     </View>
   );

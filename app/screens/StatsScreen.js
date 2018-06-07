@@ -193,9 +193,9 @@ export default class StatsScreen extends Component<Props, State> {
           </Text>
         </View>);
     }
-    return goals.map((goal: Goal) => {
+    return goals.map((goal: Goal, index: number) => {
       return (
-        <View>
+        <View key={index}>
           <View style={styles.header}>
             <View style={styles.headerItem}>
               <Text style={styles.goalText}>
