@@ -133,6 +133,6 @@ export default class GoalService {
     userId: string,
     goalId: string,
     callback: (GoalList) => void) {
-      return GoalStorage.deleteGoal(goalId, goals, callback);
+      return GoalStorage.deleteGoal(userId, goalId, callback);
   }
 }

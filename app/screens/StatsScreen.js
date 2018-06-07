@@ -75,7 +75,6 @@ export default class StatsScreen extends Component<Props, State> {
   }
 
   _setShowComplete() {
-    console.log("showing completed data only.");
     this.props.navigation.setParams({
       iconColor: '#006600',
       handleFilter: () => this._setShowAll()
@@ -88,7 +87,6 @@ export default class StatsScreen extends Component<Props, State> {
   }
 
   _setShowAll() {
-    console.log("showing ALL data.");
     this.props.navigation.setParams({
       iconColor: '#000',
       handleFilter: () => this._setShowComplete()
@@ -112,7 +110,6 @@ export default class StatsScreen extends Component<Props, State> {
   }
 
   _refreshData() {
-    console.log("getting data");
     // First get the user data, then the goals.
     UserService.getUser(
       null, // No userID until we integrate login.
@@ -291,7 +288,6 @@ export default class StatsScreen extends Component<Props, State> {
   }
 
   render() {
-    console.log("--> render");
     if (!this.state.dataLoaded)
       return (
         <LoadingSpinner modal={false} />
