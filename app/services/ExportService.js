@@ -17,6 +17,7 @@ import { State } from '../storage/data/State.js';
 import { User } from '../storage/data/User.js';
 
 import { nowDate, getDaysBetween, isBefore } from '../Dates.js';
+import { escapeString } from '../Util.js';
 
 
 export default class ExportService {
@@ -53,7 +54,7 @@ export default class ExportService {
 
               // Step 4: Generate the CSV
               // goalStateMap: Map(goalId:string => Map(date:string => State))
-              const csvCols = ["Goal Id", "Goal Text", "Goal Created", "Complete"];
+              const csvColsList = ["Goal Id", "Goal Text", "Goal Created", "Complete"];
 
               // Get the full range of dates, i.e. num columns we need.
               // Take advantage of the fact that keys are sorted lexigraphically when
@@ -63,38 +64,66 @@ export default class ExportService {
 
               console.log("ok, CSV time!");
 
-              Array.from(goalStateMap.values()).forEach((dateMap:Map<string, State>) => {
-                const dateList:?Array<string> = Array.from(dateMap.keys());
-                console.log(dateList);
-                if (dateList &&
-                    (firstDate == "" || isBefore(dateList[0], firstDate)))
-                  firstDate = dateList[0];
-                if (dateList &&
-                    (lastDate  == "" || isBefore(lastDate, dateList[dateList.length - 1])))
-                  lastDate = dateList[dateList.length - 1];
-              });
+              Array.from(goalStateMap.values())
+                .forEach((dateStateMap:Map<string, State>) => {
+                  const dateList:?Array<string> = Array.from(
+                    dateStateMap.keys());
+                  console.log(dateList);
+                  if (dateList &&
+                      (firstDate == "" || isBefore(dateList[0], firstDate)))
+                    firstDate = dateList[0];
+                  if (dateList &&
+                      (lastDate  == "" || isBefore(
+                        lastDate, dateList[dateList.length - 1])))
+                    lastDate = dateList[dateList.length - 1];
+                });
 
               // Generate the date columns we'll need.
-              const datesInCSV = getDaysBetween(firstDate, lastDate);
+              const datesInCSVList = getDaysBetween(firstDate, lastDate);
+              const csvList = [];
 
-              /*
+              // Add header.
+              csvList.push(
+                ["Goal Id", "Goal Text", "Goal Created", "Complete"]
+                .concat(datesInCSVList));
 
-              NEXT:
-                for each goalid in the map:
-                  create row array of strings
-                  look up goal object in goalList, append info to row
-                  for each date in datesInCSV
-                    look up date in the Map<string, State
-                    append state info to row.
+              // Fill in rest of list.
+              Array.from(goalStateMap.keys()).forEach((goalId: string) => {
+                const csvLineList = [];
+                const goal:?Goal = goalList.getGoal(goalId);
+                const dateStateMap:?Map<string, State> = goalStateMap.get(
+                  goalId);
+                if (goal && dateStateMap) {
+                  csvLineList.push(
+                    goalId,
+                    escapeString(goal.getText()),
+                    goal.getCreateDate(),
+                    new Boolean(goal.getComplete()).toString());
+                  datesInCSVList.forEach((date:string) => {
+                    const state:?State = dateStateMap.get(date);
+                    if (state) csvLineList.push(state.getState());
+                    else       csvLineList.push("");
+                  });
+                }
+                if (csvLineList) csvList.push(csvLineList);
+              });
 
-                construct csv string from header, rows built above.
+              const csv:string = csvList
+                .map((line:Array<string|number>) => line.join(","))
+                .join("\n");
 
-              */
+              console.log(csv);
 
+              // For local filesystem:
+              // https://github.com/itinance/react-native-fs
 
+              // For emailing an attached file:
+              // https://github.com/chirag04/react-native-mail
 
               // Invoke the callback with the file name.
               callback("filename");
+
+
             }).catch((error) => this._handleError(error, "Step 3"));
           }).catch((error) => this._handleError(error, "Step 2"));
       }).catch((error) => this._handleError(error, "Step 1"));

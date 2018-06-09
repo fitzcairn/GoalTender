@@ -53,7 +53,8 @@ export default class ExportComponent extends Component<Props, State> {
       this.setState({
         exportState: _states.FILE_READY,
       });
-    })
+    });
+    return;
   }
 
   render() {
@@ -69,10 +70,10 @@ export default class ExportComponent extends Component<Props, State> {
 
       case _states.FILE_READY:
         Alert.alert(
-          'IMAGINE THIS IS AN EMAIL CLIENT',
-          "We'll pop that shit here.",
+          'EMAIL CLIENT PLACEHOLDER',
+          "TODO: in place of this, pop an email with the file attached.",
           [
-            {text: 'Cancel', style: 'cancel'},
+            {text: 'Close', style: 'cancel', onPress: () => this.props.onFinish()},
           ],
           { cancelable: false },
         )
