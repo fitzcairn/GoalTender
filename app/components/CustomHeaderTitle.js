@@ -16,12 +16,21 @@ import {
 } from 'react-native';
 
 
-export default CustomHeaderTitle = ({ title, subtitle }) => (
-  <View style={styles.titleView}>
-    <Text style={styles.titleText}>{title}</Text>
-    <Text style={styles.subTitleText}>{subtitle}</Text>
-  </View>
-);
+export default function CustomHeaderTitle(
+  {
+    title,
+    subtitle,
+  }: {
+    title:string,
+    subtitle:string,
+  }) {
+    return (
+    <View style={styles.titleView}>
+      <Text style={styles.titleText}>{title}</Text>
+      <Text style={styles.subTitleText}>{subtitle}</Text>
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   titleView: {

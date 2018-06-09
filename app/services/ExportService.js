@@ -19,11 +19,14 @@ import { User } from '../storage/data/User.js';
 import { nowDate, getDaysBetween, isBefore } from '../Dates.js';
 import { escapeString } from '../Util.js';
 
-
 export default class ExportService {
-  static async _handleError(error: string, msg: string) {
-    console.log("generateGoalDataFile " + msg + ": " + error);
-    throw "Error generating data file!";
+
+  static async _handleError(
+    fail: () => void,
+    error: string,
+    msg: string) {
+    console.log("Error in generateGoalDataFile " + msg + ": " + error);
+    fail();
   }
 
 
@@ -35,7 +38,8 @@ export default class ExportService {
     {ID}    {TEXT}   {DATETIME}  {true|false} {"Yes"|"No"|null} ...
   */
   static async generateGoalDataFile(
-    callback: (string) => void) {
+    success: (string) => void,
+    fail: () => void) {
       // Step 1: Get the user.
       return UserStorage.getUser(
         null,
@@ -62,13 +66,10 @@ export default class ExportService {
               let firstDate:string = "";
               let lastDate:string = "";
 
-              console.log("ok, CSV time!");
-
               Array.from(goalStateMap.values())
                 .forEach((dateStateMap:Map<string, State>) => {
                   const dateList:?Array<string> = Array.from(
                     dateStateMap.keys());
-                  console.log(dateList);
                   if (dateList &&
                       (firstDate == "" || isBefore(dateList[0], firstDate)))
                     firstDate = dateList[0];
@@ -101,32 +102,22 @@ export default class ExportService {
                     new Boolean(goal.getComplete()).toString());
                   datesInCSVList.forEach((date:string) => {
                     const state:?State = dateStateMap.get(date);
-                    if (state) csvLineList.push(state.getState());
+                    if (state) csvLineList.push(state.getStateString());
                     else       csvLineList.push("");
                   });
                 }
                 if (csvLineList) csvList.push(csvLineList);
               });
 
+              // Hand off the csv back to the success callback.
               const csv:string = csvList
                 .map((line:Array<string|number>) => line.join(","))
                 .join("\n");
+              success(csv);
 
-              console.log(csv);
-
-              // For local filesystem:
-              // https://github.com/itinance/react-native-fs
-
-              // For emailing an attached file:
-              // https://github.com/chirag04/react-native-mail
-
-              // Invoke the callback with the file name.
-              callback("filename");
-
-
-            }).catch((error) => this._handleError(error, "Step 3"));
-          }).catch((error) => this._handleError(error, "Step 2"));
-      }).catch((error) => this._handleError(error, "Step 1"));
+            }).catch((error) => this._handleError(fail, error, "Step 3"));
+          }).catch((error) => this._handleError(fail, error, "Step 2"));
+      }).catch((error) => this._handleError(fail, error, "Step 1"));
   }
 
 }

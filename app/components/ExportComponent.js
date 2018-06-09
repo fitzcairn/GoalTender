@@ -20,11 +20,15 @@ import LoadingSpinner from '../components/LoadingSpinner.js';
 import ExportService from '../services/ExportService.js';
 import { User } from '../storage/data/User.js';
 
+// E-email
+import Mailer from 'react-native-mail';
+
 
 const _states = {
   NONE: 0,
   GENERATING_FILE: 1,
-  FILE_READY: 2,
+  ERROR: 2,
+  FILE_READY: 3,
 };
 
 type Props = {
@@ -33,6 +37,7 @@ type Props = {
 
 type State = {
   exportState: number,
+  csv: string|null
 };
 
 // Componenent to manage data export from GoalTender.
@@ -42,6 +47,7 @@ export default class ExportComponent extends Component<Props, State> {
     super(props);
     this.state = {
       exportState: _states.NONE,
+      csv: null,
     };
   }
 
@@ -49,17 +55,48 @@ export default class ExportComponent extends Component<Props, State> {
     this.setState({
       exportState: _states.GENERATING_FILE,
     });
-    ExportService.generateGoalDataFile(() => {
-      this.setState({
-        exportState: _states.FILE_READY,
-      });
+
+    // Kick off generating the file.
+    ExportService.generateGoalDataFile(
+      (csv: string) => {
+        this.setState({
+          exportState: _states.FILE_READY,
+          csv: csv,
+        });
+      },
+      () => this._setError());
+  }
+
+  _setError() {
+    this.setState({
+      exportState: _states.ERROR,
+      csv: null,
     });
-    return;
+  }
+
+  _handleEmail() {
+    const csv:string|null = this.state.csv;
+    if (csv == null) {
+      return this.setState({
+        exportState: _states.ERROR,
+        csv: null,
+      });
+    }
+    return Mailer.mail(
+      {
+      subject: 'Your Daily Goal Progress, from GoalTender',
+      isHTML: false,
+      body: csv,
+      },
+      (error, event) => {
+        console.log(error);
+        this._setError();
+      }
+    );
   }
 
   render() {
     let renderReturn = null;
-
     switch(this.state.exportState) {
 
       case _states.GENERATING_FILE:
@@ -68,25 +105,32 @@ export default class ExportComponent extends Component<Props, State> {
         );
       break;
 
-      case _states.FILE_READY:
+      case _states.ERROR:
         Alert.alert(
-          'EMAIL CLIENT PLACEHOLDER',
-          "TODO: in place of this, pop an email with the file attached.",
+          'Uh-Oh!',
+          "Unfortunately, there was an error exporting your data.\n\n" +
+          "Please try again later.",
           [
             {text: 'Close', style: 'cancel', onPress: () => this.props.onFinish()},
           ],
           { cancelable: false },
         )
+      break;
+
+      case _states.FILE_READY:
+        this._handleEmail();
         break;
 
       case _states.NONE:
       default:
         Alert.alert(
-          'Export Data?',
-          "It may take a few seconds to generate the export file.",
+          'Export Goal Progress?',
+          "Goal progress data will be converted into CSV format and exported " +
+          "into the  email app on your device.\n\nNote: it may take a moment " +
+          "to generate the export data.",
           [
             {text: 'Cancel', style: 'cancel'},
-            {text: 'OK', onPress: () => this._startGenerateDataExport()},
+            {text: 'Start Export', onPress: () => this._startGenerateDataExport()},
           ],
           { cancelable: false },
         )

@@ -186,10 +186,16 @@ export default class DailyScreen extends Component<Props, State> {
   }
 
   _handleDelete(goalId: string) {
+    const user:?User = this.state.user;
+    if (user == null) {
+      console.log("Error in _handleDelete: this.state.user is null/undefined.");
+      return;
+    }
+
     // Could this be called before we have data?
     if (this.state.dataLoaded) {
       GoalService.deleteGoal(
-        this.state.user.getId(),
+        user.getId(),
         goalId,
         (goals: GoalList) => {
           this._refreshData();
@@ -202,10 +208,16 @@ export default class DailyScreen extends Component<Props, State> {
   }
 
   _handleComplete(goalId: string) {
+    const user:?User = this.state.user;
+    if (user == null) {
+      console.log("Error in _handleComplete: this.state.user is null/undefined.");
+      return;
+    }
+
     // Could this be called before we have data?
     if (this.state.dataLoaded) {
       GoalService.completeGoal(
-        this.state.user.getId(),
+        user.getId(),
         goalId,
         (goals: GoalList) => {
           this._refreshData();
@@ -284,7 +296,7 @@ export default class DailyScreen extends Component<Props, State> {
               disabled={((this.drawerOpen && (this.drawerOpenIndex == index)) ? true : false)}
               label={g.getText()}
               goalId={g.getId()}
-              userId={this.state.user.getId()}
+              userId={(this.state.user == null? "" : this.state.user.getId())}
               state={g.getStateValue()} />
           </Swipeable>
         );

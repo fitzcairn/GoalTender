@@ -6,51 +6,65 @@
  * @flow
  */
 
- // States for a Goal
- export const StateValues = Object.freeze({
-   NONE: 0,
-   NO:   1,
-   YES:  2,
- });
+// States for a Goal
+export const StateValues = Object.freeze({
+ NONE: 0,
+ NO:   1,
+ YES:  2,
+});
 
- // POJsO for a goal State.
- export class State {
-   getState: () => number;
-   getGoalId: () => string;
-   getDate: () => string;
-   toJSONString: () => string;
+// Reverse lookup for states.
+const StateValueNames = Object.freeze([
+ "",       // 0
+ "NO",     // 1
+ "YES",    // 2
+]);
 
-   constructor(state: number, goalId: string, date: string) {
-     const _state = state;
-     const _goalId = goalId;
-     const _date = date;
+// POJsO for a goal State.
+export class State {
+  getState: () => number;
+  getStateString: () => string;
+  getGoalId: () => string;
+  getDate: () => string;
+  toJSONString: () => string;
 
-     this.getState = function() {
-       return _state;
-     };
+  constructor(state: number, goalId: string, date: string) {
+    const _state = state;
+    const _goalId = goalId;
+    const _date = date;
 
-     this.getGoalId = function() {
-       return _goalId;
-     };
+    this.getState = function() {
+      return _state;
+    };
 
-     this.getDate = function() {
-       return _date;
-     }
+    this.getStateString = function() {
+      const str:?string = StateValueNames[_state];
+      if (str) return str;
+      return "";
+    }
 
-     this.toJSONString = function() {
-       return JSON.stringify({
-         goalId: _goalId,
-         date: _date,
-         state: _state,
-       });
-     }
-   }
+    this.getGoalId = function() {
+      return _goalId;
+    };
 
-   static fromJSONString(json: string) {
-     let jsonObj = JSON.parse(json);
-     return new State(jsonObj.state, jsonObj.goalId, jsonObj.date);
-   }
- }
+    this.getDate = function() {
+      return _date;
+    }
+
+    this.toJSONString = function() {
+      return JSON.stringify({
+        goalId: _goalId,
+        date: _date,
+        state: _state,
+      });
+    }
+  }
+
+  static fromJSONString(json: string) {
+    let jsonObj = JSON.parse(json);
+    return new State(jsonObj.state, jsonObj.goalId, jsonObj.date);
+  }
+}
 
 // POJsO for a list of dates we have state for a goal.
 export class StateDatesList {
