@@ -16,6 +16,8 @@ import { State } from '../storage/data/State.js';
 
 import { nowDate } from '../Dates.js';
 
+import { log } from '../Util.js';
+
 
 // TODO: Add off-device persistence via API.
 export default class GoalService {
@@ -38,10 +40,7 @@ export default class GoalService {
               // 3. Combine and return.
               callback(goalList.addStates(states));
             }
-          ).catch((error) => {
-            console.log("in getGoals Step 2: " + error);
-            callback(goalList);
-        });
+          ) // Let errors propogate upward.
       });
   }
 

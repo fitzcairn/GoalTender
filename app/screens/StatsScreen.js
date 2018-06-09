@@ -39,6 +39,8 @@ import { dateDisplay, getWeekdays, getDaysBetweenDisplay } from '../Dates.js';
 
 import GlobalStyles from '../Styles.js';
 
+import { log } from '../Util.js';
+
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
@@ -124,7 +126,7 @@ export default class StatsScreen extends Component<Props, State> {
               this._refreshDataState(user, goals);
             }
           ).catch((error) => {
-            console.log("StatsScreen -> _refreshData -> getCompletedGoals: " + error);
+            log("StatsScreen -> _refreshData -> getCompletedGoals: " + error);
           });
         // Otherwise, fetch the incomplete goals.
         } else {
@@ -134,12 +136,12 @@ export default class StatsScreen extends Component<Props, State> {
               this._refreshDataState(user, goals);
             }
           ).catch((error) => {
-            console.log("StatsScreen -> _refreshData -> getGoals: " + error);
+            log("StatsScreen -> _refreshData -> getGoals: " + error);
           });
         }
       }
     ).catch((error) => {
-      console.log("StatsScreen -> _refreshData -> getUser: " + error);
+      log("StatsScreen -> _refreshData -> getUser: " + error);
     });
   }
 
@@ -167,7 +169,7 @@ export default class StatsScreen extends Component<Props, State> {
         });
       }
     ).catch((error) => {
-      console.log("StatsScreen -> _loadStatesFor: " + error);
+      log("StatsScreen -> _loadStatesFor: " + error);
     });
   }
 

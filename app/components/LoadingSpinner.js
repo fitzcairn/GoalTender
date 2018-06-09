@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 
 import GlobalStyles from '../Styles.js';
+import { log } from '../Util.js';
 
 export default function LoadingSpinner (
   {
@@ -36,7 +37,7 @@ export default function LoadingSpinner (
         transparent={true}
         animationType={'none'}
         visible={true}
-        onRequestClose={() => {console.log('close modal')}}>
+        onRequestClose={() => {log('close modal')}}>
         <View style={styles.modalBackground}>
           <View style={styles.activityIndicatorModal}>
             <ActivityIndicator animating={true} />

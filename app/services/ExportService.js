@@ -17,7 +17,8 @@ import { State } from '../storage/data/State.js';
 import { User } from '../storage/data/User.js';
 
 import { nowDate, getDaysBetween, isBefore } from '../Dates.js';
-import { escapeString } from '../Util.js';
+import { escapeStrin, log } from '../Util.js';
+
 
 export default class ExportService {
 
@@ -25,7 +26,7 @@ export default class ExportService {
     fail: () => void,
     error: string,
     msg: string) {
-    console.log("Error in generateGoalDataFile " + msg + ": " + error);
+    log("Error in generateGoalDataFile " + msg + ": " + error);
     fail();
   }
 

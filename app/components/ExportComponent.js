@@ -20,6 +20,8 @@ import LoadingSpinner from '../components/LoadingSpinner.js';
 import ExportService from '../services/ExportService.js';
 import { User } from '../storage/data/User.js';
 
+import { log } from '../Util.js';
+
 // E-email
 import Mailer from 'react-native-mail';
 
@@ -89,7 +91,7 @@ export default class ExportComponent extends Component<Props, State> {
       body: csv,
       },
       (error, event) => {
-        console.log(error);
+        log(error);
         this._setError();
       }
     );

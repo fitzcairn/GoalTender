@@ -26,3 +26,9 @@ export function escapeString(input:?string): string {
     .replace(/'/g, '\'')
     .replace(/ +(?= )/g,'');
 }
+
+export function log(msg:string) {
+  // $FlowFixMe
+  if(__DEV__)
+    console.log(msg);
+}

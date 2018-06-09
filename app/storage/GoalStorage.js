@@ -8,7 +8,7 @@
 
 import { AsyncStorage } from 'react-native';
 
-import { generateId } from '../Util.js';
+import { generateId, log } from '../Util.js';
 import { nowDate } from '../Dates.js';
 import { Goal, GoalList } from './data/Goal.js';
 
@@ -60,7 +60,7 @@ export default class GoalStorage {
             callback(GoalList.fromJSONString(goalString));
         });
     } catch (error) {
-      console.log(error);
+      log(error);
       callback(this._makeEmptyGoalList(userId));
     }
   }
@@ -94,12 +94,12 @@ export default class GoalStorage {
           AsyncStorage.setItem(this._makeKey(userId), goals.toJSONString())
             .then(() => callback(goal))
             .catch((error) => {
-              console.log(error);
+              log(error);
             });
         }
       );
     } catch (error) {
-      console.log(error);
+      log(error);
       callback(goal);
     }
   }

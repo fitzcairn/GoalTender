@@ -36,6 +36,8 @@ import UserService from '../services/UserService.js';
 import { User } from '../storage/data/User.js';
 import { Goal } from '../storage/data/Goal.js';
 
+import { log } from '../Util.js';
+
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
@@ -78,7 +80,7 @@ export default class GoalScreen extends Component<Props, State> {
         );
       }
     ).catch((error) => {
-      console.log(error);
+      log(error);
     });
   }
 

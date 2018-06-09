@@ -39,6 +39,9 @@ import { User } from '../storage/data/User.js'
 import { Goal, GoalList } from '../storage/data/Goal.js'
 import { StateValues } from '../storage/data/State.js'
 
+import { log } from '../Util.js';
+
+
 
 // Add goal button
 function AddButton(
@@ -177,18 +180,18 @@ export default class DailyScreen extends Component<Props, State> {
             });
           }
         ).catch((error) => {
-          console.log("DailyScreen -> _refreshData -> getGoals: " + error);
+          log("DailyScreen -> _refreshData -> getGoals: " + error);
         });
       }
     ).catch((error) => {
-      console.log("DailyScreen -> _refreshData -> getUser: " + error);
+      log("DailyScreen -> _refreshData -> getUser: " + error);
     });
   }
 
   _handleDelete(goalId: string) {
     const user:?User = this.state.user;
     if (user == null) {
-      console.log("Error in _handleDelete: this.state.user is null/undefined.");
+      log("Error in _handleDelete: this.state.user is null/undefined.");
       return;
     }
 
@@ -201,7 +204,7 @@ export default class DailyScreen extends Component<Props, State> {
           this._refreshData();
         }
       ).catch((error) => {
-        console.log(error);
+        log(error);
       });
     }
     return true;
@@ -210,7 +213,7 @@ export default class DailyScreen extends Component<Props, State> {
   _handleComplete(goalId: string) {
     const user:?User = this.state.user;
     if (user == null) {
-      console.log("Error in _handleComplete: this.state.user is null/undefined.");
+      log("Error in _handleComplete: this.state.user is null/undefined.");
       return;
     }
 
@@ -223,7 +226,7 @@ export default class DailyScreen extends Component<Props, State> {
           this._refreshData();
         }
       ).catch((error) => {
-        console.log(error);
+        log(error);
       });
     }
     return true;
@@ -237,6 +240,7 @@ export default class DailyScreen extends Component<Props, State> {
   }
 
   _renderGoalsView(goals: Array<Goal>): Node {
+    log("hi!");
     return goals.map((g: Goal, index: number) => {
         return (
           <Swipeable
