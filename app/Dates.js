@@ -45,10 +45,31 @@ export function getWeekdays() : Array<string> {
   return moment.weekdaysShort();
 }
 
+// Compare two dates in OSP 8601 string format, returning if a is before b.
+export function isBefore(a: string, b: string): boolean {
+  return moment(a).diff(moment(b)) < 0;
+}
+
+// Returns [ iso string ] for the date numbers between:
+//   The start date (in ISO 8601).
+//   The end date (in ISO 8601).
+export function getDaysBetween(
+  startDateString: string,
+  endDateString: string) : Array<string> {
+  const dates: Array<string> = [];
+  const startDate = moment(startDateString).startOf('day');
+  const endDate = moment(endDateString).startOf('day');
+
+  while(startDate.add(1, 'days').diff(endDate) < 0) {
+      dates.push(startDate.clone().format("YYYY-MM-DD"));
+  }
+  return dates;
+}
+
 // Returns [ [iso string, display string] ] for the date numbers between:
 //   Date of Sunday before the start date (in ISO 8601).
 //   Date of the Saturday after the end date (in ISO 8601).
-export function getDaysBetween(
+export function getDaysBetweenDisplay(
   startDateString: string,
   endDateString: string) : Array<Array<string>> {
   const dates: Array<Array<string>> = [];

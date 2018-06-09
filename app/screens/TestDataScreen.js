@@ -24,7 +24,7 @@ import StateStorage from '../storage/StateStorage.js';
 import { User } from '../storage/data/User.js';
 import { Goal } from '../storage/data/Goal.js';
 
-import { getDaysBetween } from '../Dates.js';
+import { getDaysBetweenDisplay } from '../Dates.js';
 
 
 type Props = {
@@ -88,7 +88,7 @@ export default class TestDataScreen extends Component<Props> {
       Alert.alert("No goals to add state to!");
 
     // Month of alternating dates.
-    const days = getDaysBetween('2018-05-01', '2018-05-31');
+    const days = getDaysBetweenDisplay('2018-05-01', '2018-05-31');
     const dates = days.map((day) => {
       if (parseInt(day[1].split(' ', 2)[1]) % 3 > 0)
         return day[0];

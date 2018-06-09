@@ -49,19 +49,20 @@ export default class GoalStorage {
   */
   static async getGoals(
     userId: string,
-    callback: (GoalList) => void) {
-      try {
-        return AsyncStorage.getItem(this._makeKey(userId))
-          .then((goalString) => {
-            if (goalString == null)
-              callback(this._makeEmptyGoalList(userId));
-            else
-              callback(GoalList.fromJSONString(goalString));
-          });
-      } catch (error) {
-        console.log(error);
-        callback(this._makeEmptyGoalList(userId));
-      }
+    callback: (GoalList) => void
+  ) {
+    try {
+      return AsyncStorage.getItem(this._makeKey(userId))
+        .then((goalString) => {
+          if (goalString == null)
+            callback(this._makeEmptyGoalList(userId));
+          else
+            callback(GoalList.fromJSONString(goalString));
+        });
+    } catch (error) {
+      console.log(error);
+      callback(this._makeEmptyGoalList(userId));
+    }
   }
 
   /* Add a goal.  New Goal object is handed to callback.
@@ -80,26 +81,27 @@ export default class GoalStorage {
   static addGoal(
     userId: string,
     goalText: string,
-    callback: (Goal) => void) {
-      const goal = new Goal(generateId(), goalText, nowDate());
-      try {
-        this.getGoals(
-          userId,
-          (goals: GoalList) => {
-            // Have a list, now add and save back.
-            goals.addGoal(goal);
+    callback: (Goal) => void
+  ) {
+    const goal = new Goal(generateId(), goalText, nowDate());
+    try {
+      this.getGoals(
+        userId,
+        (goals: GoalList) => {
+          // Have a list, now add and save back.
+          goals.addGoal(goal);
 
-            AsyncStorage.setItem(this._makeKey(userId), goals.toJSONString())
-              .then(() => callback(goal))
-              .catch((error) => {
-                console.log(error);
-              });
-          }
-        );
-      } catch (error) {
-        console.log(error);
-        callback(goal);
-      }
+          AsyncStorage.setItem(this._makeKey(userId), goals.toJSONString())
+            .then(() => callback(goal))
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      callback(goal);
+    }
   }
 
   /* Remove a goal for this user.  Hands the updated list of goals to the
@@ -125,28 +127,29 @@ export default class GoalStorage {
   static async deleteGoal(
     userId: string,
     goalId: string,
-    callback: (GoalList) => void) {
-      try {
+    callback: (GoalList) => void
+  ) {
+    try {
 
-        // Step 1: fetch the list of goals.
-        this.getGoals(
-          userId,
-          (goals: GoalList) => {
+      // Step 1: fetch the list of goals.
+      this.getGoals(
+        userId,
+        (goals: GoalList) => {
 
-            // Step 2: delete the goal.
-            goals.deleteGoal(goalId);
+          // Step 2: delete the goal.
+          goals.deleteGoal(goalId);
 
-            // Step 3: Save the goallist back.
-            AsyncStorage.setItem(this._makeKey(userId), goals.toJSONString())
-              .then(() => callback(goals))
-              .catch((error) => {
-                console.log("deleteGoal step 3: " + error);
-              });
-          }
-        );
-      } catch (error) {
-        console.log(error);
-      }
+          // Step 3: Save the goallist back.
+          AsyncStorage.setItem(this._makeKey(userId), goals.toJSONString())
+            .then(() => callback(goals))
+            .catch((error) => {
+              console.log("deleteGoal step 3: " + error);
+            });
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   /* Mark a goal as completed.  Hands the updated goal to the
@@ -166,29 +169,30 @@ export default class GoalStorage {
   static async completeGoal(
     userId: string,
     goalId: string,
-    callback: (GoalList) => void) {
-      try {
+    callback: (GoalList) => void
+  ) {
+    try {
 
-        // Step 1: fetch the list of goals.
-        this.getGoals(
-          userId,
-          (goals: GoalList) => {
-            // Step 2: mark the goal as completed.
-            const goal:?Goal = goals.getGoal(goalId);
-            if (goal == null)
-              throw "Goal " + goalId + " not found in completeGoal step 2";
-            goal.setComplete(true);
+      // Step 1: fetch the list of goals.
+      this.getGoals(
+        userId,
+        (goals: GoalList) => {
+          // Step 2: mark the goal as completed.
+          const goal:?Goal = goals.getGoal(goalId);
+          if (goal == null)
+            throw "Goal " + goalId + " not found in completeGoal step 2";
+          goal.setComplete(true);
 
-            // Step 3: Save the goallist back.
-            AsyncStorage.setItem(this._makeKey(userId), goals.toJSONString())
-              .then(() => callback(goals))
-              .catch((error) => {
-                console.log("completeGoal step 3: " + error);
-              });
-          }
-        );
-      } catch (error) {
-        console.log(error);
-      }
+          // Step 3: Save the goallist back.
+          AsyncStorage.setItem(this._makeKey(userId), goals.toJSONString())
+            .then(() => callback(goals))
+            .catch((error) => {
+              console.log("completeGoal step 3: " + error);
+            });
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

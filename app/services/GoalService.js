@@ -29,7 +29,7 @@ export default class GoalService {
         (goalList: GoalList) => {
 
           // 2. Get today's states for the incomplete goals only.
-          StateStorage.getStates(
+          StateStorage.getStatesForDate(
             userId,
             goalList.getGoals().map((goal: Goal) => goal.getId()),
             nowDate(),
@@ -45,32 +45,31 @@ export default class GoalService {
       });
   }
 
-    // Get the list of all goals for this user.
-    static async getGoals(
-      userId: string,
-      callback: (GoalList) => void) {
-        return GoalStorage.getGoals(
-          userId,
-          (goalList: GoalList) => callback(goalList));
-    }
+  // Get the list of all goals for this user.
+  static async getGoals(
+    userId: string,
+    callback: (GoalList) => void) {
+      return GoalStorage.getGoals(
+        userId,
+        (goalList: GoalList) => callback(goalList));
+  }
 
-
-    // Get the list of all incomplete goals for this user.
-    static async getIncompleteGoals(
-      userId: string,
-      callback: (GoalList) => void) {
-        return GoalStorage.getGoals(
-          userId,
-          (goalList: GoalList) =>  {
-            // Clean out complete goals.
-            const completeGoals:Array<Goal> =
-              goalList.getGoals().filter((g: Goal) => g.getComplete());
-            completeGoals.forEach((g: Goal) => {
-              goalList.deleteGoal(g.getId());
-            });
-
-            callback(goalList);
+  // Get the list of all incomplete goals for this user.
+  static async getIncompleteGoals(
+    userId: string,
+    callback: (GoalList) => void) {
+      return GoalStorage.getGoals(
+        userId,
+        (goalList: GoalList) =>  {
+          // Clean out complete goals.
+          const completeGoals:Array<Goal> =
+            goalList.getGoals().filter((g: Goal) => g.getComplete());
+          completeGoals.forEach((g: Goal) => {
+            goalList.deleteGoal(g.getId());
           });
+
+          callback(goalList);
+        });
   }
 
   // Get the list of just completed goals for this user.
@@ -91,13 +90,12 @@ export default class GoalService {
         });
   }
 
-
   // Get all historical state for a goal, in date:string -> state:State format.
-  static async getStatesFor(
+  static async getStatesForGoal(
     userId: string,
     goalId: string,
     callback: (Map<string, State>) => void) {
-      return StateStorage.getStatesFor(userId, goalId, callback);
+      return StateStorage.getStatesForGoal(userId, goalId, callback);
   }
 
   // Save a new state for a goal for today
@@ -109,7 +107,6 @@ export default class GoalService {
       return StateStorage.setState(
         userId, goalId, goalState, nowDate(), callback);
   }
-
 
   // Mark a goal as completed.
   static completeGoal(

@@ -35,7 +35,7 @@ import { User } from '../storage/data/User.js';
 import { Goal, GoalList } from '../storage/data/Goal.js';
 import { StateValues } from '../storage/data/State.js';
 
-import { nowDate, dateDisplay, getWeekdays, getDaysBetween } from '../Dates.js';
+import { dateDisplay, getWeekdays, getDaysBetweenDisplay } from '../Dates.js';
 
 import GlobalStyles from '../Styles.js';
 
@@ -154,7 +154,7 @@ export default class StatsScreen extends Component<Props, State> {
     const userId:string = this.state.user.getId();
 
     // Load the state for the first goal.
-    GoalService.getStatesFor(
+    GoalService.getStatesForGoal(
       userId,
       goal.getId(),
       (stateMap: Map<string, State>) => {
@@ -211,7 +211,7 @@ export default class StatsScreen extends Component<Props, State> {
     // Get days between the first and last date we have data.
     const dateMap:Map<string, State> = this.state.goalStates.get(goal.getId());
     const dateList = Array.from(dateMap.keys());
-    const days:Array<Array<string>> = getDaysBetween(dateList[0],
+    const days:Array<Array<string>> = getDaysBetweenDisplay(dateList[0],
       dateList[dateList.length - 1]);
 
     // Create weeks.
