@@ -14,6 +14,12 @@
 
     "remindersSetting": "Enable Reminders",
   },
+  "About": {
+    "title": "About",
+
+    "version": "Version",
+    "github": "View Source on Github"
+  },
   "Goal": {
     "title": "Create New Goal",
 

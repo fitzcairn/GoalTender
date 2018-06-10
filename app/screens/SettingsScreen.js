@@ -30,7 +30,7 @@ import {
 // https://github.com/mmazzarolo/react-native-modal-datetime-picker
 //import DateTimePicker from 'react-native-modal-datetime-picker';
 
-import Localized from '../Strings';
+import Localized from '../Strings.js';
 
 import GlobalStyles from '../Styles.js';
 
@@ -89,7 +89,7 @@ export default class SettingsScreen extends Component<Props, State> {
             <SettingsButton
               label={Localized('Settings.aboutSetting')}
               isLast={true}
-              onPress={() => {}}
+              onPress={() => { this.props.navigation.navigate('About'); }}
             />
           </View>
           {/* TODO: Implement local notifications, and allow folks to set

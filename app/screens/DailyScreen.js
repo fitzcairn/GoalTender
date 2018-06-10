@@ -27,7 +27,7 @@ import {
 import Swipeable from 'react-native-swipeable';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import Localized from '../Strings';
+import Localized from '../Strings.js';
 
 import GlobalStyles from '../Styles.js';
 

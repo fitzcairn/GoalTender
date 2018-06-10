@@ -27,7 +27,7 @@ import {
 
 import './ReactotronConfig.js';
 
-import Localized from './app/Strings';
+import Localized from './app/Strings.js';
 
 // Screens
 import FTUXScreen from './app/screens/FTUXScreen.js';
@@ -35,6 +35,7 @@ import SettingsScreen from './app/screens/SettingsScreen.js';
 import DailyScreen from './app/screens/DailyScreen.js';
 import StatsScreen from './app/screens/StatsScreen.js';
 import GoalScreen from './app/screens/GoalScreen.js';
+import AboutScreen from './app/screens/AboutScreen.js';
 import TestDataScreen from './app/screens/TestDataScreen.js';
 
 // Services
@@ -63,6 +64,18 @@ const GoalTenderStack = {
     path: 'settings',
     navigationOptions: ({ navigation }) => ({
       title: Localized('Settings.title'),
+      headerTitleStyle: {
+        flex: 1,
+        textAlign: 'center',
+      },
+      headerRight: (<View></View>),
+    }),
+  },
+  About: {
+    screen: AboutScreen,
+    path: 'settings',
+    navigationOptions: ({ navigation }) => ({
+      title: Localized('About.title'),
       headerTitleStyle: {
         flex: 1,
         textAlign: 'center',

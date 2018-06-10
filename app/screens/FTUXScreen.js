@@ -19,7 +19,7 @@ import {
   NavigationState,
 } from 'react-navigation';
 
-import Localized from '../Strings';
+import Localized from '../Strings.js';
 
 import GlobalStyles from '../Styles.js';
 

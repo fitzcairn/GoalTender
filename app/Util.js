@@ -6,6 +6,7 @@
  * @flow
  */
 
+const packageJSON = require('../package.json');
 
 // From https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
 // Should have good enough entropy for this little app.
@@ -31,4 +32,8 @@ export function log(msg:string) {
   // $FlowFixMe
   if(__DEV__)
     console.log(msg);
+}
+
+export function getVersion() {
+  return packageJSON.version;
 }

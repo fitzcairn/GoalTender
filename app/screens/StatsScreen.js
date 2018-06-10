@@ -37,7 +37,7 @@ import { StateValues } from '../storage/data/State.js';
 
 import { dateDisplay, getWeekdays, getDaysBetweenDisplay } from '../Dates.js';
 
-import Localized from '../Strings';
+import Localized from '../Strings.js';
 
 import GlobalStyles from '../Styles.js';
 

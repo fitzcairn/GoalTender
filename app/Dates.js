@@ -84,3 +84,7 @@ export function getDaysBetweenDisplay(
   }
   return dates;
 }
+
+export function timeInMillis() {
+  return moment().valueOf();
+}
