@@ -37,6 +37,8 @@ import { StateValues } from '../storage/data/State.js';
 
 import { dateDisplay, getWeekdays, getDaysBetweenDisplay } from '../Dates.js';
 
+import Localized from '../Strings';
+
 import GlobalStyles from '../Styles.js';
 
 import { log } from '../Util.js';
@@ -155,12 +157,15 @@ export default class StatsScreen extends Component<Props, State> {
     if (this.state.user == null) return;
     const userId:string = this.state.user.getId();
 
+    if (this.state.goalStates == null) return;
+    const goalStates:Map<string, Map<string, State>> = this.state.goalStates;
+
     // Load the state for the first goal.
     GoalService.getStatesForGoal(
       userId,
       goal.getId(),
       (stateMap: Map<string, State>) => {
-        this.state.goalStates.set(goal.getId(), stateMap);
+        goalStates.set(goal.getId(), stateMap);
 
         // Success!  Set state and trigger refresh.
         this.setState({
@@ -178,7 +183,7 @@ export default class StatsScreen extends Component<Props, State> {
     const rendered:Array<Object> = weekdays.map((day: string) => {
       return (
           <Text key={day} style={styles.calendarWeekdaysText}>
-            {day.toUpperCase()}
+            { day.toUpperCase() }
           </Text>
       );
     });
@@ -197,7 +202,7 @@ export default class StatsScreen extends Component<Props, State> {
           <Text style={
             (dateMap.has(day[0]) ? styles.dayTextColor : styles.dayText)
           }>
-            {day[1]}
+            { day[1] }
           </Text>
         </View>
       );
@@ -225,7 +230,7 @@ export default class StatsScreen extends Component<Props, State> {
     return weeks.map((week: Array<Array<string>>, index: number) => {
       return (
           <View key={index} style={styles.week}>
-          { this._renderDays(weeks[index], dateMap) }
+            { this._renderDays(weeks[index], dateMap) }
           </View>
       );
     });
@@ -236,23 +241,25 @@ export default class StatsScreen extends Component<Props, State> {
       return (
         <View style={styles.headerItem}>
           <Text style={styles.goalCompleted}>
-            Completed!
+            { Localized("Stats.completed") }
           </Text>
           <Text style={styles.goalText}>
-            {goal.getText()}
+            { goal.getText() }
           </Text>
           <Text style={styles.dateText}>
-            Created {dateDisplay(goal.getCreateDate())}
+          { /* Note: Can't seem to get I18n.t working with params. */ }
+          { Localized("Stats.created") + dateDisplay(goal.getCreateDate()) }
           </Text>
         </View>
       );
     return (
       <View style={styles.headerItem}>
         <Text style={styles.goalText}>
-          {goal.getText()}
+          { goal.getText() }
         </Text>
         <Text style={styles.dateText}>
-          Created {dateDisplay(goal.getCreateDate())}
+          { /* Note: Can't seem to get I18n.t working with params. */ }
+          { Localized("Stats.created") + dateDisplay(goal.getCreateDate()) }
         </Text>
       </View>
     );
@@ -266,8 +273,8 @@ export default class StatsScreen extends Component<Props, State> {
         <View style={GlobalStyles.noGoalsInstructions}>
           <Text style={GlobalStyles.instructions}>
            { this.state.showCompleted ?
-             "You have no completed goals."
-             : "Create a daily goal to start tracking your progress!" }
+             Localized('Stats.noCompleted') :
+             Localized('Stats.instructions') }
           </Text>
         </View>
       );

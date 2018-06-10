@@ -23,6 +23,8 @@ import {
   NavigationState,
 } from 'react-navigation';
 
+import Localized from '../Strings';
+
 import GlobalStyles from '../Styles.js';
 
 // Components
@@ -86,11 +88,17 @@ export default class GoalScreen extends Component<Props, State> {
 
   _handleSave() {
     Alert.alert(
-      'All done?',
-      "Once you save, you won't be able to edit this goal again.",
+      Localized('Goal.saveTitle'),
+      Localized('Goal.saveText'),
       [
-        {text: 'Edit More', style: 'cancel'},
-        {text: 'Save!', onPress: () => this._handleGoalSaveAndGo()},
+        {
+          text: Localized('Goal.saveCancel'),
+          style: 'cancel',
+        },
+        {
+          text: Localized('Goal.saveComplete'),
+          onPress: () => this._handleGoalSaveAndGo()
+        },
       ],
       { cancelable: false }
     );
@@ -99,7 +107,7 @@ export default class GoalScreen extends Component<Props, State> {
  _handleText(text: string) {
    this.setState({
      text: text,
-     error: 200 - text.length + ' characters remaining.',
+     error: 200 - text.length + ' ' + Localized('Goal.charactersRemaining'),
    });
  }
 
@@ -112,7 +120,7 @@ export default class GoalScreen extends Component<Props, State> {
       // Render a saving spinner.
       return (
         <View style={styles.goalView}>
-          <LoadingSpinner modal={false} text="Saving..." />
+          <LoadingSpinner modal={false} text={Localized('Goal.saving')} />
         </View>
       );
     }
@@ -127,15 +135,18 @@ export default class GoalScreen extends Component<Props, State> {
             multiline = {true}
             numberOfLines = {4}
             underlineColorAndroid = {'transparent'}
-            placeholder="Enter a short and descriptive daily goal."
+            placeholder={Localized('Goal.input')}
             onChangeText={(text) => this._handleText(text)}
           />
         </View>
         <TouchableOpacity
           disabled={(this._isInput() ? false : true)}
-          style={(this._isInput() ? GlobalStyles.button : GlobalStyles.buttonDisabled)}
+          style={(this._isInput() ?
+            GlobalStyles.button : GlobalStyles.buttonDisabled)}
           onPress={() => {this._handleSave();}}>
-          <Text style={GlobalStyles.buttonText}>Save</Text>
+          <Text style={GlobalStyles.buttonText}>
+            {Localized('Goal.saveButton')}
+          </Text>
         </TouchableOpacity>
       </View>
     );

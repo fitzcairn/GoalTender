@@ -19,6 +19,8 @@ import {
   NavigationState,
 } from 'react-navigation';
 
+import Localized from '../Strings';
+
 import GlobalStyles from '../Styles.js';
 
 // Services
@@ -44,15 +46,17 @@ export default class FTUXScreen extends Component<Props> {
     return (
       <View style={GlobalStyles.container}>
         <Text style={GlobalStyles.welcome}>
-          Welcome to GoalTender!
+          {Localized('FTUXScreen.welcome')}
         </Text>
         <Text style={GlobalStyles.instructions}>
-          This is a tiny app to help you track simple daily goals.
+          {Localized('FTUXScreen.instructions')}
         </Text>
         <TouchableOpacity
           style={GlobalStyles.button}
           onPress={() => this._registerUser()}>
-          <Text style={GlobalStyles.buttonText}>Get Started!</Text>
+          <Text style={GlobalStyles.buttonText}>
+            {Localized('FTUXScreen.buttton')}
+          </Text>
         </TouchableOpacity>
       </View>
     );

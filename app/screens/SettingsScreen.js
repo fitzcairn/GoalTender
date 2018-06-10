@@ -30,6 +30,8 @@ import {
 // https://github.com/mmazzarolo/react-native-modal-datetime-picker
 //import DateTimePicker from 'react-native-modal-datetime-picker';
 
+import Localized from '../Strings';
+
 import GlobalStyles from '../Styles.js';
 
 import SettingsButton from '../components/SettingsButton.js';
@@ -71,24 +73,40 @@ export default class SettingsScreen extends Component<Props, State> {
         <ScrollView>
           <View style={GlobalStyles.settingsGroup}>
             <SettingsButton
-              label='Export Data'
-              onPress={ () => this.setState({ renderExport: true }) } />
+              label={Localized('Settings.exportSetting')}
+              onPress={ () => this.setState({ renderExport: true }) }
+            />
+            { /* TODO: Once login and server-side persist is in place, allow
+              users to manage their online identity.
+
             <SettingsButton
-              label='Manage Identity (Coming Soon!)'
+              label={Localized('Settings.loginSetting')}
               disabled={true}
+              onPress={() => {}}
+            />
+
+            */}
+            <SettingsButton
+              label={Localized('Settings.aboutSetting')}
               isLast={true}
-              onPress={() => alert("TBD")} />
+              onPress={() => {}}
+            />
           </View>
+          {/* TODO: Implement local notifications, and allow folks to set
+            reminders for themnselves to update their daily goals.
+
           <View style={GlobalStyles.settingsGroup}>
             <View style={GlobalStyles.settingsRow}>
               <View style={GlobalStyles.settingsRowViewLast}>
                 <Text style={GlobalStyles.settingsTextDisabled}>
-                  Enable Reminders (Coming Soon!)
+                  {Localized('Settings.remindersSetting')}
                 </Text>
                 <Switch disabled={true}/>
               </View>
             </View>
           </View>
+
+          */}
         </ScrollView>
       </View>
     );

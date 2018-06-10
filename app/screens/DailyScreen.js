@@ -27,6 +27,8 @@ import {
 import Swipeable from 'react-native-swipeable';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+import Localized from '../Strings';
+
 import GlobalStyles from '../Styles.js';
 
 import GoalRow from '../components/GoalRow.js';
@@ -240,7 +242,6 @@ export default class DailyScreen extends Component<Props, State> {
   }
 
   _renderGoalsView(goals: Array<Goal>): Node {
-    log("hi!");
     return goals.map((g: Goal, index: number) => {
         return (
           <Swipeable
@@ -249,32 +250,46 @@ export default class DailyScreen extends Component<Props, State> {
             leftButtons={[
               <DeleteButton onPress={() => {
                 Alert.alert(
-                  'Delete Goal?',
-                  'Deleting this goal will permanently remove both the goal and its history.',
+                  Localized('Daily.deleteTitle'),
+                  Localized('Daily.deleteText'),
                   [
-                    {text: 'Cancel', style: 'cancel', onPress: () => {
-                      this._closeDrawer();
-                    }},
-                    {text: 'Delete', onPress: () => {
-                      this._closeDrawer();
-                      this._handleDelete(g.getId());
-                    }},
+                    {
+                      text: Localized('Daily.deleteCancel'),
+                      style: 'cancel',
+                      onPress: () => {
+                        this._closeDrawer();
+                      }
+                    },
+                    {
+                      text: Localized('Daily.deleteDelete'),
+                      onPress: () => {
+                        this._closeDrawer();
+                        this._handleDelete(g.getId());
+                      }
+                    },
                   ],
                   { cancelable: false }
                 )
               }} />,
               <CompleteButton onPress={() => {
                 Alert.alert(
-                  'Complete Goal?',
-                  'Marking this goal as complete will permanently remove it from this list.\n\nYou\'ll still be able to view and export goal history.',
+                  Localized('Daily.completeTitle'),
+                  Localized('Daily.completeText'),
                   [
-                    {text: 'Cancel', style: 'cancel', onPress: () => {
-                      this._closeDrawer();
-                    }},
-                    {text: 'Complete', onPress: () => {
-                      this._closeDrawer();
-                      this._handleComplete(g.getId());
-                    }},
+                    {
+                      text: Localized('Daily.completeCancel'),
+                      style: 'cancel',
+                      onPress: () => {
+                        this._closeDrawer();
+                      }
+                    },
+                    {
+                      text: Localized('Daily.completeComplete'),
+                      onPress: () => {
+                        this._closeDrawer();
+                        this._handleComplete(g.getId());
+                      }
+                    },
                   ],
                   { cancelable: false }
                 )
@@ -312,7 +327,7 @@ export default class DailyScreen extends Component<Props, State> {
       return (
         <View style={GlobalStyles.noGoalsInstructions}>
           <Text style={GlobalStyles.instructions}>
-            Click the red button below create a new daily goal!
+            {Localized('Daily.instructions')}
           </Text>
         </View>);
     }

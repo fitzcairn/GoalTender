@@ -27,6 +27,8 @@ import {
 
 import './ReactotronConfig.js';
 
+import Localized from './app/Strings';
+
 // Screens
 import FTUXScreen from './app/screens/FTUXScreen.js';
 import SettingsScreen from './app/screens/SettingsScreen.js';
@@ -60,7 +62,7 @@ const GoalTenderStack = {
     screen: SettingsScreen,
     path: 'settings',
     navigationOptions: ({ navigation }) => ({
-      title: 'Settings',
+      title: Localized('Settings.title'),
       headerTitleStyle: {
         flex: 1,
         textAlign: 'center',
@@ -72,7 +74,7 @@ const GoalTenderStack = {
     screen: GoalScreen,
     path: 'goal',
     navigationOptions: ({ navigation }) => ({
-      title: 'Create New Goal',
+      title: Localized('Goal.title'),
       headerTitleStyle: {
         flex: 1,
         textAlign: 'center',
@@ -85,7 +87,7 @@ const GoalTenderStack = {
     path: 'daily',
     navigationOptions: ({ navigation }) => ({
       headerTitle: <CustomHeaderTitle
-                     title={"Today's Goals"}
+                     title={Localized('Daily.title')}
                      subtitle={nowDateDisplay()} />,
       headerTitleStyle: {
         flex: 1,
@@ -114,7 +116,7 @@ const GoalTenderStack = {
     screen: StatsScreen,
     path: 'stats',
     navigationOptions: ({ navigation }) => ({
-      title: 'Goal Progress',
+      title: Localized('Stats.title'),
       headerTitleStyle: {
         flex: 1,
         textAlign: 'center',

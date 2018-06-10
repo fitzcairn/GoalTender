@@ -1,0 +1,57 @@
+{
+  "FTUXScreen": {
+    "title": "Welcome",
+    "welcome": "Welcome to GoalTender!",
+    "instructions": "This is a tiny app to help you track simple daily goals.",
+    "button": "Get Started!"
+  },
+  "Settings": {
+    "title": "Settings",
+
+    "exportSetting": "Export Goal Data",
+    "loginSetting": "Manage Login",
+    "aboutSetting": "About",
+
+    "remindersSetting": "Enable Reminders",
+  },
+  "Goal": {
+    "title": "Create New Goal",
+
+    "saveTitle": "Save Goal?",
+    "saveText": "Once you save this goal, you won't be able to edit this text again.",
+    "saveCancel": "Edit More",
+    "saveComplete": "Save!",
+
+    "charactersRemaining": "characters remaining.",
+
+    "saving": "Saving Goal...",
+
+    "input": "Enter a short and descriptive daily goal.",
+
+    "saveButton": "Save Goal"
+  },
+  "Daily": {
+    "title": "Today's Goal Progress",
+
+    "deleteTitle": "Delete Goal?",
+    "deleteText": "Deleting this goal will permanently remove both the goal and its history.",
+    "deleteCancel": "Cancel",
+    "deleteDelete": "Delete",
+
+    "completeTitle": "Complete Goal?",
+    "completeText": "Marking this goal as complete will permanently remove it from this list.\n\nYou\'ll still be able to view and export goal history.",
+    "completeCancel": "Cancel",
+    "completeComplete": "Complete",
+
+    "instructions": "Click the red button below create a new daily goal!",
+  },
+  "Stats": {
+    "title": "Goal Progress",
+
+    "completed": "Goal Complete!",
+    "created": "Goal created: ",
+
+    "instructions": "Create a new daily goal to start tracking your progress!",
+    "noCompleted": "You have no completed goals.",
+  },
+}
