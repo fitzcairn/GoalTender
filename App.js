@@ -157,7 +157,6 @@ const GoalTender = createStackNavigator(GoalTenderStack,
 });
 const GoalTenderNoFTUX = createStackNavigator(GoalTenderStack,
 {
-  //initialRouteName: '_Test',
   initialRouteName: 'Daily',
 });
 
