@@ -49,12 +49,11 @@ test('GoalStorage.getGoals', () => {
   const goalList:GoalList = _addGoalsToStorage(userId);
 
   return GoalStorage.getGoals(userId, (result:GoalList) => {
-    //expect(result.toJSONString()).toEqual(goalList.toJSONString());
-    expect(true).toBeFalsy();
+    expect(result.toJSONString()).toEqual(goalList.toJSONString());
   })
 });
 
-/*test('GoalStorage.getGoals -- no results, should be empty', () => {
+test('GoalStorage.getGoals -- no results, should be empty', () => {
   const userId:string = "uid";
   _addGoalsToStorage("not userId");
 
@@ -64,30 +63,14 @@ test('GoalStorage.getGoals', () => {
 });
 
 test('GoalStorage.addGoal -- add first goal', () => {
-  const goalList:GoalList = new GoalList(userId);
   const userId:string = "uid";
+  const goalList:GoalList = new GoalList(userId);
 
   return GoalStorage.addGoal(userId, "text", (goal:Goal) => {
     goalList.addGoal(goal);
-
-    // Expect to have a list of goals for this user now.
+  }).done(() => {
     expect(storageCache[GoalStorage._makeKey(userId)])
       .toEqual(goalList.toJSONString());
   });
+
 });
-
-test('GoalStorage.addGoal -- append new goal.', () => {
-  const userId:string = "uid";
-  const goalList:GoalList = _addGoalsToStorage(userId);
-
-  return GoalStorage.addGoal(userId, "new goal text", (goal:Goal) => {
-    goalList.addGoal(goal);
-    console.log(goalList.toJSONString());
-
-    // Expect to have a list of goals for this user now.
-    expect(storageCache[GoalStorage._makeKey(userId)])
-      .toEqual(goalList.toJSONString());
-
-
-  });
-});*/

@@ -51,19 +51,20 @@ export default class GoalStorage {
     userId: string,
     callback: (GoalList) => void
   ) {
-    try {
-      return AsyncStorage.getItem(this._makeKey(userId))
-        .then((goalString) => {
-          if (goalString == null)
-            callback(this._makeEmptyGoalList(userId));
-          else
-            callback(GoalList.fromJSONString(goalString));
-        });
-    } catch (error) {
+  const empty:GoalList = this._makeEmptyGoalList(userId);
+
+  return AsyncStorage.getItem(this._makeKey(userId))
+    .then((goalString) => {
+      if (goalString == null)
+        callback(empty);
+      else
+        callback(GoalList.fromJSONString(goalString));
+    })
+    .catch((error) => {
       log(error);
-      callback(this._makeEmptyGoalList(userId));
-    }
-  }
+      callback(empty);
+    });
+}
 
   /* Add a goal.  New Goal object is handed to callback.
 
@@ -83,25 +84,25 @@ export default class GoalStorage {
     goalText: string,
     callback: (Goal) => void
   ) {
+    const userKey = this._makeKey(userId);
     const goal = new Goal(generateId(), goalText, nowDate());
-    try {
-      this.getGoals(
-        userId,
-        (goals: GoalList) => {
-          // Have a list, now add and save back.
-          goals.addGoal(goal);
 
-          AsyncStorage.setItem(this._makeKey(userId), goals.toJSONString())
-            .then(() => callback(goal))
-            .catch((error) => {
-              log(error);
-            });
-        }
-      );
-    } catch (error) {
-      log(error);
-      callback(goal);
-    }
+    return AsyncStorage.getItem(userKey)
+      .then((goalString) =>  {
+        const goals:GoalList = (goalString == null ?
+          this._makeEmptyGoalList(userId) :
+          GoalList.fromJSONString(goalString));
+
+        // Have a list, now add and save back.
+        goals.addGoal(goal);
+
+        // Return promise from setting item.
+        return AsyncStorage.setItem(userKey, goals.toJSONString())
+      })
+      .then(() => callback(goal))
+      .catch((error) => {
+        log(error);
+      })
   }
 
   /* Remove a goal for this user.  Hands the updated list of goals to the
