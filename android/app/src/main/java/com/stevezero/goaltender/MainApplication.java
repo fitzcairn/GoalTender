@@ -1,4 +1,4 @@
-package com.goaltender;
+package com.stevezero.goaltender;
 
 import android.app.Application;
 

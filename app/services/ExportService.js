@@ -17,7 +17,7 @@ import { State } from '../storage/data/State.js';
 import { User } from '../storage/data/User.js';
 
 import { nowDate, getDaysBetween, isBefore } from '../Dates.js';
-import { escapeStrin, log } from '../Util.js';
+import { escapeString, log } from '../Util.js';
 
 
 export default class ExportService {

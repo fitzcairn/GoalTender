@@ -3,7 +3,7 @@
     "title": "Welcome",
     "welcome": "Welcome to GoalTender!",
     "instructions": "This is a tiny app to help you track simple daily goals.",
-    "button": "Get Started!"
+    "button": "Get Started!",
   },
   "Settings": {
     "title": "Settings",

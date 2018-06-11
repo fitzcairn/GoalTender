@@ -55,7 +55,7 @@ export default class FTUXScreen extends Component<Props> {
           style={GlobalStyles.button}
           onPress={() => this._registerUser()}>
           <Text style={GlobalStyles.buttonText}>
-            {Localized('FTUXScreen.buttton')}
+            {Localized('FTUXScreen.button')}
           </Text>
         </TouchableOpacity>
       </View>
