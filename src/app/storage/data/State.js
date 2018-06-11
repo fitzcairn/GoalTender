@@ -113,37 +113,3 @@ export class StateDatesList {
     return new StateDatesList(jsonObj.userId, jsonObj.goalId, jsonObj.dateList);
   }
 }
-
-
-//
-// Test Data
-//
-
-// TODO: Pagination?  This could get big.
-const testData = {
-  version: 1,
-  userId: "SomeIDString", // Flattened from a user object elsewhere.
-  goalId: "12",
-  stateList: [ // Always in descending order of date.
-    {
-      date: "2018-06-02", // ISO 8601, UTC, but day only.
-      state: "NO",
-    },
-    { // Note that days can be skipped for this goal.
-      date: "2018-06-01", // ISO 8601, UTC, but day only.
-      state: "YES",
-    },
-    {
-      date: "2018-05-31", // ISO 8601, UTC, but day only.
-      state: "YES",
-    },
-    {
-      date: "2018-05-30", // ISO 8601, UTC, but day only.
-      state: "NO",
-    },
-    { // Note that days can be skipped for this goal.
-      date: "2018-05-27", // ISO 8601, UTC, but day only.
-      state: "YES",
-    },
-  ],
-};

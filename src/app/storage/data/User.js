@@ -64,14 +64,3 @@ export class User {
       jsonObj.hasSeenFTUX);
   }
 }
-
-
-//
-// Test Data
-//
-
-const testData = {
-  version: 1,
-  userId: "SomeIDString", // Flattened from a user object elsewhere.
-  lastUpdateDateTime: "2018-05-31T11:45:12,780210000-00:00", // ISO 8601, UTC
-};
