@@ -10,13 +10,12 @@
 import React, { Component } from 'react';
 
 import {
+  Button,
   Platform,
   StyleSheet,
   Text,
   TextInput,
   View,
-  Button,
-  Image
 } from 'react-native';
 
 import {
@@ -63,11 +62,8 @@ const GoalTenderStack = {
     screen: SettingsScreen,
     path: 'settings',
     navigationOptions: ({ navigation }) => ({
-      title: Localized('Settings.title'),
-      headerTitleStyle: {
-        flex: 1,
-        textAlign: 'center',
-      },
+      headerTitle: <CustomHeaderTitle
+                     title={Localized('Settings.title')}/>,
       headerRight: (<View></View>),
     }),
   },
@@ -75,11 +71,8 @@ const GoalTenderStack = {
     screen: AboutScreen,
     path: 'settings',
     navigationOptions: ({ navigation }) => ({
-      title: Localized('About.title'),
-      headerTitleStyle: {
-        flex: 1,
-        textAlign: 'center',
-      },
+      headerTitle: <CustomHeaderTitle
+                     title={Localized('About.title')}/>,
       headerRight: (<View></View>),
     }),
   },
@@ -87,11 +80,8 @@ const GoalTenderStack = {
     screen: GoalScreen,
     path: 'goal',
     navigationOptions: ({ navigation }) => ({
-      title: Localized('Goal.title'),
-      headerTitleStyle: {
-        flex: 1,
-        textAlign: 'center',
-      },
+      headerTitle: <CustomHeaderTitle
+                     title={Localized('Goal.title')}/>,
       headerRight: (<View></View>),
     }),
   },
@@ -102,10 +92,6 @@ const GoalTenderStack = {
       headerTitle: <CustomHeaderTitle
                      title={Localized('Daily.title')}
                      subtitle={nowDateDisplay()} />,
-      headerTitleStyle: {
-        flex: 1,
-        textAlign: 'center',
-      },
       headerLeft: (
         <IconButton
           align='left'
@@ -129,11 +115,8 @@ const GoalTenderStack = {
     screen: StatsScreen,
     path: 'stats',
     navigationOptions: ({ navigation }) => ({
-      title: Localized('Stats.title'),
-      headerTitleStyle: {
-        flex: 1,
-        textAlign: 'center',
-      },
+      headerTitle: <CustomHeaderTitle
+                     title={Localized('Stats.title')}/>,
       headerRight: (
         <IconButton
           align='right'
