@@ -98,7 +98,7 @@ export default class SettingsScreen extends Component<Props, State> {
           <View style={GlobalStyles.settingsGroup}>
             <View style={GlobalStyles.settingsRow}>
               <View style={GlobalStyles.settingsRowViewLast}>
-                <Text style={GlobalStyles.settingsTextDisabled}>
+                <Text style={[GlobalStyles.settingsTextDisabled, GlobalStyles.defaultFontSize]}>
                   {Localized('Settings.remindersSetting')}
                 </Text>
                 <Switch disabled={true}/>

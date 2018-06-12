@@ -44,7 +44,6 @@ import { StateValues } from '../storage/data/State.js'
 import { log } from '../Util.js';
 
 
-
 // Add goal button
 function AddButton(
   {
@@ -328,7 +327,7 @@ export default class DailyScreen extends Component<Props, State> {
     if (goals.filter((g: Goal) => !g.getComplete()).length == 0) {
       return (
         <View style={GlobalStyles.noGoalsInstructions}>
-          <Text style={GlobalStyles.instructions}>
+          <Text style={[GlobalStyles.instructions, GlobalStyles.defaultFontSize]}>
             {Localized('Daily.instructions')}
           </Text>
         </View>);

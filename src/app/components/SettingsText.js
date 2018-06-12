@@ -29,10 +29,10 @@ export default function SettingsText(
   return (
     <View style={GlobalStyles.settingsRow}>
       <View style={viewStyle}>
-        <Text style={styles.settingsText}>
+        <Text style={[styles.settingsText, GlobalStyles.defaultFontSize]}>
           {title}
         </Text>
-        <Text style={styles.settingsTextDisabled}>
+        <Text style={[styles.settingsTextDisabled, GlobalStyles.defaultFontSize]}>
           {text}
         </Text>
       </View>

@@ -20,6 +20,8 @@ import GoalService from '../services/GoalService.js';
 
 import { StateValues } from '../storage/data/State.js'
 
+import GlobalStyles from '../Styles.js';
+
 
 // Buttons for Yes and No
 function IconButton(
@@ -113,7 +115,7 @@ export default class GoalRow extends Component<Props, State> {
     return (
       <TouchableWithoutFeedback onPress={() => this.props.onTouch()}>
         <View style={styles.goalRow}>
-          <Text style={styles.goalText}>{this.props.label}</Text>
+          <Text style={[styles.goalText, GlobalStyles.defaultFontSize]}>{this.props.label}</Text>
           <IconButton
             type={GoalRow.ButtonType.YES}
             disabled={this.props.disabled}

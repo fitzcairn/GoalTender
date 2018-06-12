@@ -33,6 +33,10 @@ const GlobalStyles = StyleSheet.create({
     fontSize: Platform.OS === 'ios' ? 22 : 24,
   },
 
+  defaultHeaderStyle: {
+    flex: 1,
+    textAlign: 'center',
+  },
   noGoalsInstructions: {
     justifyContent: 'center',
     alignItems: 'center',

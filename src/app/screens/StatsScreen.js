@@ -146,7 +146,7 @@ export default class StatsScreen extends Component<Props, State> {
     if (goals.length == 0)
       return (
         <View style={GlobalStyles.noGoalsInstructions}>
-          <Text style={GlobalStyles.instructions}>
+          <Text style={[GlobalStyles.instructions, GlobalStyles.defaultFontSize]}>
            { this.state.showCompleted ?
              Localized('Stats.noCompleted') :
              Localized('Stats.instructions') }

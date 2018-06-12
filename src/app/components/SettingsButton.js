@@ -37,7 +37,9 @@ export default function SettingsButton(
       onPress={ (disabled? () => {} : onPress) }>
       <View style={viewStyle}>
         <Text style={
-          (disabled ? GlobalStyles.settingsTextDisabled : GlobalStyles.settingsText)
+          (disabled ?
+            [GlobalStyles.settingsTextDisabled, GlobalStyles.defaultFontSize] :
+            [GlobalStyles.settingsText, GlobalStyles.defaultFontSize])
         }>
           {label}
         </Text>
