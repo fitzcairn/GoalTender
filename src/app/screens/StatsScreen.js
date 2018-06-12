@@ -180,6 +180,7 @@ export default class StatsScreen extends Component<Props, State> {
         showsButtons={false}
         loadMinimal={true}
         showsPagination={true}
+        loop={false}
       >
         { this._renderGoals() }
       </Swiper>
