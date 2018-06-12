@@ -37,7 +37,7 @@
     "saveButton": "Save Goal"
   },
   "Daily": {
-    "title": "Today's Goal Progress",
+    "title": "Today's Goals",
 
     "deleteTitle": "Delete Goal?",
     "deleteText": "Deleting this goal will permanently remove both the goal and its history.",
