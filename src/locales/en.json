@@ -52,7 +52,7 @@
     "instructions": "Click the red button below create a new daily goal!",
   },
   "Stats": {
-    "title": "Goal Progress",
+    "title": "Goal History",
 
     "completed": "Goal Complete!",
     "created": "Goal created: ",
