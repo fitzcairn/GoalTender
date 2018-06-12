@@ -9,16 +9,16 @@
 import React, { Component } from 'react';
 
 import {
+  Button,
+  Image,
   Platform,
+  SectionList,
+  ScrollView,
   StyleSheet,
+  Switch,
   Text,
   TextInput,
   View,
-  Button,
-  Image,
-  SectionList,
-  ScrollView,
-  Switch,
 } from 'react-native';
 
 import {
@@ -68,7 +68,7 @@ export default class SettingsScreen extends Component<Props, State> {
 
   render() {
     return (
-      <View>
+      <View style={styles.settingsView}>
         { this._maybeRenderExport() }
         <ScrollView>
           <View style={GlobalStyles.settingsGroup}>
@@ -112,3 +112,9 @@ export default class SettingsScreen extends Component<Props, State> {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  settingsView: {
+    flex: 1,
+  },
+});
