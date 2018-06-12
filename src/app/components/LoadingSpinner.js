@@ -28,7 +28,11 @@ export default function LoadingSpinner (
 
   const renderText = function() {
     if (typeof text != 'undefined' && text.length > 0)
-      return (<Text style={GlobalStyles.info}>{text}</Text>);
+      return (
+        <Text style={[GlobalStyles.info, GlobalStyles.defaultFontSize]}>
+          {text}
+        </Text>
+      );
   }
 
   if (modal)

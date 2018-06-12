@@ -45,16 +45,16 @@ export default class FTUXScreen extends Component<Props> {
   render() {
     return (
       <View style={GlobalStyles.container}>
-        <Text style={GlobalStyles.welcome}>
+        <Text style={[GlobalStyles.welcome, GlobalStyles.splashFontSize]}>
           {Localized('FTUXScreen.welcome')}
         </Text>
-        <Text style={GlobalStyles.instructions}>
+        <Text style={[GlobalStyles.instructions, GlobalStyles.titleFontSize]}>
           {Localized('FTUXScreen.instructions')}
         </Text>
         <TouchableOpacity
           style={GlobalStyles.button}
           onPress={() => this._registerUser()}>
-          <Text style={GlobalStyles.buttonText}>
+          <Text style={[GlobalStyles.buttonText, GlobalStyles.titleFontSize]}>
             {Localized('FTUXScreen.button')}
           </Text>
         </TouchableOpacity>

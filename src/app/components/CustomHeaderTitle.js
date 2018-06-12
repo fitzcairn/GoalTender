@@ -15,6 +15,7 @@ import {
   View,
 } from 'react-native';
 
+import GlobalStyles from '../Styles.js';
 
 export default function CustomHeaderTitle(
   {
@@ -22,12 +23,20 @@ export default function CustomHeaderTitle(
     subtitle,
   }: {
     title:string,
-    subtitle:string,
+    subtitle:?string,
   }) {
     return (
     <View style={styles.titleView}>
-      <Text style={styles.titleText}>{title}</Text>
-      <Text style={styles.subTitleText}>{subtitle}</Text>
+      <Text style={[styles.titleText, GlobalStyles.headerTitleFontSize]}>
+        {title}
+      </Text>
+      {
+        (subtitle != null ?
+          (<Text style={[styles.subTitleText, GlobalStyles.defaultFontSize]}>
+            {subtitle}
+          </Text>)
+          : null)
+      }
     </View>
   );
 }
@@ -38,14 +47,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   titleText: {
-    fontSize: Platform.OS === 'ios' ? 17 : 20,
     fontWeight: Platform.OS === 'ios' ? '700' : '500',
     color: 'rgba(0, 0, 0, .9)',
     textAlign: Platform.OS === 'ios' ? 'center' : 'left',
     marginHorizontal: 16,
   },
   subTitleText: {
-    fontSize: Platform.OS === 'ios' ? 12 : 14,
     color: 'grey'
   },
 });

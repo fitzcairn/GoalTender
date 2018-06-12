@@ -9,11 +9,30 @@
 import React, { Component } from 'react';
 
 import {
+  Platform,
   StyleSheet,
 } from 'react-native';
 
-
+/*
+ * Typography references:
+ * https://material.io/design/typography/#type-scale
+ * https://developer.apple.com/design/human-interface-guidelines/ios/visual-design/typography/
+ */
 const GlobalStyles = StyleSheet.create({
+  // Global font sizes, referencing the above.
+  defaultFontSize: {
+    fontSize: Platform.OS === 'ios' ? 17 : 16,
+  },
+  splashFontSize: { // Title 1 on iOS, H4 on Android
+    fontSize: Platform.OS === 'ios' ? 28 : 34,
+  },
+  titleFontSize: { // H3 on iOS, H6 on Android
+    fontSize: Platform.OS === 'ios' ? 20 : 20,
+  },
+  headerTitleFontSize: { // H2 on iOS, H5 on Android
+    fontSize: Platform.OS === 'ios' ? 22 : 24,
+  },
+
   noGoalsInstructions: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -27,7 +46,6 @@ const GlobalStyles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   welcome: {
-    fontSize: 20,
     textAlign: 'center',
     margin: 10,
   },
@@ -37,7 +55,6 @@ const GlobalStyles = StyleSheet.create({
     marginBottom: 5,
   },
   info: {
-    fontSize: 16,
     textAlign: 'center',
     color: '#333333',
     margin: 10,
@@ -66,7 +83,6 @@ const GlobalStyles = StyleSheet.create({
     borderColor: '#99ccff'
   },
   buttonText: {
-    fontSize: 20,
     color:'#fff',
     textAlign:'center',
     marginLeft: 30,

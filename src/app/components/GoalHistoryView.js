@@ -10,11 +10,10 @@ import React, { Component } from 'react';
 import type { Node } from 'react';
 
 import {
-  Platform,
+  ScrollView,
   StyleSheet,
   Text,
   View,
-  ScrollView,
 } from 'react-native';
 
 import {
@@ -29,6 +28,8 @@ import GoalService from '../services/GoalService.js';
 import { State as StateForGoal, StateValues } from '../storage/data/State.js';
 
 import { dateDisplay, getWeekdays, getDaysBetweenDisplay } from '../Dates.js';
+
+import GlobalStyles from '../Styles.js';
 
 import Localized from '../Strings.js';
 
@@ -148,13 +149,13 @@ export default class GoalHistoryView extends Component<Props, State> {
     if (this.props.goalComplete)
       return (
         <View style={styles.headerItem}>
-          <Text style={styles.goalCompleted}>
+          <Text style={[styles.goalCompleted, GlobalStyles.defaultFontSize]}>
             { Localized("Stats.completed") }
           </Text>
-          <Text style={styles.goalText}>
+          <Text style={[styles.goalText, GlobalStyles.titleFontSize]}>
             { this.props.goalText }
           </Text>
-          <Text style={styles.dateText}>
+          <Text style={[styles.dateText, GlobalStyles.defaultFontSize]}>
           { /* Note: Can't seem to get I18n.t working with params. */ }
           { Localized("Stats.created") + dateDisplay(this.props.goalDate) }
           </Text>
@@ -162,10 +163,10 @@ export default class GoalHistoryView extends Component<Props, State> {
       );
     return (
       <View style={styles.headerItem}>
-        <Text style={styles.goalText}>
+        <Text style={[styles.goalText, GlobalStyles.titleFontSize]}>
           { this.props.goalText }
         </Text>
-        <Text style={styles.dateText}>
+        <Text style={[styles.dateText, GlobalStyles.defaultFontSize]}>
           { /* Note: Can't seem to get I18n.t working with params. */ }
           { Localized("Stats.created") + dateDisplay(this.props.goalDate) }
         </Text>
@@ -256,18 +257,15 @@ const styles = StyleSheet.create({
   },
   goalText: {
     textAlign: 'center',
-    fontSize: Platform.OS === 'ios' ? 16 : 18,
     color: 'rgba(0, 0, 0, .9)',
     marginHorizontal: 16,
   },
   goalCompleted: {
     textAlign: 'center',
-    fontSize: Platform.OS === 'ios' ? 10 : 12,
     color: '#006600'
   },
   dateText: {
     textAlign: 'center',
-    fontSize: Platform.OS === 'ios' ? 10 : 12,
     color: 'grey'
   },
 });

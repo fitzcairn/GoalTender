@@ -127,10 +127,12 @@ export default class GoalScreen extends Component<Props, State> {
     // Otherwise, normal form.
     return (
       <View style={styles.goalView}>
-        <Text style={GlobalStyles.error}>{this.state.error}</Text>
+        <Text style={[GlobalStyles.error, GlobalStyles.defaultFontSize]}>
+          {this.state.error}
+        </Text>
         <View style={styles.goalViewInput}>
           <TextInput
-            style={styles.goalInput}
+            style={[styles.goalInput, GlobalStyles.titleFontSize]}
             maxLength = {200}
             multiline = {true}
             numberOfLines = {4}
@@ -142,9 +144,10 @@ export default class GoalScreen extends Component<Props, State> {
         <TouchableOpacity
           disabled={(this._isInput() ? false : true)}
           style={(this._isInput() ?
-            GlobalStyles.button : GlobalStyles.buttonDisabled)}
+            GlobalStyles.button :
+            GlobalStyles.buttonDisabled)}
           onPress={() => {this._handleSave();}}>
-          <Text style={GlobalStyles.buttonText}>
+          <Text style={[GlobalStyles.buttonText, GlobalStyles.titleFontSize]}>
             {Localized('Goal.saveButton')}
           </Text>
         </TouchableOpacity>
@@ -177,7 +180,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     alignSelf:'center',
-    fontSize: 20,
     textAlign: 'center',
   },
 });

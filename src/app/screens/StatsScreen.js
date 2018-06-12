@@ -10,7 +10,6 @@ import React, { Component } from 'react';
 import type { Node } from 'react';
 
 import {
-  Platform,
   StyleSheet,
   Text,
   View,
