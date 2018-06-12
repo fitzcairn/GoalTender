@@ -32,6 +32,9 @@ const GlobalStyles = StyleSheet.create({
   headerTitleFontSize: { // H2 on iOS, H5 on Android
     fontSize: Platform.OS === 'ios' ? 22 : 24,
   },
+  headerSubtitleFontSize: { // Subhead on iOS, Subtitle 1 on Android
+    fontSize: Platform.OS === 'ios' ? 15 : 16,
+  },
 
   defaultHeaderStyle: {
     flex: 1,

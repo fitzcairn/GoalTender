@@ -32,7 +32,8 @@ export default function CustomHeaderTitle(
       </Text>
       {
         (subtitle != null ?
-          (<Text style={[styles.subTitleText, GlobalStyles.defaultFontSize]}>
+          (<Text style={[styles.subTitleText,
+            GlobalStyles.headerSubtitleFontSize]}>
             {subtitle}
           </Text>)
           : null)
