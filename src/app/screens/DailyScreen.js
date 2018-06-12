@@ -247,6 +247,7 @@ export default class DailyScreen extends Component<Props, State> {
           <Swipeable
             leftButtonWidth={50}
             key={index}
+            rightActionActivationDistance={25}
             leftButtons={[
               <DeleteButton onPress={() => {
                 Alert.alert(
