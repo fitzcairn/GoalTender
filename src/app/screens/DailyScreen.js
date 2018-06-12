@@ -312,6 +312,7 @@ export default class DailyScreen extends Component<Props, State> {
             }}
             >
             <GoalRow
+              onTouch={() => this._closeDrawer()}
               disabled={((this.drawerOpen && (this.drawerOpenIndex == index)) ? true : false)}
               label={g.getText()}
               goalId={g.getId()}

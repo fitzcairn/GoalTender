@@ -9,6 +9,7 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Text,
   View,
 } from 'react-native';
@@ -67,6 +68,7 @@ type Props = {
   userId: string,
   disabled: boolean,
   state: number,
+  onTouch: () => void,
 };
 
 type State = {
@@ -87,7 +89,7 @@ export default class GoalRow extends Component<Props, State> {
     };
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps: Object, prevState: Object) {
     if (this.props.state !== prevProps.state) {
       this.setState({
         goalState: this.props.state,
@@ -109,27 +111,29 @@ export default class GoalRow extends Component<Props, State> {
 
   render() {
     return (
-      <View style={styles.goalRow}>
-        <Text style={styles.goalText}>{this.props.label}</Text>
-        <IconButton
-          type={GoalRow.ButtonType.YES}
-          disabled={this.props.disabled}
-          state={this.state.goalState}
-          onPress={() => {
-            this._saveGoalState(
-                StateValues.YES
-              );
-          }} />
-        <IconButton
-          type={GoalRow.ButtonType.NO}
-          disabled={this.props.disabled}
-          state={this.state.goalState}
-          onPress={() => {
-            this._saveGoalState(
-                StateValues.NO
-              );
-          }} />
-      </View>
+      <TouchableWithoutFeedback onPress={() => this.props.onTouch()}>
+        <View style={styles.goalRow}>
+          <Text style={styles.goalText}>{this.props.label}</Text>
+          <IconButton
+            type={GoalRow.ButtonType.YES}
+            disabled={this.props.disabled}
+            state={this.state.goalState}
+            onPress={() => {
+              this._saveGoalState(
+                  StateValues.YES
+                );
+            }} />
+          <IconButton
+            type={GoalRow.ButtonType.NO}
+            disabled={this.props.disabled}
+            state={this.state.goalState}
+            onPress={() => {
+              this._saveGoalState(
+                  StateValues.NO
+                );
+            }} />
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 };
