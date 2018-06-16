@@ -15,6 +15,7 @@
     "react-native-i18n": "^2.0.12",
     "react-native-mail": "^3.0.6",
     "react-native-modal-datetime-picker": "^5.1.0",
+    "react-native-push-notification": "^3.0.2",
     "react-native-svg": "^6.3.1",
     "react-native-swipeable": "^0.6.0",
     "react-native-swiper": "^1.5.13",

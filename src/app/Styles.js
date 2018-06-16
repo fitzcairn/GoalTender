@@ -119,6 +119,7 @@ const GlobalStyles = StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 15,
     alignItems: "center",
+
     borderColor: '#d9d9d9',
     borderTopWidth: 0,
     borderBottomWidth: 1,
@@ -131,11 +132,36 @@ const GlobalStyles = StyleSheet.create({
     marginLeft: 15,
     alignItems: "center",
   },
+  reminderSettingsToggleRowView: {
+    flex: 1,
+    flexDirection: 'row',
+    marginLeft: 15,
+    alignItems: "center",
+  },
+  reminderSettingsDateRowView: {
+    flex: 1,
+    flexDirection: 'row',
+    marginLeft: 15,
+    alignItems: "center",
+
+    borderColor: '#d9d9d9',
+    borderTopWidth: 1,
+    borderBottomWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+  },
   settingsText: {
     marginTop: 10,
     marginBottom: 10,
     flex: 1,
     color: 'black',
+  },
+  settingsTextClickable: {
+    textAlign: 'center',
+    marginTop: 10,
+    marginBottom: 10,
+    flex: 1,
+    color: 'blue',
   },
   settingsTextDisabled: {
     marginTop: 10,

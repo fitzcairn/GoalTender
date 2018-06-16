@@ -161,6 +161,8 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-push-notification')
+    compile project(':react-native-i18n')
     compile project(':react-native-mail')
     compile project(':react-native-vector-icons')
     compile project(':react-native-svg')

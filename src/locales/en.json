@@ -12,7 +12,8 @@
     "loginSetting": "Manage Login",
     "aboutSetting": "About",
 
-    "remindersSetting": "Enable Reminders",
+    "remindersSetting": "Enable Daily Reminders",
+    "remindersTime": "Remind me at: ",
   },
   "About": {
     "title": "About",

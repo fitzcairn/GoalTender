@@ -9,15 +9,11 @@
 import React, { Component } from 'react';
 
 import {
-  Button,
-  Image,
-  Platform,
-  SectionList,
   ScrollView,
   StyleSheet,
   Switch,
   Text,
-  TextInput,
+  TouchableOpacity,
   View,
 } from 'react-native';
 
@@ -26,9 +22,7 @@ import {
   NavigationState,
 } from 'react-navigation';
 
-// TODO: Add DateTimePicker once I tackle local notifications.
-// https://github.com/mmazzarolo/react-native-modal-datetime-picker
-//import DateTimePicker from 'react-native-modal-datetime-picker';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 
 import Localized from '../Strings.js';
 
@@ -37,6 +31,9 @@ import GlobalStyles from '../Styles.js';
 import SettingsButton from '../components/SettingsButton.js';
 import ExportComponent from '../components/ExportComponent.js';
 
+import { nowDisplayTime } from '../Dates.js';
+
+import { log } from '../Util.js';
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
@@ -44,6 +41,8 @@ type Props = {
 
 type State = {
   renderExport: boolean,
+  notificationsOn: boolean,
+  showPicker: boolean,
 };
 
 // App Settings
@@ -53,6 +52,8 @@ export default class SettingsScreen extends Component<Props, State> {
     super(props);
     this.state = {
       renderExport: false,
+      notificationsOn: false,
+      showPicker: false,
     };
   }
 
@@ -64,6 +65,48 @@ export default class SettingsScreen extends Component<Props, State> {
         }} />
       );
     return null;
+  }
+
+  _handleSwitchValueChange() {
+    this.setState({
+      notificationsOn: !this.state.notificationsOn,
+    });
+  }
+
+  _showTimePicker() {
+    this.setState({
+      showPicker: true
+    });
+  }
+
+  _hideTimePicker() {
+    this.setState({
+      showPicker: false
+    });
+  }
+
+  _handleTimePicked(time: string) {
+    log(time);
+    this._hideTimePicker();
+  }
+
+  _renderReminderDateTime() {
+    if (this.state.notificationsOn) {
+      return (
+          <TouchableOpacity
+            style={GlobalStyles.settingsRow}
+            onPress={ () => this._showTimePicker() }>
+            <View style={GlobalStyles.reminderSettingsDateRowView}>
+              <Text style={
+                [GlobalStyles.settingsTextClickable, GlobalStyles.defaultFontSize]
+              }>
+                { "12:05 PM" }
+              </Text>
+            </View>
+          </TouchableOpacity>
+      );
+    }
+    else return null;
   }
 
   render() {
@@ -92,21 +135,26 @@ export default class SettingsScreen extends Component<Props, State> {
               onPress={() => { this.props.navigation.navigate('About'); }}
             />
           </View>
-          {/* TODO: Implement local notifications, and allow folks to set
-            reminders for themnselves to update their daily goals.
-
           <View style={GlobalStyles.settingsGroup}>
             <View style={GlobalStyles.settingsRow}>
-              <View style={GlobalStyles.settingsRowViewLast}>
-                <Text style={[GlobalStyles.settingsTextDisabled, GlobalStyles.defaultFontSize]}>
+              <View style={GlobalStyles.reminderSettingsToggleRowView}>
+                <Text style={[GlobalStyles.settingsText, GlobalStyles.defaultFontSize]}>
                   {Localized('Settings.remindersSetting')}
                 </Text>
-                <Switch disabled={true}/>
+                <Switch
+                  value={ this.state.notificationsOn }
+                  onValueChange={() => this._handleSwitchValueChange()}
+                />
               </View>
             </View>
+            { this._renderReminderDateTime() }
+            <DateTimePicker
+              mode={"time"}
+              isVisible={this.state.showPicker}
+              onConfirm={(time) => this._handleTimePicked(time)}
+              onCancel={() => this._hideTimePicker()}
+            />
           </View>
-
-          */}
         </ScrollView>
       </View>
     );

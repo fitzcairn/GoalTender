@@ -6,8 +6,11 @@
  * @flow
  */
 
+import I18n from 'react-native-i18n';
+
 import moment from 'moment';
 
+const currentLocale = I18n.currentLocale();
 const _now = new Date();
 
 // Modified from
@@ -27,21 +30,27 @@ export function nowDate() : string {
   return _now.toISOString().split('T')[0];
 }
 
+// Get the current time.
+export function nowDisplayTime() : string {
+  moment.locale(currentLocale);
+  return moment().format("HH:mm");
+}
+
 // Get a (TODO: localized) date string for today.
 export function nowDateDisplay() : string {
-  moment.locale('en');
+  moment.locale(currentLocale);
   return moment().format("dddd, MMMM Do");
 }
 
 // Get a (TODO: localized) date string for a ISO 8601 datetime.
 export function dateDisplay(date: string) : string {
-  moment.locale('en');
+  moment.locale(currentLocale);
   return moment(date).format("dddd, MMMM Do");
 }
 
 // Get localized (TODO!) weekday names.
 export function getWeekdays() : Array<string> {
-  moment.locale('en');
+  moment.locale(currentLocale);
   return moment.weekdaysShort();
 }
 
