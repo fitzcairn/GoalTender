@@ -69,10 +69,15 @@ export default class UserStorage {
   static async upsertUser(
     userId: string | null,
     callback: (User) => void,
-    hasSeenFTUX?: boolean
-  ) {
+    userData?: {
+      hasSeenFTUX?: boolean,
+      reminderTime?: string,
+    }) {
+    if (userData == null) userData = {};
+
     const newUser = this._makeUser(this._getUserId(userId))
-      .setHasSeenFTUX(hasSeenFTUX);
+      .setHasSeenFTUX(userData.hasSeenFTUX)
+      .setReminderTime(userData.reminderTime);
 
     if (userId == null) { // New user case.
       return AsyncStorage.setItem(
@@ -84,7 +89,8 @@ export default class UserStorage {
         AsyncStorage.setItem(
           this._makeKey(userObj.getId()),
           userObj
-            .setHasSeenFTUX(hasSeenFTUX)
+            .setHasSeenFTUX(newUser.getHasSeenFTUX())
+            .setReminderTime(newUser.getReminderTime())
             .setLastUpdateDateTimeToNow()
             .toJSONString()
           ).then(callback(userObj));

@@ -24,16 +24,21 @@ import {
 
 import DateTimePicker from 'react-native-modal-datetime-picker';
 
+import SettingsButton from '../components/SettingsButton.js';
+import ExportComponent from '../components/ExportComponent.js';
+
+import UserService from '../services/UserService.js';
+
+import { User } from '../storage/data/User.js'
+
+import { nowDateTime, fromIsoToDisplay, getHoursMinutes } from '../Dates.js';
+
+import { log } from '../Util.js';
+
 import Localized from '../Strings.js';
 
 import GlobalStyles from '../Styles.js';
 
-import SettingsButton from '../components/SettingsButton.js';
-import ExportComponent from '../components/ExportComponent.js';
-
-import { nowDisplayTime } from '../Dates.js';
-
-import { log } from '../Util.js';
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
@@ -43,6 +48,8 @@ type State = {
   renderExport: boolean,
   notificationsOn: boolean,
   showPicker: boolean,
+  isoTime: string,
+  user: User|null,
 };
 
 // App Settings
@@ -54,7 +61,23 @@ export default class SettingsScreen extends Component<Props, State> {
       renderExport: false,
       notificationsOn: false,
       showPicker: false,
+      isoTime: nowDateTime(),
+      user: null,
     };
+  }
+
+  componentDidMount() {
+    // Get the user.
+    UserService.getUser(
+      null, // No userID until we integrate login.
+      (user: User) => {
+        this.setState({
+          user: user,
+        });
+      }
+    ).catch((error) => {
+      log("DailyScreen -> _refreshData -> getGoals: " + error);
+    });
   }
 
   _maybeRenderExport() {
@@ -86,8 +109,32 @@ export default class SettingsScreen extends Component<Props, State> {
   }
 
   _handleTimePicked(time: string) {
-    log(time);
-    this._hideTimePicker();
+    const [hours, mins] = getHoursMinutes(time);
+    const user = this.state.user;
+    if (user == null) {
+      this.setState({
+        isoTime: time,
+        showPicker: false
+      });
+    } else {
+      UserService.updateUserReminderTime(
+        user.getId(),
+        time,
+        (updatedUser: User) => {
+          this.setState({
+            isoTime: time,
+            user: updatedUser,
+            showPicker: false
+          });
+        })
+    }
+  }
+
+  _getReminderTime(): string {
+    if (this.state.user == null || this.state.user.getReminderTime() == null)
+      return fromIsoToDisplay(this.state.isoTime);
+    // $FlowFixMe
+    return fromIsoToDisplay(this.state.user.getReminderTime());
   }
 
   _renderReminderDateTime() {
@@ -100,7 +147,7 @@ export default class SettingsScreen extends Component<Props, State> {
               <Text style={
                 [GlobalStyles.settingsTextClickable, GlobalStyles.defaultFontSize]
               }>
-                { "12:05 PM" }
+                { this._getReminderTime() }
               </Text>
             </View>
           </TouchableOpacity>
@@ -150,6 +197,7 @@ export default class SettingsScreen extends Component<Props, State> {
             { this._renderReminderDateTime() }
             <DateTimePicker
               mode={"time"}
+              minuteInterval={5}
               isVisible={this.state.showPicker}
               onConfirm={(time) => this._handleTimePicked(time)}
               onCancel={() => this._hideTimePicker()}

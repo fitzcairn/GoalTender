@@ -13,14 +13,23 @@ export class User {
   getId: () => string;
   getLastUpdateDateTime: () => string;
   getHasSeenFTUX: () => boolean;
+  getReminderTime: () => ?string;
+  setReminderTime: (reminderTime?: ?string) => User;
   setLastUpdateDateTimeToNow: () => User;
   setHasSeenFTUX: (hasSeenFTUX?: boolean) => User;
   toJSONString: () => string;
 
-  constructor(id: string, lastUpdateDateTime: string, hasSeenFTUX: boolean) {
+  constructor(
+    id: string,
+    lastUpdateDateTime: string,
+    hasSeenFTUX: boolean,
+    reminderTime: ?string
+  ) {
+
     let _id = id;
     let _lastUpdateDateTime = lastUpdateDateTime;
     let _hasSeenFTUX = hasSeenFTUX;
+    let _reminderTime = reminderTime;
 
     Boolean(hasSeenFTUX).valueOf();
 
@@ -34,6 +43,16 @@ export class User {
 
     this.getLastUpdateDateTime = function() {
       return _lastUpdateDateTime;
+    }
+
+    this.getReminderTime = function() {
+      return _reminderTime;
+    }
+
+    this.setReminderTime = function(reminderTime?: ?string) {
+      if (typeof reminderTime != 'undefined')
+        _reminderTime = reminderTime;
+      return this;
     }
 
     this.setLastUpdateDateTimeToNow = function() {
@@ -52,6 +71,7 @@ export class User {
       return JSON.stringify({
         userId: _id,
         lastUpdateDateTime: _lastUpdateDateTime,
+        reminderTime: _reminderTime,
         hasSeenFTUX: _hasSeenFTUX,
       });
     }
@@ -61,6 +81,7 @@ export class User {
     let jsonObj = JSON.parse(json);
     return new User(jsonObj.userId,
       jsonObj.lastUpdateDateTime,
-      jsonObj.hasSeenFTUX);
+      jsonObj.hasSeenFTUX,
+      jsonObj.reminderTime);
   }
 }

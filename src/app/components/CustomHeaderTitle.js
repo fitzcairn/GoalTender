@@ -23,7 +23,7 @@ export default function CustomHeaderTitle(
     subtitle,
   }: {
     title:string,
-    subtitle:?string,
+    subtitle:string,
   }) {
     return (
     <View style={styles.titleView}>
@@ -31,7 +31,7 @@ export default function CustomHeaderTitle(
         {title}
       </Text>
       {
-        (subtitle != null ?
+        (subtitle != "" ?
           (<Text style={[styles.subTitleText,
             GlobalStyles.headerSubtitleFontSize]}>
             {subtitle}

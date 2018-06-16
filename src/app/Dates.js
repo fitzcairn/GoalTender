@@ -97,3 +97,17 @@ export function getDaysBetweenDisplay(
 export function timeInMillis() {
   return moment().valueOf();
 }
+
+// Turn an ISO 8601 datetime string into a localized time display string.
+export function fromIsoToDisplay(isoString: ?string): string {
+  moment.locale(currentLocale);
+  if (isoString != null)
+    return moment(isoString).format("LT");
+  return moment().format("LT");
+}
+
+// Get [hours, minutes] from an ISO 8601 string.
+export function getHoursMinutes(isoString: string): Array<string> {
+  moment.locale(currentLocale);
+  return [moment(isoString).hours(), moment(isoString).minutes()];
+}

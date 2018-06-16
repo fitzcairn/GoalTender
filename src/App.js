@@ -63,7 +63,8 @@ const GoalTenderStack = {
     path: 'settings',
     navigationOptions: ({ navigation }) => ({
       headerTitle: <CustomHeaderTitle
-                     title={Localized('Settings.title')}/>,
+                     title={Localized('Settings.title')}
+                     subtitle={""}/>,
       headerRight: (<View></View>),
     }),
   },
@@ -72,7 +73,8 @@ const GoalTenderStack = {
     path: 'settings',
     navigationOptions: ({ navigation }) => ({
       headerTitle: <CustomHeaderTitle
-                     title={Localized('About.title')}/>,
+                     title={Localized('About.title')}
+                     subtitle={""}/>,
       headerRight: (<View></View>),
     }),
   },
@@ -81,7 +83,8 @@ const GoalTenderStack = {
     path: 'goal',
     navigationOptions: ({ navigation }) => ({
       headerTitle: <CustomHeaderTitle
-                     title={Localized('Goal.title')}/>,
+                     title={Localized('Goal.title')}
+                     subtitle={""}/>,
       headerRight: (<View></View>),
     }),
   },
@@ -116,7 +119,8 @@ const GoalTenderStack = {
     path: 'stats',
     navigationOptions: ({ navigation }) => ({
       headerTitle: <CustomHeaderTitle
-                     title={Localized('Stats.title')}/>,
+                     title={Localized('Stats.title')}
+                     subtitle={""}/>,
       headerRight: (
         <IconButton
           align='right'

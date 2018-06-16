@@ -34,6 +34,16 @@ export default class UserService {
     userId: string | null,
     hasSeenFTUX: boolean,
     callback: (User) => void) {
-      return UserStorage.upsertUser(userId, callback, hasSeenFTUX);
+      return UserStorage.upsertUser(
+        userId, callback, {hasSeenFTUX: hasSeenFTUX});
+  }
+
+  // Set a user's reminder time.
+  static async updateUserReminderTime(
+    userId: string | null,
+    reminderTime: string,
+    callback: (User) => void) {
+      return UserStorage.upsertUser(
+        userId, callback, {reminderTime: reminderTime});
   }
 }
