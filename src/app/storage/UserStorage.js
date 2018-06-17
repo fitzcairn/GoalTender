@@ -21,7 +21,7 @@ export default class UserStorage {
     return (typeof userId == 'undefined' || userId == null ? this._defaultId : userId);
   }
 
-  static _makeKey(userId?: string) {
+  static _makeKey(userId?: string|null) {
     return 'user:' + this._getUserId(userId);
   }
 
@@ -45,10 +45,10 @@ export default class UserStorage {
     callback: (User) => void
   ) {
     // TODO: make key with 3P login.
-    return AsyncStorage.getItem(this._makeKey())
+    return AsyncStorage.getItem(this._makeKey(userId))
       .then(userJSON => {
         if (userJSON == null)
-          callback(this._makeUser(this._defaultId));
+          callback(this._makeUser(userId));
         else
           callback(User.fromJSONString(userJSON));
       });  // Don't swallow any exceptions with a catch block; prop to caller.
@@ -89,8 +89,8 @@ export default class UserStorage {
         AsyncStorage.setItem(
           this._makeKey(userObj.getId()),
           userObj
-            .setHasSeenFTUX(newUser.getHasSeenFTUX())
-            .setReminderTime(newUser.getReminderTime())
+            .setHasSeenFTUX(userData.hasSeenFTUX)
+            .setReminderTime(userData.reminderTime)
             .setLastUpdateDateTimeToNow()
             .toJSONString()
           ).then(callback(userObj));

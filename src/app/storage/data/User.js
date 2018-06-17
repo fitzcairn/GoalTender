@@ -71,8 +71,8 @@ export class User {
       return JSON.stringify({
         userId: _id,
         lastUpdateDateTime: _lastUpdateDateTime,
-        reminderTime: _reminderTime,
         hasSeenFTUX: _hasSeenFTUX,
+        reminderTime: _reminderTime,
       });
     }
   }
