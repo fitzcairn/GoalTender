@@ -13,6 +13,8 @@ export class User {
   getId: () => string;
   getLastUpdateDateTime: () => string;
   getHasSeenFTUX: () => boolean;
+  getRemindersOn: () => boolean;
+  setRemindersOn: (remindersOn?: boolean) => User;
   getReminderTime: () => ?string;
   setReminderTime: (reminderTime?: ?string) => User;
   setLastUpdateDateTimeToNow: () => User;
@@ -21,25 +23,27 @@ export class User {
 
   constructor(
     id: string,
-    lastUpdateDateTime: string,
-    hasSeenFTUX: boolean,
-    reminderTime: ?string
+    lastUpdateDateTime: ?string,
+    hasSeenFTUX: ?boolean,
+    reminderTime: ?string,
+    remindersOn: ?boolean
   ) {
 
     let _id = id;
-    let _lastUpdateDateTime = lastUpdateDateTime;
-    let _hasSeenFTUX = hasSeenFTUX;
-    let _reminderTime = reminderTime;
 
-    Boolean(hasSeenFTUX).valueOf();
+    let _lastUpdateDateTime = (
+      lastUpdateDateTime == null ? nowDateTime() :
+      lastUpdateDateTime
+    );
+
+    let _hasSeenFTUX = !!hasSeenFTUX;
+    let _remindersOn = !!remindersOn;
+
+    let _reminderTime = reminderTime;
 
     this.getId = function() {
       return _id;
     };
-
-    this.getHasSeenFTUX = function() {
-      return _hasSeenFTUX;
-    }
 
     this.getLastUpdateDateTime = function() {
       return _lastUpdateDateTime;
@@ -60,6 +64,21 @@ export class User {
       return this;
     }
 
+    this.getRemindersOn = function() {
+      return _remindersOn;
+    }
+
+    // Only update if arg defined.
+    this.setRemindersOn = function(remindersOn?: boolean) {
+      if (typeof remindersOn != 'undefined')
+        _remindersOn = remindersOn;
+      return this;
+    }
+
+    this.getHasSeenFTUX = function() {
+      return _hasSeenFTUX;
+    }
+
     // Only update if arg defined.
     this.setHasSeenFTUX = function(hasSeenFTUX?: boolean) {
       if (typeof hasSeenFTUX != 'undefined')
@@ -73,6 +92,7 @@ export class User {
         lastUpdateDateTime: _lastUpdateDateTime,
         hasSeenFTUX: _hasSeenFTUX,
         reminderTime: _reminderTime,
+        remindersOn: _remindersOn,
       });
     }
   }
@@ -82,6 +102,7 @@ export class User {
     return new User(jsonObj.userId,
       jsonObj.lastUpdateDateTime,
       jsonObj.hasSeenFTUX,
-      jsonObj.reminderTime);
+      jsonObj.reminderTime,
+      jsonObj.remindersOn);
   }
 }

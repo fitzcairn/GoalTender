@@ -71,12 +71,14 @@ export default class UserStorage {
     callback: (User) => void,
     userData?: {
       hasSeenFTUX?: boolean,
+      remindersOn?: boolean,
       reminderTime?: string,
     }) {
     if (userData == null) userData = {};
 
     const newUser = this._makeUser(this._getUserId(userId))
       .setHasSeenFTUX(userData.hasSeenFTUX)
+      .setRemindersOn(userData.remindersOn)
       .setReminderTime(userData.reminderTime);
 
     if (userId == null) { // New user case.
@@ -91,6 +93,7 @@ export default class UserStorage {
           userObj
             .setHasSeenFTUX(userData.hasSeenFTUX)
             .setReminderTime(userData.reminderTime)
+            .setRemindersOn(userData.remindersOn)
             .setLastUpdateDateTimeToNow()
             .toJSONString()
           ).then(callback(userObj));

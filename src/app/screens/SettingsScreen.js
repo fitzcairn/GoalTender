@@ -46,9 +46,9 @@ type Props = {
 
 type State = {
   renderExport: boolean,
-  notificationsOn: boolean,
   showPicker: boolean,
-  isoTime: string,
+  notificationsOn: boolean,
+  notificationsIsoTime: string,
   user: User|null,
 };
 
@@ -59,24 +59,31 @@ export default class SettingsScreen extends Component<Props, State> {
     super(props);
     this.state = {
       renderExport: false,
-      notificationsOn: false,
       showPicker: false,
-      isoTime: nowDateTime(),
+      notificationsOn: false,
+      notificationsIsoTime: nowDateTime(),
       user: null,
     };
   }
 
   componentDidMount() {
+    let isoTime:string = this.state.notificationsIsoTime;
+
     // Get the user.
     UserService.getUser(
       null, // No userID until we integrate login.
       (user: User) => {
+        // $FlowFixMe
+        if (user.getReminderTime() != null) isoTime = user.getReminderTime();
+
         this.setState({
           user: user,
+          notificationsOn: user.getRemindersOn(),
+          notificationsIsoTime: isoTime,
         });
       }
     ).catch((error) => {
-      log("DailyScreen -> _refreshData -> getGoals: " + error);
+      log("SettingsScreen -> componentDidMount: " + error);
     });
   }
 
@@ -90,10 +97,36 @@ export default class SettingsScreen extends Component<Props, State> {
     return null;
   }
 
+  _updateUserReminderState(notificationsOn: boolean, isoTime: string) {
+    UserService.updateUserReminder(
+      this.state.user == null ? null : this.state.user.getId(),
+      notificationsOn,
+      isoTime,
+      (updatedUser: User) => {
+
+        // TODO: If notofications are on, use library to create:
+        // https://github.com/wmcmahan/react-native-calendar-reminders
+
+        if (!notificationsOn) {
+          // Disable calendar entry.
+        } else {
+          // Enable calendar entry.
+        }
+
+        this.setState({
+          notificationsOn: notificationsOn,
+          notificationsIsoTime: isoTime,
+          user: updatedUser,
+          showPicker: false
+        });
+      }).catch((error) => {
+        log("SettingsScreen -> _updateUserReminderState: " + error);
+      });
+  }
+
   _handleSwitchValueChange() {
-    this.setState({
-      notificationsOn: !this.state.notificationsOn,
-    });
+    this._updateUserReminderState(
+      !this.state.notificationsOn, this.state.notificationsIsoTime);
   }
 
   _showTimePicker() {
@@ -108,31 +141,14 @@ export default class SettingsScreen extends Component<Props, State> {
     });
   }
 
-  _handleTimePicked(time: string) {
-    const [hours, mins] = getHoursMinutes(time);
-    const user = this.state.user;
-    if (user == null) {
-      this.setState({
-        isoTime: time,
-        showPicker: false
-      });
-    } else {
-      UserService.updateUserReminderTime(
-        user.getId(),
-        time,
-        (updatedUser: User) => {
-          this.setState({
-            isoTime: time,
-            user: updatedUser,
-            showPicker: false
-          });
-        })
-    }
+  _handleTimePicked(isoTime: string) {
+    const [hours, mins] = getHoursMinutes(isoTime);
+    this._updateUserReminderState(this.state.notificationsOn, isoTime);
   }
 
   _getReminderTime(): string {
     if (this.state.user == null || this.state.user.getReminderTime() == null)
-      return fromIsoToDisplay(this.state.isoTime);
+      return fromIsoToDisplay(this.state.notificationsIsoTime);
     // $FlowFixMe
     return fromIsoToDisplay(this.state.user.getReminderTime());
   }

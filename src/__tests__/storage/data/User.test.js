@@ -46,6 +46,16 @@ test('User.setHasSeenFTUX', () => {
   expect(user.setHasSeenFTUX(true).getHasSeenFTUX()).toBe(true);
 });
 
+test('User.setRemindersOn', () => {
+  const user:User = new User("id", "date", true, "reminders", true);
+
+  // Undefined should not change the value.
+  expect(user.setRemindersOn().getRemindersOn()).toBe(true);
+  expect(user.setRemindersOn(false).getRemindersOn()).toBe(false);
+  expect(user.setRemindersOn().getRemindersOn()).toBe(false);
+  expect(user.setRemindersOn(true).getRemindersOn()).toBe(true);
+});
+
 test('User.setReminderTime', () => {
   const user:User = new User("id", "date", true, "reminder");
 
@@ -57,22 +67,24 @@ test('User.setReminderTime', () => {
 });
 
 test('User.toJSONString', () => {
-  const user:User = new User("id", "date", true, "reminder");
+  const user:User = new User("id", "date", true, "reminder", true);
   expect(user.toJSONString()).toBe(JSON.stringify({
     userId: "id",
     lastUpdateDateTime: "date",
     hasSeenFTUX: true,
     reminderTime: "reminder",
+    remindersOn: true,
   }));
 });
 
 test('User.fromJSONString', () => {
-  const user:User = new User("id", "date", true, "reminder");
+  const user:User = new User("id", "date", true, "reminder", true);
   const userString:string = JSON.stringify({
     userId: "id",
     lastUpdateDateTime: "date",
     hasSeenFTUX: true,
     reminderTime: "reminder",
+    remindersOn: true,
   });
   expect(User.fromJSONString(userString).toJSONString())
     .toBe(user.toJSONString());

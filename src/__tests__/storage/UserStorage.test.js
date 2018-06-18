@@ -97,20 +97,22 @@ test('UserStorage.upsertUser -- user exists, mutate reminder time', () => {
   );
 });
 
-test('UserStorage.upsertUser -- user exists, mutate both', () => {
+test('UserStorage.upsertUser -- user exists, mutate all', () => {
   const user:User = new User("uid", "date", false, "reminder")
     .setLastUpdateDateTimeToNow();
   _addUserToStorage(user);
 
   const updatedUser:User = User.fromJSONString(user.toJSONString())
     .setReminderTime("new reminder time")
-    .setHasSeenFTUX(true);
+    .setHasSeenFTUX(true)
+    .setRemindersOn(true);
 
   return UserStorage.upsertUser(user.getId(),
     (result:User) => {
       expect(result.toJSONString()).toEqual(updatedUser.toJSONString());
     },
     { hasSeenFTUX: true,
+      remindersOn: true,
       reminderTime: "new reminder time" }
   );
 });
@@ -157,20 +159,22 @@ test('UserStorage.upsertUser -- user does NOT exist, mutate reminder time', () =
   );
 });
 
-test('UserStorage.upsertUser -- user does NOT exist, mutate both', () => {
+test('UserStorage.upsertUser -- user does NOT exist, mutate all', () => {
   const user:User = UserStorage._makeUser("uid")
     .setLastUpdateDateTimeToNow();
   _addUserToStorage(user);
 
   const updatedUser:User = User.fromJSONString(user.toJSONString())
     .setReminderTime("new reminder time")
-    .setHasSeenFTUX(true);
+    .setHasSeenFTUX(true)
+    .setRemindersOn(true);
 
   return UserStorage.upsertUser(user.getId(),
     (result:User) => {
       expect(result.toJSONString()).toEqual(updatedUser.toJSONString());
     },
     { hasSeenFTUX: true,
+      remindersOn: true,
       reminderTime: "new reminder time" }
   );
 });

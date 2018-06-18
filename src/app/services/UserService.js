@@ -39,11 +39,15 @@ export default class UserService {
   }
 
   // Set a user's reminder time.
-  static async updateUserReminderTime(
+  static async updateUserReminder(
     userId: string | null,
+    remindersOn: boolean,
     reminderTime: string,
     callback: (User) => void) {
       return UserStorage.upsertUser(
-        userId, callback, {reminderTime: reminderTime});
+        userId, callback, {
+          remindersOn: remindersOn,
+          reminderTime: reminderTime,
+        });
   }
 }
