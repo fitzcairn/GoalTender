@@ -10,14 +10,20 @@ import I18n from 'react-native-i18n';
 
 import moment from 'moment';
 
-const currentLocale = I18n.currentLocale();
+const _locale = I18n.currentLocale();
+
+// This is a horrible, horrible hack to get around:
+// https://github.com/moment/moment/issues/3624#issuecomment-335190847
+const currentLocale =
+  (_locale.indexOf("-") === -1 ?
+  _locale :
+  _locale.substr(0, _locale.indexOf('-')));
+
 const _now = new Date();
 
-// Modified from
-// https://stackoverflow.com/questions/27012854/change-iso-date-string-to-date-object-javascript
-export function parseISODateString(s: string): Date {
-  let b = s.split(/\D+/).map(d => parseInt(d, 10));
-  return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
+// Parse an ISO 8601 string into a Date object.
+export function parseISODateString(isoDateTime: string): Date {
+  return moment(isoDateTime).toDate();
 }
 
 // Get a ISO 8601 datetime in UTC.
@@ -110,4 +116,11 @@ export function fromIsoToDisplay(isoString: ?string): string {
 export function getHoursMinutes(isoString: string): Array<string> {
   moment.locale(currentLocale);
   return [moment(isoString).hours(), moment(isoString).minutes()];
+}
+
+// Get this exact time a day from now, in ISO 8601
+export function getNextTime(isoTime: string): string {
+  if (moment(isoTime).diff(moment()) < 0)
+    return moment(isoTime).add(1, 'day').toISOString();
+  return moment(isoTime).toISOString();
 }

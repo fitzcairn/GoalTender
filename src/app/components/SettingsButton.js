@@ -7,13 +7,13 @@
  */
 import React from 'react';
 import {
-  StyleSheet,
   TouchableOpacity,
   Text,
   View,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
+
 import GlobalStyles from '../Styles.js';
 
 
@@ -43,17 +43,8 @@ export default function SettingsButton(
         }>
           {label}
         </Text>
-        <Icon name='chevron-right' style={styles.settingsIcon} size={30}/>
+        <Icon name='chevron-right' style={GlobalStyles.settingsIcon} size={30}/>
       </View>
     </TouchableOpacity>
   );
 }
-
-
-const styles = StyleSheet.create({
-  settingsIcon: {
-    backgroundColor: 'transparent',
-    color: '#d9d9d9',
-    alignSelf: 'center',
-  },
-});

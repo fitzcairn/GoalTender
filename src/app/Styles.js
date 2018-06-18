@@ -150,6 +150,11 @@ const GlobalStyles = StyleSheet.create({
     borderLeftWidth: 0,
     borderRightWidth: 0,
   },
+  settingsIcon: {
+    backgroundColor: 'transparent',
+    color: '#d9d9d9',
+    alignSelf: 'center',
+  },
   settingsText: {
     marginTop: 10,
     marginBottom: 10,

@@ -1,4 +1,7 @@
 {
+  "Notifications": {
+    "message": "How did you do on your daily goals?",
+  },
   "FTUXScreen": {
     "title": "Welcome",
     "welcome": "Welcome to GoalTender!",

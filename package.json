@@ -12,7 +12,6 @@
     "npm": "^6.1.0",
     "react": "16.3.1",
     "react-native": "0.55.4",
-    "react-native-calendar-reminders": "^1.1.2",
     "react-native-i18n": "^2.0.12",
     "react-native-mail": "^3.0.6",
     "react-native-modal-datetime-picker": "^5.1.0",

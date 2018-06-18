@@ -23,15 +23,18 @@ import {
 } from 'react-navigation';
 
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Notifications from 'react-native-push-notification';
 
 import SettingsButton from '../components/SettingsButton.js';
 import ExportComponent from '../components/ExportComponent.js';
 
 import UserService from '../services/UserService.js';
+import LocalNotificationsService from '../services/LocalNotificationsService.js';
 
 import { User } from '../storage/data/User.js'
 
-import { nowDateTime, fromIsoToDisplay, getHoursMinutes } from '../Dates.js';
+import { nowDateTime, fromIsoToDisplay, getNextTime } from '../Dates.js';
 
 import { log } from '../Util.js';
 
@@ -50,6 +53,7 @@ type State = {
   notificationsOn: boolean,
   notificationsIsoTime: string,
   user: User|null,
+  haveNotificationsPermission: boolean,
 };
 
 // App Settings
@@ -63,6 +67,7 @@ export default class SettingsScreen extends Component<Props, State> {
       notificationsOn: false,
       notificationsIsoTime: nowDateTime(),
       user: null,
+      haveNotificationsPermission: false,
     };
   }
 
@@ -97,36 +102,45 @@ export default class SettingsScreen extends Component<Props, State> {
     return null;
   }
 
-  _updateUserReminderState(notificationsOn: boolean, isoTime: string) {
+  _updateReminderAndUserState(
+    notificationsOn: boolean,
+    isoTime: string,
+    haveNotificationsPermission: boolean) {
+
     UserService.updateUserReminder(
       this.state.user == null ? null : this.state.user.getId(),
       notificationsOn,
       isoTime,
       (updatedUser: User) => {
-
-        // TODO: If notofications are on, use library to create:
-        // https://github.com/wmcmahan/react-native-calendar-reminders
+        // Ensure we can actually create reminders.
+        if (notificationsOn && !this.state.haveNotificationsPermission) {
+          LocalNotificationsService.handlePermissions();
+        }
 
         if (!notificationsOn) {
-          // Disable calendar entry.
+          LocalNotificationsService.clearReminderNotifications();
         } else {
-          // Enable calendar entry.
+          LocalNotificationsService.scheduleReminderNotifications(isoTime);
         }
 
         this.setState({
           notificationsOn: notificationsOn,
           notificationsIsoTime: isoTime,
           user: updatedUser,
-          showPicker: false
+          showPicker: false,
+          haveNotificationsPermission: haveNotificationsPermission,
         });
-      }).catch((error) => {
-        log("SettingsScreen -> _updateUserReminderState: " + error);
-      });
+      }
+    ).catch((error) => {
+      log("SettingsScreen -> _updateReminderAndUserState: " + error);
+    });
   }
 
   _handleSwitchValueChange() {
-    this._updateUserReminderState(
-      !this.state.notificationsOn, this.state.notificationsIsoTime);
+    this._updateReminderAndUserState(
+      !this.state.notificationsOn,
+      this.state.notificationsIsoTime,
+      this.state.haveNotificationsPermission);
   }
 
   _showTimePicker() {
@@ -142,8 +156,13 @@ export default class SettingsScreen extends Component<Props, State> {
   }
 
   _handleTimePicked(isoTime: string) {
-    const [hours, mins] = getHoursMinutes(isoTime);
-    this._updateUserReminderState(this.state.notificationsOn, isoTime);
+    // The timestring returned by the picker will be for today.
+    // However, if it is for a time before now, Android will immediately pop a
+    // notification.  Adjust to tomorrow if that is the case.
+    this._updateReminderAndUserState(
+      this.state.notificationsOn,
+      getNextTime(isoTime),
+      this.state.haveNotificationsPermission);
   }
 
   _getReminderTime(): string {
@@ -165,6 +184,7 @@ export default class SettingsScreen extends Component<Props, State> {
               }>
                 { this._getReminderTime() }
               </Text>
+              <Icon name='chevron-right' style={GlobalStyles.settingsIcon} size={30}/>
             </View>
           </TouchableOpacity>
       );

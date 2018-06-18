@@ -39,6 +39,7 @@ import TestDataScreen from './app/screens/TestDataScreen.js';
 
 // Services
 import UserService from './app/services/UserService.js';
+import LocalNotificationsService from './app/services/LocalNotificationsService.js';
 import { User } from './app/storage/data/User.js';
 
 // Components
