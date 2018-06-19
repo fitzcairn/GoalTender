@@ -41,11 +41,26 @@ export default class LocalNotificationsService {
     })
   }
 
-  // Wrapper for permissions.
-  static handlePermissions() {
+  // Wrapper for permissions, returns a Promise.
+  static async handlePermissions(
+    executeOnOk: () => {},
+  ) {
     // Really not sure what to do here. :(
-    PushNotification.checkPermissions();
-    PushNotification.requestPermissions();
+    return PushNotification.requestPermissions()
+    .then((permission) => {
+
+      log(permission);
+
+      if (Platform.OS === 'ios') {
+        if (permission.alert) executeOnOk();
+      }
+      else {
+        // What to check on Android?
+        executeOnOk();
+      }
+    }).catch((error) => {
+      log("LocalNotificationsService -> " + "handlePermissions " + error);
+    });
   }
 
   static scheduleReminderNotifications(isoTime: string) {
@@ -57,7 +72,7 @@ export default class LocalNotificationsService {
     PushNotification.localNotificationSchedule({
       message: Localized('Notifications.message'),
       date: parseISODateString(isoTime),
-      repeatType: 'daily',
+      repeatType: Platform.OS === 'ios' ? 'day' : 'daily',
     });
   }
 
