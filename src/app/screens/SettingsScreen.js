@@ -139,7 +139,7 @@ export default class SettingsScreen extends Component<Props, State> {
               isoTime,
               updatedUser);
           });
-        } else if (notificationsOn) {
+        } else {
           this._setNotification(
             notificationsOn,
             isoTime,

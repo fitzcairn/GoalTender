@@ -45,22 +45,19 @@ export default class LocalNotificationsService {
   static async handlePermissions(
     executeOnOk: () => {},
   ) {
-    // Really not sure what to do here. :(
-    return PushNotification.requestPermissions()
-    .then((permission) => {
-
-      log(permission);
-
-      if (Platform.OS === 'ios') {
-        if (permission.alert) executeOnOk();
-      }
-      else {
-        // What to check on Android?
-        executeOnOk();
-      }
-    }).catch((error) => {
-      log("LocalNotificationsService -> " + "handlePermissions " + error);
-    });
+    // Only required for iOS.
+    if (Platform.OS !=='ios') {
+      executeOnOk();
+    }
+    else {
+      return PushNotification.requestPermissions()
+        .then((permission) => {
+          // Only need alert permissions.
+          if (permission.alert) executeOnOk();
+          }).catch((error) => {
+            log("LocalNotificationsService -> " + "handlePermissions " + error);
+          });
+    }
   }
 
   static scheduleReminderNotifications(isoTime: string) {

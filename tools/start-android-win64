@@ -1,5 +1,8 @@
 #!/bin/bash
 
+pushd android/
+./gradlew clean
+popd
 `type -P emulator` -avd Nexus_5X_API_23 &
 sleep 2
 react-native run-android $1 &
