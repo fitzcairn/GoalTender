@@ -78,5 +78,3 @@ export default class LocalNotificationsService {
     PushNotification.cancelAllLocalNotifications();
   }
 }
-
-LocalNotificationsService.init()
