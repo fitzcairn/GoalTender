@@ -151,6 +151,8 @@ export default class GoalScreen extends Component<Props, State> {
             {Localized('Goal.saveButton')}
           </Text>
         </TouchableOpacity>
+        <View style={styles.goalViewSpacer}>
+        </View>
       </View>
     );
   }
@@ -158,6 +160,9 @@ export default class GoalScreen extends Component<Props, State> {
 
 // Styles only used on this screen.
 const styles = StyleSheet.create({
+  goalViewSpacer: {
+    flex: 1,
+  },
   goalView: {
     flex: 1,
     flexDirection: 'column',
