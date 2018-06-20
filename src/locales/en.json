@@ -15,6 +15,25 @@
     "loginSetting": "Manage Login",
     "aboutSetting": "About",
 
+    "exportAlerts": {
+      "errorNoAccount": {
+        "title": "Email Account Unavailable!",
+        "message": "Could not find an email account on the device.\n\nPlease " +
+          "add one and try again.",
+      },
+      "errorUnknown": {
+        "title": "Uh-Oh!",
+        "message": "Unfortunately, there was an error exporting your data.\n\n"+
+        "Please try again later.",
+      },
+      "exportStart": {
+        "title": "Export Goal Progress?",
+        "message": "Goal progress data will be converted into CSV format and " +
+          "exported into the  email app on your device.\n\nNote: it may take "+
+          "a moment to generate the export data.",
+      },
+    },
+
     "remindersSetting": "Enable Daily Reminders",
     "remindersTime": "Remind me at: ",
   },

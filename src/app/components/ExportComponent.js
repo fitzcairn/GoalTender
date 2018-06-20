@@ -12,6 +12,8 @@ import {
   Alert,
 } from 'react-native';
 
+// E-email
+import Mailer from 'react-native-mail';
 
 // Components
 import LoadingSpinner from '../components/LoadingSpinner.js';
@@ -22,15 +24,16 @@ import { User } from '../storage/data/User.js';
 
 import { log } from '../Util.js';
 
-// E-email
-import Mailer from 'react-native-mail';
+import Localized from '../Strings.js';
 
 
 const _states = {
   NONE: 0,
   GENERATING_FILE: 1,
-  ERROR: 2,
-  FILE_READY: 3,
+  ERROR_UNKNOWN: 2,
+  ERROR_NO_ACCOUNT: 3,
+  DONE: 4,
+  FILE_READY: 5,
 };
 
 type Props = {
@@ -66,12 +69,12 @@ export default class ExportComponent extends Component<Props, State> {
           csv: csv,
         });
       },
-      () => this._setError());
+      () => this._setDoneState(_states.ERROR_UNKNOWN));
   }
 
-  _setError() {
+  _setDoneState(state: number) {
     this.setState({
-      exportState: _states.ERROR,
+      exportState: state,
       csv: null,
     });
   }
@@ -79,10 +82,8 @@ export default class ExportComponent extends Component<Props, State> {
   _handleEmail() {
     const csv:string|null = this.state.csv;
     if (csv == null) {
-      return this.setState({
-        exportState: _states.ERROR,
-        csv: null,
-      });
+      return this._setDoneState(_states.ERROR_UNKNOWN);
+
     }
     return Mailer.mail(
       {
@@ -92,7 +93,16 @@ export default class ExportComponent extends Component<Props, State> {
       },
       (error, event) => {
         log(error);
-        this._setError();
+        log(event);
+        if (error === 'not_available') {
+          this._setDoneState(_states.ERROR_NO_ACCOUNT);
+        }
+        else if (error) {
+          this._setDoneState(_states.ERROR_UNKNOWN);
+        }
+        else {
+          this._setDoneState(_states.DONE);
+        }
       }
     );
   }
@@ -107,11 +117,25 @@ export default class ExportComponent extends Component<Props, State> {
         );
       break;
 
-      case _states.ERROR:
+      case _states.DONE:
+        this.props.onFinish();
+      break;
+
+      case _states.ERROR_NO_ACCOUNT:
         Alert.alert(
-          'Uh-Oh!',
-          "Unfortunately, there was an error exporting your data.\n\n" +
-          "Please try again later.",
+          Localized('Settings.exportAlerts.errorNoAccount.title'),
+          Localized('Settings.exportAlerts.errorNoAccount.message'),
+          [
+            {text: 'Close', style: 'cancel', onPress: () => this.props.onFinish()},
+          ],
+          { cancelable: false },
+        )
+      break;
+
+      case _states.ERROR_UNKNOWN:
+        Alert.alert(
+          Localized('Settings.exportAlerts.errorUnknown.title'),
+          Localized('Settings.exportAlerts.errorUnknown.message'),
           [
             {text: 'Close', style: 'cancel', onPress: () => this.props.onFinish()},
           ],
@@ -126,10 +150,8 @@ export default class ExportComponent extends Component<Props, State> {
       case _states.NONE:
       default:
         Alert.alert(
-          'Export Goal Progress?',
-          "Goal progress data will be converted into CSV format and exported " +
-          "into the  email app on your device.\n\nNote: it may take a moment " +
-          "to generate the export data.",
+          Localized('Settings.exportAlerts.exportStart.title'),
+          Localized('Settings.exportAlerts.exportStart.message'),
           [
             {text: 'Cancel', style: 'cancel'},
             {text: 'Start Export', onPress: () => this._startGenerateDataExport()},
