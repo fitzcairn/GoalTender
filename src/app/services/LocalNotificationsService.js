@@ -18,46 +18,47 @@ import { parseISODateString } from '../Dates.js'
 import Localized from '../Strings.js';
 
 export default class LocalNotificationsService {
-  static init() {
-    LocalNotificationsService.configure();
-  }
 
-  static configure() {
-  PushNotification.configure({
-    onNotification: (notification) => {
-      log("Notification: " + notification);
-      // Required for iOS.
-      notification.finish(PushNotificationIOS.FetchResult.NoData);
-    },
+  // Initialize local notifications.
+  static init(callback: (Object) => void) {
 
-    popInitialNotification: false,
+    PushNotification.configure({
+      onNotification: (notification) => {
+        log("Notification: " + notification);
 
-    /**
-    * (optional) default: true
-    * - Specified if permissions (ios) and token (android and ios) will requested or not,
-    * - if not, you must call PushNotificationsHandler.requestPermissions() later
-    */
-    requestPermissions: false,
-    })
-  }
+        callback(notification);
 
-  // Wrapper for permissions, returns a Promise.
-  static async handlePermissions(
-    executeOnOk: () => {},
-  ) {
-    // Only required for iOS.
-    if (Platform.OS !=='ios') {
-      executeOnOk();
+        // Required for iOS.
+        notification.finish(PushNotificationIOS.FetchResult.NoData);
+      },
+
+      popInitialNotification: false,
+      /**
+      * (optional) default: true
+      * - Specified if permissions (ios) and token (android and ios) will requested or not,
+      * - if not, you must call PushNotificationsHandler.requestPermissions() later
+      */
+      requestPermissions: false,
+      })
     }
-    else {
-      return PushNotification.requestPermissions()
-        .then((permission) => {
-          // Only need alert permissions.
-          if (permission.alert) executeOnOk();
-          }).catch((error) => {
-            log("LocalNotificationsService -> " + "handlePermissions " + error);
-          });
-    }
+
+    // Wrapper for permissions, returns a Promise.
+    static async handlePermissions(
+      executeOnOk: () => {},
+    ) {
+      // Only required for iOS.
+      if (Platform.OS !=='ios') {
+        executeOnOk();
+      }
+      else {
+        return PushNotification.requestPermissions()
+          .then((permission) => {
+            // Only need alert permissions.
+            if (permission.alert) executeOnOk();
+            }).catch((error) => {
+              log("LocalNotificationsService -> " + "handlePermissions " + error);
+            });
+      }
   }
 
   static scheduleReminderNotifications(isoTime: string) {

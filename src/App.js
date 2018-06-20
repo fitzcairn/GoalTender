@@ -168,6 +168,13 @@ export default class App extends Component<Props, State> {
   }
 
   componentDidMount() {
+    // Register callbacks for notifications.
+    LocalNotificationsService.init((notification: Object) => {
+      // For now, don't do anything--if the user is in the app, then swallow.
+      // If not, the daily screen is the first screen they'll see on app open--
+      // which is where they need to go.
+    })
+
     UserService.getUser(
       null, // TODO: Split out a function for local storage until user signin.
       (user: User) => {
