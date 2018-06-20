@@ -63,6 +63,7 @@ const GoalTenderStack = {
     screen: SettingsScreen,
     path: 'settings',
     navigationOptions: ({ navigation }) => ({
+      headerStyle: { height: 60 },
       headerTitle: <CustomHeaderTitle
                      title={Localized('Settings.title')}
                      subtitle={""}/>,
@@ -73,6 +74,7 @@ const GoalTenderStack = {
     screen: AboutScreen,
     path: 'settings',
     navigationOptions: ({ navigation }) => ({
+      headerStyle: { height: 60 },
       headerTitle: <CustomHeaderTitle
                      title={Localized('About.title')}
                      subtitle={""}/>,
@@ -83,6 +85,7 @@ const GoalTenderStack = {
     screen: GoalScreen,
     path: 'goal',
     navigationOptions: ({ navigation }) => ({
+      headerStyle: { height: 60 },
       headerTitle: <CustomHeaderTitle
                      title={Localized('Goal.title')}
                      subtitle={""}/>,
@@ -93,6 +96,7 @@ const GoalTenderStack = {
     screen: DailyScreen,
     path: 'daily',
     navigationOptions: ({ navigation }) => ({
+      headerStyle: { height: 60 },
       headerTitle: <CustomHeaderTitle
                      title={Localized('Daily.title')}
                      subtitle={nowDateDisplay()} />,
@@ -119,6 +123,7 @@ const GoalTenderStack = {
     screen: StatsScreen,
     path: 'stats',
     navigationOptions: ({ navigation }) => ({
+      headerStyle: { height: 60 },
       headerTitle: <CustomHeaderTitle
                      title={Localized('Stats.title')}
                      subtitle={""}/>,
