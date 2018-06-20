@@ -135,9 +135,9 @@ export default class GoalScreen extends Component<Props, State> {
             style={[styles.goalInput, GlobalStyles.titleFontSize]}
             maxLength = {200}
             multiline = {true}
-            numberOfLines = {4}
+            numberOfLines = {5}
             underlineColorAndroid = {'transparent'}
-            placeholder={Localized('Goal.input')}
+            placeholder={"\n" + Localized('Goal.input') + "\n"}
             onChangeText={(text) => this._handleText(text)}
           />
         </View>
@@ -185,6 +185,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     alignSelf:'center',
+    textAlignVertical: 'top',
     textAlign: 'center',
   },
 });
