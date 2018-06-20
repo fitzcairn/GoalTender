@@ -87,9 +87,9 @@ export default class ExportComponent extends Component<Props, State> {
     }
     return Mailer.mail(
       {
-      subject: 'Your Daily Goal Progress, from GoalTender',
-      isHTML: false,
-      body: csv,
+        subject: Localized('Settings.exportEmail.subject'),
+        isHTML: false,
+        body: csv,
       },
       (error, event) => {
         log(error);
@@ -108,18 +108,25 @@ export default class ExportComponent extends Component<Props, State> {
   }
 
   render() {
-    let renderReturn = null;
+    let renderReturn = (
+      <LoadingSpinner modal={true} text={
+        Localized('Settings.exportLoading.working')
+      }/>
+    );
+
     switch(this.state.exportState) {
 
       case _states.GENERATING_FILE:
         renderReturn = (
-          <LoadingSpinner modal={true} text="Generating Data File..."/>
+          <LoadingSpinner modal={true} text={
+            Localized('Settings.exportLoading.generating')
+          }/>
         );
-      break;
+        break;
 
       case _states.DONE:
         this.props.onFinish();
-      break;
+        break;
 
       case _states.ERROR_NO_ACCOUNT:
         Alert.alert(
@@ -130,7 +137,7 @@ export default class ExportComponent extends Component<Props, State> {
           ],
           { cancelable: false },
         )
-      break;
+        break;
 
       case _states.ERROR_UNKNOWN:
         Alert.alert(
@@ -141,7 +148,7 @@ export default class ExportComponent extends Component<Props, State> {
           ],
           { cancelable: false },
         )
-      break;
+        break;
 
       case _states.FILE_READY:
         this._handleEmail();

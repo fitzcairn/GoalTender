@@ -15,6 +15,15 @@
     "loginSetting": "Manage Login",
     "aboutSetting": "About",
 
+    "exportLoading": {
+      "working": "Working...",
+      "generating": "Generating Data File...",
+    },
+
+    "exportEmail": {
+      "subject": "Your Daily Goal Progress, from GoalTender",
+    },
+
     "exportAlerts": {
       "errorNoAccount": {
         "title": "Email Account Unavailable!",
