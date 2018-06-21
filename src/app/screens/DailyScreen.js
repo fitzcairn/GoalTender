@@ -323,6 +323,12 @@ export default class DailyScreen extends Component<Props, State> {
       });
   }
 
+  _renderGoalsPadding() {
+    return (
+      <View style={styles.goalsPaddingView}>
+      </View>);
+  }
+
   _renderInstructions(goals: Array<Goal>) {
     if (goals.filter((g: Goal) => !g.getComplete()).length == 0) {
       return (
@@ -345,8 +351,10 @@ export default class DailyScreen extends Component<Props, State> {
       <View style={styles.goalsView}>
         { this._renderInstructions(goals) }
         <ScrollView
-          scrollEnabled={!this.state.isSwiping}>
-          { this._renderGoalsView(goals) }
+          scrollEnabled={!this.state.isSwiping}
+        >
+        { this._renderGoalsView(goals) }
+        { this._renderGoalsPadding() }
         </ScrollView>
         <AddButton onPress={() => {
           this.props.navigation.navigate('Goal');
@@ -357,6 +365,9 @@ export default class DailyScreen extends Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
+  goalsPaddingView: {
+    height: 85, // Match height of AddButton.
+  },
   goalsView: {
     flex: 1,
     backgroundColor: 'transparent',
