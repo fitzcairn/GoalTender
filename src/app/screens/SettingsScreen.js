@@ -53,7 +53,6 @@ type State = {
   notificationsOn: boolean,
   notificationsIsoTime: string,
   user: User|null,
-  haveNotificationsPermission: boolean,
 };
 
 // App Settings
@@ -67,7 +66,6 @@ export default class SettingsScreen extends Component<Props, State> {
       notificationsOn: false,
       notificationsIsoTime: nowDateTime(),
       user: null,
-      haveNotificationsPermission: false,
     };
   }
 
@@ -81,11 +79,7 @@ export default class SettingsScreen extends Component<Props, State> {
         // $FlowFixMe
         if (user.getReminderTime() != null) isoTime = user.getReminderTime();
 
-        this.setState({
-          user: user,
-          notificationsOn: user.getRemindersOn(),
-          notificationsIsoTime: isoTime,
-        });
+        this._setNotificationsState(user.getRemindersOn(), user, isoTime);
       }
     ).catch((error) => {
       log("SettingsScreen -> componentDidMount: " + error);
@@ -102,25 +96,23 @@ export default class SettingsScreen extends Component<Props, State> {
     return null;
   }
 
-  // Only called once permissions are granted.
-  _setNotification(
+  _setNotificationsState(
     notificationsOn: boolean,
-    isoTime: string,
-    updatedUser: User,) {
-      if (!notificationsOn) {
-        LocalNotificationsService.clearReminderNotifications();
-      } else {
-        LocalNotificationsService.scheduleReminderNotifications(isoTime);
-      }
+    updatedUser: User,
+    isoTime: ?string) {
 
-      this.setState({
-        notificationsOn: notificationsOn,
-        notificationsIsoTime: isoTime,
-        user: updatedUser,
-        showPicker: false,
-        haveNotificationsPermission: true,
-      });
-    }
+    if (!notificationsOn)
+      LocalNotificationsService.clearReminderNotifications();
+
+    let stateUpdate = {
+      notificationsOn: notificationsOn,
+      user: updatedUser,
+      showPicker: false,
+    };
+    if (isoTime != null) stateUpdate.notificationsIsoTime = isoTime,
+
+    this.setState(stateUpdate);
+  }
 
   _updateReminderAndUserState(
     notificationsOn: boolean,
@@ -131,19 +123,27 @@ export default class SettingsScreen extends Component<Props, State> {
       notificationsOn,
       isoTime,
       (updatedUser: User) => {
-        // Ensure we can actually create reminders.
-        if (notificationsOn && !this.state.haveNotificationsPermission) {
-          LocalNotificationsService.handlePermissions(() => {
-            this._setNotification(
-              notificationsOn,
-              isoTime,
-              updatedUser);
-          });
+        // Schedule notification if needed.
+        if (notificationsOn) {
+          LocalNotificationsService.handlePermissions(
+            () => { // Success
+              // We have permission.  Schedule the notification.
+              LocalNotificationsService.scheduleReminderNotifications(isoTime);
+
+              this._setNotificationsState(
+                notificationsOn,
+                updatedUser,
+                isoTime);
+            },
+            () => { // Fail
+              this._setNotificationsState(
+                false, // notificationsOn
+                updatedUser); // no isoTime update.
+            });
         } else {
-          this._setNotification(
+          this._setNotificationsState(
             notificationsOn,
-            isoTime,
-            updatedUser);
+            updatedUser); // no isoTime update.
         }
       }
     ).catch((error) => {

@@ -44,20 +44,24 @@ export default class LocalNotificationsService {
 
     // Wrapper for permissions, returns a Promise.
     static async handlePermissions(
-      executeOnOk: () => {},
+      successCb: () => void,
+      failCb: () => void,
     ) {
       // Only required for iOS.
       if (Platform.OS !=='ios') {
-        executeOnOk();
+        successCb();
       }
       else {
         return PushNotification.requestPermissions()
           .then((permission) => {
             // Only need alert permissions.
-            if (permission.alert) executeOnOk();
-            }).catch((error) => {
-              log("LocalNotificationsService -> " + "handlePermissions " + error);
-            });
+            if (permission.alert) successCb();
+            else failCb();
+          }).catch((error) => {
+            log("LocalNotificationsService -> " + "handlePermissions " +
+              error);
+            failCb();
+          });
       }
   }
 
