@@ -9,6 +9,8 @@
 import React, { Component } from 'react';
 
 import {
+  Linking,
+  Platform,
   ScrollView,
   StyleSheet,
   Switch,
@@ -51,6 +53,7 @@ type State = {
   renderExport: boolean,
   showPicker: boolean,
   notificationsOn: boolean,
+  showiOSNotificationsLink: boolean,
   notificationsIsoTime: string,
   user: User|null,
 };
@@ -64,6 +67,7 @@ export default class SettingsScreen extends Component<Props, State> {
       renderExport: false,
       showPicker: false,
       notificationsOn: false,
+      showiOSNotificationsLink: false,
       notificationsIsoTime: nowDateTime(),
       user: null,
     };
@@ -79,7 +83,8 @@ export default class SettingsScreen extends Component<Props, State> {
         // $FlowFixMe
         if (user.getReminderTime() != null) isoTime = user.getReminderTime();
 
-        this._setNotificationsState(user.getRemindersOn(), user, isoTime);
+        this._setNotificationsState(
+          false, user.getRemindersOn(), user, isoTime);
       }
     ).catch((error) => {
       log("SettingsScreen -> componentDidMount: " + error);
@@ -97,6 +102,7 @@ export default class SettingsScreen extends Component<Props, State> {
   }
 
   _setNotificationsState(
+    showiOSNotificationsLink: boolean,
     notificationsOn: boolean,
     updatedUser: User,
     isoTime: ?string) {
@@ -108,8 +114,9 @@ export default class SettingsScreen extends Component<Props, State> {
       notificationsOn: notificationsOn,
       user: updatedUser,
       showPicker: false,
+      showiOSNotificationsLink: showiOSNotificationsLink,
       notificationsIsoTime: (isoTime == null?
-        this.state.notificationsIsoTime : isoTime)
+        this.state.notificationsIsoTime : isoTime),
     });
   }
 
@@ -130,17 +137,20 @@ export default class SettingsScreen extends Component<Props, State> {
               LocalNotificationsService.scheduleReminderNotifications(isoTime);
 
               this._setNotificationsState(
+                false, // showiOSNotificationsLink
                 notificationsOn,
                 updatedUser,
                 isoTime);
             },
             () => { // Fail
               this._setNotificationsState(
+                true,  // showiOSNotificationsLink
                 false, // notificationsOn
                 updatedUser); // no isoTime update.
             });
         } else {
           this._setNotificationsState(
+            false, // showiOSNotificationsLink
             notificationsOn,
             updatedUser); // no isoTime update.
         }
@@ -184,7 +194,7 @@ export default class SettingsScreen extends Component<Props, State> {
     return fromIsoToDisplay(this.state.user.getReminderTime());
   }
 
-  _renderReminderDateTime() {
+  _maybeRenderReminderDateTime() {
     if (this.state.notificationsOn) {
       return (
           <TouchableOpacity
@@ -201,6 +211,22 @@ export default class SettingsScreen extends Component<Props, State> {
           </TouchableOpacity>
       );
     }
+    else if (this.state.showiOSNotificationsLink && Platform.OS !=='ios') {
+        return (
+            <TouchableOpacity
+              style={GlobalStyles.settingsRow}
+              onPress={ () => Linking.openURL('app-settings:') }>
+              <View style={GlobalStyles.reminderSettingsDateRowView}>
+                <Text style={
+                  [GlobalStyles.settingsTextClickable, GlobalStyles.defaultFontSize]
+                }>
+                  { Localized('Settings.remindersiOSSettings') }
+                </Text>
+                <Icon name='chevron-right' style={GlobalStyles.settingsIcon} size={30}/>
+              </View>
+            </TouchableOpacity>
+        );
+      }
     else return null;
   }
 
@@ -242,7 +268,7 @@ export default class SettingsScreen extends Component<Props, State> {
                 />
               </View>
             </View>
-            { this._renderReminderDateTime() }
+            { this._maybeRenderReminderDateTime() }
             <DateTimePicker
               mode={"time"}
               minuteInterval={5}

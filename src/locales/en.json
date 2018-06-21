@@ -45,6 +45,7 @@
 
     "remindersSetting": "Enable Daily Reminders",
     "remindersTime": "Remind me at: ",
+    "remindersiOSSettings": "Tap here to open Notifications settings."
   },
   "About": {
     "title": "About",
