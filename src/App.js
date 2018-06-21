@@ -175,7 +175,6 @@ export default class App extends Component<Props, State> {
   componentDidMount() {
     // Register callbacks for notifications.
     LocalNotificationsService.init((notification: Object) => {
-      this.props.navigation.navigate('Daily');
     })
 
     UserService.getUser(
