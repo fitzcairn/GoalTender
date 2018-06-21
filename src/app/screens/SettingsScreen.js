@@ -104,14 +104,13 @@ export default class SettingsScreen extends Component<Props, State> {
     if (!notificationsOn)
       LocalNotificationsService.clearReminderNotifications();
 
-    let stateUpdate = {
+    this.setState({
       notificationsOn: notificationsOn,
       user: updatedUser,
       showPicker: false,
-    };
-    if (isoTime != null) stateUpdate.notificationsIsoTime = isoTime,
-
-    this.setState(stateUpdate);
+      notificationsIsoTime: (isoTime == null?
+        this.state.notificationsIsoTime : isoTime)
+    });
   }
 
   _updateReminderAndUserState(
