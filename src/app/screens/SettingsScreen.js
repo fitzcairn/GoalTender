@@ -83,7 +83,7 @@ export default class SettingsScreen extends Component<Props, State> {
         // $FlowFixMe
         if (user.getReminderTime() != null) isoTime = user.getReminderTime();
 
-        this._setNotificationsState(
+        this._updateComponentState(
           false, user.getRemindersOn(), user, isoTime);
       }
     ).catch((error) => {
@@ -101,11 +101,11 @@ export default class SettingsScreen extends Component<Props, State> {
     return null;
   }
 
-  _setNotificationsState(
+  _updateComponentState(
     showiOSNotificationsLink: boolean,
     notificationsOn: boolean,
     updatedUser: User,
-    isoTime: ?string) {
+    isoTime: string) {
 
     if (!notificationsOn)
       LocalNotificationsService.clearReminderNotifications();
@@ -115,53 +115,66 @@ export default class SettingsScreen extends Component<Props, State> {
       user: updatedUser,
       showPicker: false,
       showiOSNotificationsLink: showiOSNotificationsLink,
-      notificationsIsoTime: (isoTime == null?
-        this.state.notificationsIsoTime : isoTime),
+      notificationsIsoTime: isoTime,
     });
   }
 
-  _updateReminderAndUserState(
+  _updateUserState(
+    showiOSNotificationsLink: boolean,
     notificationsOn: boolean,
-    isoTime: string) {
+    isoTime: ?string) {
+
+    let checkedIsoTime = this.state.notificationsIsoTime;
+    if (isoTime != null) checkedIsoTime = isoTime;
 
     UserService.updateUserReminder(
       this.state.user == null ? null : this.state.user.getId(),
       notificationsOn,
-      isoTime,
+      checkedIsoTime,
       (updatedUser: User) => {
-        // Schedule notification if needed.
-        if (notificationsOn) {
-          LocalNotificationsService.handlePermissions(
-            () => { // Success
-              // We have permission.  Schedule the notification.
-              LocalNotificationsService.scheduleReminderNotifications(isoTime);
-
-              this._setNotificationsState(
-                false, // showiOSNotificationsLink
-                notificationsOn,
-                updatedUser,
-                isoTime);
-            },
-            () => { // Fail
-              this._setNotificationsState(
-                true,  // showiOSNotificationsLink
-                false, // notificationsOn
-                updatedUser); // no isoTime update.
-            });
-        } else {
-          this._setNotificationsState(
-            false, // showiOSNotificationsLink
-            notificationsOn,
-            updatedUser); // no isoTime update.
-        }
+        // Now update the component.
+        this._updateComponentState(
+          showiOSNotificationsLink,
+          notificationsOn,
+          updatedUser,
+          checkedIsoTime);
       }
     ).catch((error) => {
-      log("SettingsScreen -> _updateReminderAndUserState: " + error);
+      log("SettingsScreen -> _updateUserState: " + error);
     });
   }
 
+  _updateUserAndComponentState(
+    notificationsOn: boolean,
+    isoTime: string) {
+
+    // Schedule notification if needed.
+    if (notificationsOn) {
+      LocalNotificationsService.handlePermissions(
+        () => { // Success
+          // We have permission.  Schedule the notification and update state.
+          LocalNotificationsService.scheduleReminderNotifications(isoTime);
+          this._updateUserState(
+            false, // showiOSNotificationsLink
+            notificationsOn,
+            isoTime);
+        },
+        () => { // Fail
+          this._updateUserState(
+            true,  // showiOSNotificationsLink
+            false); // notificationsOn
+            // no isoTime update.
+        });
+    } else {
+      this._updateUserState(
+        false,  // showiOSNotificationsLink
+        notificationsOn);
+        // no isoTime update.
+    }
+  }
+
   _handleSwitchValueChange() {
-    this._updateReminderAndUserState(
+    this._updateUserAndComponentState(
       !this.state.notificationsOn,
       this.state.notificationsIsoTime);
   }
@@ -182,7 +195,7 @@ export default class SettingsScreen extends Component<Props, State> {
     // The timestring returned by the picker will be for today.
     // However, if it is for a time before now, Android will immediately pop a
     // notification.  Adjust to tomorrow if that is the case.
-    this._updateReminderAndUserState(
+    this._updateUserAndComponentState(
       this.state.notificationsOn,
       getNextTime(isoTime));
   }
@@ -211,7 +224,7 @@ export default class SettingsScreen extends Component<Props, State> {
           </TouchableOpacity>
       );
     }
-    else if (this.state.showiOSNotificationsLink && Platform.OS !=='ios') {
+    else if (this.state.showiOSNotificationsLink && Platform.OS =='ios') {
         return (
             <TouchableOpacity
               style={GlobalStyles.settingsRow}

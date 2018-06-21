@@ -4,7 +4,7 @@
   },
   "FTUXScreen": {
     "title": "Welcome",
-    "welcome": "Welcome to GoalTender!",
+    "welcome": "Welcome to My GoalTender!",
     "instructions": "This is a tiny app to help you track simple daily goals.",
     "button": "Get Started!",
   },
@@ -21,7 +21,7 @@
     },
 
     "exportEmail": {
-      "subject": "Your Daily Goal Progress, from GoalTender",
+      "subject": "Your Daily Goal Progress, from My GoalTender",
     },
 
     "exportAlerts": {
@@ -45,7 +45,7 @@
 
     "remindersSetting": "Enable Daily Reminders",
     "remindersTime": "Remind me at: ",
-    "remindersiOSSettings": "Tap here to open Notifications settings."
+    "remindersiOSSettings": "Tap here to enable notifications."
   },
   "About": {
     "title": "About",
