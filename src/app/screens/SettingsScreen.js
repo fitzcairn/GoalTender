@@ -284,7 +284,7 @@ export default class SettingsScreen extends Component<Props, State> {
             { this._maybeRenderReminderDateTime() }
             <DateTimePicker
               mode={"time"}
-              minuteInterval={5}
+              minuteInterval={1}
               isVisible={this.state.showPicker}
               onConfirm={(time) => this._handleTimePicked(time)}
               onCancel={() => this._hideTimePicker()}
