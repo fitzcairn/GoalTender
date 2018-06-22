@@ -225,21 +225,21 @@ export default class SettingsScreen extends Component<Props, State> {
       );
     }
     else if (this.state.showiOSNotificationsLink && Platform.OS =='ios') {
-        return (
-            <TouchableOpacity
-              style={GlobalStyles.settingsRow}
-              onPress={ () => Linking.openURL('app-settings:') }>
-              <View style={GlobalStyles.reminderSettingsDateRowView}>
-                <Text style={
-                  [GlobalStyles.settingsTextClickable, GlobalStyles.defaultFontSize]
-                }>
-                  { Localized('Settings.remindersiOSSettings') }
-                </Text>
-                <Icon name='chevron-right' style={GlobalStyles.settingsIcon} size={30}/>
-              </View>
-            </TouchableOpacity>
-        );
-      }
+      return (
+        <TouchableOpacity
+          style={GlobalStyles.settingsRow}
+          onPress={ () => Linking.openURL('app-settings:') }>
+          <View style={GlobalStyles.reminderSettingsDateRowView}>
+            <Text style={
+              [GlobalStyles.settingsTextClickable, GlobalStyles.defaultFontSize]
+            }>
+              { Localized('Settings.remindersiOSSettings') }
+            </Text>
+            <Icon name='chevron-right' style={GlobalStyles.settingsIcon} size={30}/>
+          </View>
+        </TouchableOpacity>
+      );
+    }
     else return null;
   }
 
