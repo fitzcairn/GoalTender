@@ -13,6 +13,8 @@ import {
   StyleSheet,
 } from 'react-native';
 
+
+
 /*
  * Typography references:
  * https://material.io/design/typography/#type-scale
@@ -59,7 +61,7 @@ const GlobalStyles = StyleSheet.create({
   instructions: {
     textAlign: 'center',
     color: '#333333',
-    marginBottom: 5,
+    margin: 20,
   },
   info: {
     textAlign: 'center',

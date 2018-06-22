@@ -24,7 +24,7 @@ import StateStorage from '../storage/StateStorage.js';
 import { User } from '../storage/data/User.js';
 import { Goal } from '../storage/data/Goal.js';
 
-import { getDaysBetweenDisplay } from '../Dates.js';
+import { getDaysBetweenDisplay, getTwoMonthsAgo } from '../Dates.js';
 
 
 type Props = {
@@ -42,7 +42,7 @@ export default class TestDataScreen extends Component<Props> {
     UserStorage.upsertUser(
       UserStorage._defaultId,
       () => { Alert.alert("User reset" + (hasSeenFTUX? " with FTUX" : " no FTUX"))},
-      hasSeenFTUX);
+      { hasSeenFTUX: hasSeenFTUX });
   }
 
   _clear() {
@@ -52,59 +52,74 @@ export default class TestDataScreen extends Component<Props> {
   _addGoals() {
     GoalStorage.addGoal(
       UserStorage._defaultId,
-      "Test Goal 1", (g1: Goal) => {
+      "Work out at least 30 minutes.", (g1: Goal) => {
         _goalMap.set(g1.getId(), g1);
         GoalStorage.addGoal(
           UserStorage._defaultId,
-          "Test Goal 2", (g2: Goal) => {
+          "Collaborate with someone on solving a problem.", (g2: Goal) => {
             _goalMap.set(g2.getId(), g1);
             GoalStorage.addGoal(
               UserStorage._defaultId,
-              "Test Goal 3", (g3: Goal) => {
+              "Ask at least one question in a meeting.", (g3: Goal) => {
                 _goalMap.set(g3.getId(), g1);
                 GoalStorage.addGoal(
                   UserStorage._defaultId,
-                  "Test Goal 4", (g4: Goal) => {
+                  "Express thanks for at least one contribution from someone else.", (g4: Goal) => {
                     _goalMap.set(g4.getId(), g1);
                     GoalStorage.addGoal(
                       UserStorage._defaultId,
-                      "Test Goal 5", (g5: Goal) => {
+                      "Smile at one person.", (g5: Goal) => {
                         _goalMap.set(g5.getId(), g1);
                         Alert.alert("Goals added!");
-                      }
+                      },
+                      getTwoMonthsAgo()
                     );
-                  }
+                  },
+                  getTwoMonthsAgo()
                 );
-              }
+              },
+              getTwoMonthsAgo()
             );
-          }
+          },
+          getTwoMonthsAgo()
         );
-      }
+      },
+      getTwoMonthsAgo()
     );
+  }
+
+
+  _getRandomInt(max: number) {
+    return Math.floor(Math.random() * Math.floor(max));
   }
 
   _addState() {
     if (Array.from(_goalMap.keys()).length == 0)
-      Alert.alert("No goals to add state to!");
+      return Alert.alert("No goals to add state to!");
 
-    // Month of alternating dates.
-    const days = getDaysBetweenDisplay('2018-05-01', '2018-05-31');
-    const dates = days.map((day) => {
-      if (parseInt(day[1].split(' ', 2)[1]) % 3 > 0)
-        return day[0];
-    }).filter(date => typeof date != 'undefined');
+    // Get a set of days.
+    const days = getDaysBetweenDisplay('2018-05-01', '2018-06-20');
 
-    const states = dates.map((date, index) => {
-      return (index % 2) + 1;
-    });
+    // Set states for each goal, randomizing as much as possible.
+    for (let goalId: string of _goalMap.keys()) {
 
-    StateStorage.setStates(
-      UserStorage._defaultId,
-      Array.from(_goalMap.keys())[0],
-      dates,
-      states,
-      () => { Alert.alert("States added!"); }
-    );
+      let dates:Array<string> = days.map((day) => {
+        if (this._getRandomInt(3) > 0)
+        //if (parseInt(day[1].split(' ', 2)[1]) % 3 > 0)
+          return day[0];
+      }).filter(date => typeof date != 'undefined');
+
+      let states = dates.map((date, index) => {
+        return this._getRandomInt(2) + 1;
+      });
+
+      StateStorage.setStates(
+        UserStorage._defaultId,
+        goalId,
+        dates,
+        states,
+        () => { Alert.alert("States added for " + goalId); });
+    }
   }
 
   render() {

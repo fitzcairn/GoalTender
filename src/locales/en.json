@@ -2,11 +2,24 @@
   "Notifications": {
     "message": "How did you do on your daily goals?",
   },
-  "FTUXScreen": {
+  "FTUXStart": {
     "title": "Welcome",
     "welcome": "Welcome to My GoalTender!",
-    "instructions": "This is a tiny app to help you track simple daily goals.",
-    "button": "Get Started!",
+    "instructions": "A simple daily goal tracker to make changing habits easier.",
+    "button": "Let's Get Started!",
+  },
+  "FTUXFinish": {
+    "title": "Using My GoalTender",
+
+    "addInstructions": "To add a goal, tap: ",
+
+    "goalInstructions": "Tap the icons to record goal progress:",
+    "goalInstructionsGoalText": "Try tapping on my buttons!",
+
+    "deleteInstructions": "Swipe right to delete or complete a goal:",
+    "goalInstructionsDeleteText": "Try swiping me right!",
+
+    "button": "Got It, Let's Go!",
   },
   "Settings": {
     "title": "Settings",

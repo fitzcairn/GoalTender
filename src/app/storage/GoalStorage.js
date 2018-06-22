@@ -82,10 +82,13 @@ export default class GoalStorage {
   static addGoal(
     userId: string,
     goalText: string,
-    callback: (Goal) => void
+    callback: (Goal) => void,
+    createDate: ?string, // Optional goal backdate.
   ) {
     const userKey = this._makeKey(userId);
     const goal = new Goal(generateId(), goalText, nowDate());
+
+    if (createDate != null) goal.setCreateDate(createDate);
 
     return AsyncStorage.getItem(userKey)
       .then((goalString) =>  {

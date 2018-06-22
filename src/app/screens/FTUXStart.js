@@ -32,30 +32,30 @@ type Props = {
 };
 
 // Opening Screen
-export default class FTUXScreen extends Component<Props> {
+export default class FTUXStart extends Component<Props> {
 
   _registerUser() {
     // TODO: Call this from a login integration.  For now, no user id.
     UserService.updateUserFTUX(
       null, // No user id; just use the default local one.
       true, // User has seen FTUX.
-      () => this.props.navigation.navigate('Daily'))
+      () => this.props.navigation.navigate('FTUXFinish'))
   }
 
   render() {
     return (
       <View style={GlobalStyles.container}>
         <Text style={[GlobalStyles.welcome, GlobalStyles.splashFontSize]}>
-          {Localized('FTUXScreen.welcome')}
+          {Localized('FTUXStart.welcome')}
         </Text>
         <Text style={[GlobalStyles.instructions, GlobalStyles.titleFontSize]}>
-          {Localized('FTUXScreen.instructions')}
+          {Localized('FTUXStart.instructions')}
         </Text>
         <TouchableOpacity
           style={GlobalStyles.button}
           onPress={() => this._registerUser()}>
           <Text style={[GlobalStyles.buttonText, GlobalStyles.titleFontSize]}>
-            {Localized('FTUXScreen.button')}
+            {Localized('FTUXStart.button')}
           </Text>
         </TouchableOpacity>
       </View>

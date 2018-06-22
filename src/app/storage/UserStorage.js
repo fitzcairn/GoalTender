@@ -25,8 +25,8 @@ export default class UserStorage {
     return 'user:' + this._getUserId(userId);
   }
 
-  static _makeUser(userId: string) {
-    return new User(userId, nowDateTime(), false);
+  static _makeUser(userId: string | null) {
+    return new User(this._getUserId(userId), nowDateTime(), false);
   }
 
   /* Get a user object.

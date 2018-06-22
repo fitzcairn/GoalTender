@@ -15,6 +15,7 @@
    getText: () => string;
    getStateValue: () => number;
    getCreateDate: () => string;
+   setCreateDate: (string) => Goal;
    getComplete: () => boolean;
    setComplete: (boolean) => Goal;
    setState: (State) => Goal;
@@ -39,6 +40,11 @@
 
      this.getCreateDate = function() {
        return _date;
+     }
+
+     this.setCreateDate = function(date:string) {
+       _date = date;
+       return this;
      }
 
      this.getText = function() {

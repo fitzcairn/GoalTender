@@ -29,7 +29,8 @@ import './ReactotronConfig.js';
 import Localized from './app/Strings.js';
 
 // Screens
-import FTUXScreen from './app/screens/FTUXScreen.js';
+import FTUXStart from './app/screens/FTUXStart.js';
+import FTUXFinish from './app/screens/FTUXFinish.js';
 import SettingsScreen from './app/screens/SettingsScreen.js';
 import DailyScreen from './app/screens/DailyScreen.js';
 import StatsScreen from './app/screens/StatsScreen.js';
@@ -52,11 +53,23 @@ import { nowDateDisplay } from './app/Dates.js';
 
 // Set up Goaltender's screens.
 const GoalTenderStack = {
-  FTUX: {
-    screen: FTUXScreen,
-    path: 'ftux',
+  FTUXStart: {
+    screen: FTUXStart,
+    path: 'ftuxstart',
     navigationOptions: ({ navigation }) => ({
       header: null,
+    }),
+  },
+  FTUXFinish: {
+    screen: FTUXFinish,
+    path: 'ftuxfinish',
+    navigationOptions: ({ navigation }) => ({
+      headerStyle: { height: 60 },
+      headerTitle: <CustomHeaderTitle
+                     title={Localized('FTUXFinish.title')}
+                     subtitle={""} />,
+      headerLeft: (<View />),
+      headerRight: (<View />),
     }),
   },
   Settings: {
@@ -146,7 +159,7 @@ const GoalTenderStack = {
 // Messy, but the best way I found to get this to work.
 const GoalTender = createStackNavigator(GoalTenderStack,
 {
-  initialRouteName: 'FTUX',
+  initialRouteName: 'FTUXStart',
 });
 const GoalTenderNoFTUX = createStackNavigator(GoalTenderStack,
 {

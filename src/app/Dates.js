@@ -124,3 +124,8 @@ export function getNextTime(isoTime: string): string {
     return moment(isoTime).add(1, 'day').toISOString();
   return moment(isoTime).toISOString();
 }
+
+// Get 2 months ago, today=, in ISO 8601 format.
+export function getTwoMonthsAgo(): string {
+  return moment().subtract(2, 'month').toISOString();
+}

@@ -15,7 +15,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableHighlight,
   View,
 } from 'react-native';
 
@@ -25,7 +24,6 @@ import {
 } from 'react-navigation';
 
 import Swipeable from 'react-native-swipeable';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import Localized from '../Strings.js';
 
@@ -33,6 +31,9 @@ import GlobalStyles from '../Styles.js';
 
 import GoalRow from '../components/GoalRow.js';
 import LoadingSpinner from '../components/LoadingSpinner.js';
+import AddButton from '../components/AddButton.js';
+import DeleteButton from '../components/DeleteButton.js';
+import CompleteButton from '../components/CompleteButton.js';
 
 import GoalService from '../services/GoalService.js';
 import UserService from '../services/UserService.js';
@@ -42,83 +43,6 @@ import { Goal, GoalList } from '../storage/data/Goal.js'
 import { StateValues } from '../storage/data/State.js'
 
 import { log } from '../Util.js';
-
-
-// Add goal button
-function AddButton(
-  {
-    onPress,
-  }: {
-    onPress: () => void,
-  }) {
-  return (
-    <TouchableHighlight
-      underlayColor={'transparent'}
-      style={styles.addButtonFloat}
-      onPress={() => {onPress()}}>
-      <View style={styles.addView}>
-        <Icon
-          name={'fiber-manual-record'}
-          size={70}
-          style={styles.addIconBg}
-        />
-        <Icon
-          name={'add-circle'}
-          size={70}
-          style={styles.addIconShadow}
-        />
-        <Icon
-          name={'add-circle'}
-          size={70}
-          style={styles.addIcon}
-        />
-      </View>
-    </TouchableHighlight>
-  );
-}
-
-
-// Button for delete on swipe.
-function DeleteButton(
-  {
-    onPress,
-  }: {
-    onPress: () => void,
-  }) {
-  return (
-    <TouchableHighlight
-      underlayColor={'white'}
-      style={styles.deleteButton}
-      onPress={() => {onPress()}}>
-      <Icon
-        name={'delete-forever'}
-        size={40}
-        style={styles.deleteIcon}
-      />
-    </TouchableHighlight>
-  );
-}
-
-// Button for complete on swipe.
-function CompleteButton(
-  {
-    onPress,
-  }: {
-    onPress: () => void,
-  }) {
-  return (
-    <TouchableHighlight
-      underlayColor={'white'}
-      style={styles.completeButton}
-      onPress={() => {onPress()}}>
-      <Icon
-        name={'done-all'}
-        size={40}
-        style={styles.completeIcon}
-      />
-    </TouchableHighlight>
-  );
-}
 
 
 type Props = {
@@ -333,7 +257,7 @@ export default class DailyScreen extends Component<Props, State> {
     if (goals.filter((g: Goal) => !g.getComplete()).length == 0) {
       return (
         <View style={GlobalStyles.noGoalsInstructions}>
-          <Text style={[GlobalStyles.instructions, GlobalStyles.defaultFontSize]}>
+          <Text style={[GlobalStyles.instructions, GlobalStyles.titleFontSize]}>
             {Localized('Daily.instructions')}
           </Text>
         </View>);
@@ -356,7 +280,7 @@ export default class DailyScreen extends Component<Props, State> {
         { this._renderGoalsView(goals) }
         { this._renderGoalsPadding() }
         </ScrollView>
-        <AddButton onPress={() => {
+        <AddButton style={styles.addButtonFloat} onPress={() => {
           this.props.navigation.navigate('Goal');
         }} />
       </View>
@@ -373,53 +297,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     justifyContent: 'flex-end'
   },
-  deleteButton: {
-    backgroundColor: '#cc0000',
-    flex: 1,
-    justifyContent: 'center',
-  },
-  deleteIcon: {
-    color: 'white',
-    alignSelf: 'flex-end',
-    marginRight: 4,
-  },
-  completeButton: {
-    backgroundColor: '#006600',
-    flex: 1,
-    justifyContent: 'center',
-  },
-  completeIcon: {
-    color: 'white',
-    alignSelf: 'flex-end',
-    marginRight: 5,
-  },
   addButtonFloat: {
     position: 'absolute',
     zIndex: 100,
     alignSelf: 'flex-end',
-    backgroundColor: 'transparent',
-  },
-  addView: {
-    marginRight: 8,
-    marginBottom: 8,
-  },
-  addIcon: {
-    flex: 1,
-    color: '#cc0000',
-    backgroundColor: 'transparent',
-  },
-  addIconShadow: {
-    position: 'absolute',
-    flex: 1,
-    left: 1,
-    top: 1,
-    color: '#666666',
-    backgroundColor: 'transparent',
-  },
-  addIconBg: {
-    position: 'absolute',
-    flex: 1,
-    color: 'white',
     backgroundColor: 'transparent',
   },
 });
