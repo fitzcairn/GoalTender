@@ -92,6 +92,7 @@ export default class ExportComponent extends Component<Props, State> {
       return this._setDoneState(_states.ERROR_UNKNOWN);
 
     }
+
     return Mailer.mail(
       {
         subject: Localized('Settings.exportEmail.subject'),
@@ -101,6 +102,8 @@ export default class ExportComponent extends Component<Props, State> {
       (error, event) => {
         log(error);
         log(event);
+        // Only regenerate the file on error.  Otherwise, if the user taps
+        // "Export" again re-use the state we just generated.
         if (error === 'not_available') {
           this._setDoneState(_states.ERROR_NO_ACCOUNT);
         }
@@ -115,11 +118,7 @@ export default class ExportComponent extends Component<Props, State> {
   }
 
   render() {
-    let renderReturn = (
-      <LoadingSpinner modal={true} text={
-        Localized('Settings.exportLoading.working')
-      }/>
-    );
+    let renderReturn = null;
 
     switch(this.state.exportState) {
 
@@ -132,6 +131,7 @@ export default class ExportComponent extends Component<Props, State> {
         break;
 
       case _states.DONE:
+        renderReturn = null;
         this.props.onFinish();
         break;
 

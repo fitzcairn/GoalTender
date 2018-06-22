@@ -204,7 +204,6 @@ export default class SettingsScreen extends Component<Props, State> {
   _getReminderTime(): string {
     if (this.state.user == null || this.state.user.getReminderTime() == null)
       return fromIsoToDisplay(this.state.notificationsIsoTime);
-    // $FlowFixMe
     return fromIsoToDisplay(this.state.user.getReminderTime());
   }
 
