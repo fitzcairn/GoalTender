@@ -114,6 +114,7 @@ export default class SettingsScreen extends Component<Props, State> {
       notificationsOn: notificationsOn,
       user: updatedUser,
       showPicker: false,
+      renderExport: false,
       showiOSNotificationsLink: showiOSNotificationsLink,
       notificationsIsoTime: isoTime,
     });
