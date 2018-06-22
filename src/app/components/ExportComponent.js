@@ -90,14 +90,13 @@ export default class ExportComponent extends Component<Props, State> {
     const csv:string|null = this.state.csv;
     if (csv == null) {
       return this._setDoneState(_states.ERROR_UNKNOWN);
-
     }
 
     return Mailer.mail(
       {
         subject: Localized('Settings.exportEmail.subject'),
         isHTML: false,
-        body: csv,
+        body: Localized('Settings.exportEmail.body') + csv,
       },
       (error, event) => {
         log(error);
@@ -123,11 +122,13 @@ export default class ExportComponent extends Component<Props, State> {
     switch(this.state.exportState) {
 
       case _states.GENERATING_FILE:
-        renderReturn = (
+        // THe below breaks on iOS; leaving it there to come back and
+        // investigate further.
+        /*renderReturn = (
           <LoadingSpinner modal={true} text={
             Localized('Settings.exportLoading.generating')
           }/>
-        );
+        );*/
         break;
 
       case _states.DONE:

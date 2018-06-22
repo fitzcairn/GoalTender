@@ -35,6 +35,9 @@
 
     "exportEmail": {
       "subject": "Your Daily Goal Progress, from My GoalTender",
+      "body": "Copy and paste the below CSV data into a file, and import that "+
+        "file into your spreadsheet of choice.\n\nThanks for using My " +
+        "Goaltender!\n\n\n",
     },
 
     "exportAlerts": {
