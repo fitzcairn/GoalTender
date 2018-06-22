@@ -30,10 +30,11 @@ import Localized from '../Strings.js';
 const _states = {
   NONE: 0,
   GENERATING_FILE: 1,
-  ERROR_UNKNOWN: 2,
-  ERROR_NO_ACCOUNT: 3,
-  DONE: 4,
-  FILE_READY: 5,
+  ERROR_NO_DATA: 2,
+  ERROR_UNKNOWN: 3,
+  ERROR_NO_ACCOUNT: 4,
+  DONE: 5,
+  FILE_READY: 6,
 };
 
 type Props = {
@@ -64,10 +65,16 @@ export default class ExportComponent extends Component<Props, State> {
     // Kick off generating the file.
     ExportService.generateGoalDataFile(
       (csv: string) => {
-        this.setState({
-          exportState: _states.FILE_READY,
-          csv: csv,
-        });
+        if (csv)
+          this.setState({
+            exportState: _states.FILE_READY,
+            csv: csv,
+          });
+        else {
+          this.setState({
+            exportState: _states.ERROR_NO_DATA,
+          });
+        }
       },
       () => this._setDoneState(_states.ERROR_UNKNOWN));
   }
@@ -126,6 +133,17 @@ export default class ExportComponent extends Component<Props, State> {
 
       case _states.DONE:
         this.props.onFinish();
+        break;
+
+      case _states.ERROR_NO_DATA:
+        Alert.alert(
+          Localized('Settings.exportAlerts.errorNoData.title'),
+          Localized('Settings.exportAlerts.errorNoData.message'),
+          [
+            {text: 'Close', style: 'cancel', onPress: () => this.props.onFinish()},
+          ],
+          { cancelable: false },
+        )
         break;
 
       case _states.ERROR_NO_ACCOUNT:

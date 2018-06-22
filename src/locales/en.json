@@ -38,6 +38,11 @@
     },
 
     "exportAlerts": {
+      "errorNoData": {
+        "title": "No Goal Data!",
+        "message": "You have nothing to export yet!  Please record daily " +
+          "progress for a goal.",
+      },
       "errorNoAccount": {
         "title": "Email Account Unavailable!",
         "message": "Could not find an email account on the device.\n\nPlease " +

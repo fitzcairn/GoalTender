@@ -51,6 +51,11 @@ export default class ExportService {
           user.getId(),
           (goalList: GoalList) => {
 
+          // No goals?  Return nothing so we can message.
+          if (goalList.getGoals().length == 0) {
+            return success('');
+          }
+
           // Step 3: Load the states for all goals for all days.
           StateStorage.getStates(
             user.getId(),
@@ -109,6 +114,10 @@ export default class ExportService {
                 }
                 if (csvLineList) csvList.push(csvLineList);
               });
+
+              // No data?  Return nothing so we can message.
+              if (csvList.length == 1)
+                return success('');
 
               // Hand off the csv back to the success callback.
               const csv:string = csvList
