@@ -6,7 +6,7 @@ GoalTender is also the first app I've written using [React Native](https://faceb
 
 ## Using GoalTender
 
-You can install GoalTender on the [iOS App Store](https://itunes.apple.com/us/app/my-goaltender/id1398117026) and the [Google Play Store](https://play.google.com/store/apps/details?id=com.stevezero.goaltender).
+You can install GoalTender from the [iOS App Store](https://itunes.apple.com/us/app/my-goaltender/id1398117026) or the [Google Play Store](https://play.google.com/store/apps/details?id=com.stevezero.goaltender).
 
 
 ## What's Next?
